@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Blackjack" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Button" parent="Widget.AppCompat.Button">
+        <item name="android:padding">@dimen/padding_large_size</item>
+        <item name="android:layout_margin">@dimen/margin_normal_size</item>
+    </style>
+
+    <style name="Image_button" parent="Widget.AppCompat.ImageButton">
+        <item name="android:layout_marginStart">@dimen/margin_large_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_large_size</item>
+        <item name="android:layout_marginTop">@dimen/margin_large_size</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large_size</item>
+    </style>
+
+    <style name="main_screen_button" parent="Widget.AppCompat.Button">
+        <item name="android:layout_margin">@dimen/margin_large_size</item>
+        <item name="android:background">@drawable/rounded_corner_colored</item>
+        <item name="android:tint">@color/purple_200</item>
+    </style>
+
+    <!-- ANIMATION -->
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up_dialog</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_down</item>
+    </style>
+
+
+
+</resources>

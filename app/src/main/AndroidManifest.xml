@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"/>
+
+    <application
+        android:name=".BlackjackApplication"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Blackjack"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".ui.activity.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.SettingMenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.OnlineGameActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.activity.DetailOnlineUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.OnlineMainScreenActivity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".ui.activity.MainScreenActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activity.GameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.sign.GoogleSignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.sign.FacebookSignInActivity"
+            android:exported="false" />
+
+        <service android:name=".service.TimeService" />
+    </application>
+
+</manifest>

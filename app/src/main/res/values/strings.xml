@@ -1,0 +1,139 @@
+<resources>
+    <string name="app_name">Blackjack</string>
+    <string name="webclient_id">752234267388-fgaat8sqor7bb0l3c7g67s0e2ih88j5e.apps.googleusercontent.com</string>
+
+    <string name="facebook_app_id">466824041889664</string>
+    <string name="fb_login_protocol_scheme">fb466824041889664</string>
+
+    <!-- ANIMATION -->
+    <string name="animation_online_main_screen_to_detail" translatable="false">animationOnlineMainScreenToDetail</string>
+    <string name="detail_to_animation_online_main_screen" translatable="false">detailToAnimationOnlineMainScreen</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="fragment_main_screen_new_game">Start new game</string>
+    <string name="fragment_main_game_start_game">Start</string>
+    <string name="fragment_main_game_dealer_score">DEALER SCORE</string>
+    <string name="fragment_main_game_you_win">WIN</string>
+    <string name="fragment_main_game_you_lose">LOSE</string>
+    <string name="online_game_fragment_bust">BUST</string>
+    <string name="fragment_main_game_dealer_bust">DEALER BUST</string>
+    <string name="fragment_main_game_draw">DRAW</string>
+    <string name="bet_dialog_one_token">1</string>
+    <string name="bet_dialog_five_token">5</string>
+    <string name="bet_dialog_ten_token">10</string>
+    <string name="bet_dialog_fifty_token">50</string>
+    <string name="bet_dialog_reset">reset</string>
+    <string name="bet_dialog_default_bet">0</string>
+    <string name="bet_dialog_ok">OK</string>
+    <string name="bet_dialog_not_enough_money">Not enough money</string>
+    <string name="fragment_main_screen_load_game">load game</string>
+    <string name="load_game_dialog_empty_slot">Empty slot</string>
+    <string name="load_game_dialog_game_number">Game</string>
+    <string name="load_game_dialog_bank_amout">"Bank amount: "</string>
+    <string name="new_game_dialog_enter_name">Enter a save name</string>
+    <string name="bet_dialog_cancel">Cancel</string>
+    <string name="fragment_main_game_current_bet">bet:</string>
+    <string name="fragment_main_game_total_spent">Total spent:</string>
+    <string name="fragment_main_game_blackjack">BJ</string>
+    <string name="fragment_main_game_insurance">Would you like to assure?</string>
+    <string name="fragment_main_game_insurance_title">Insurance</string>
+    <string name="fragment_main_game_assured">Your are assured</string>
+    <string name="fragment_main_game_blackjack_result">Black jack</string>
+    <string name="fragment_main_game_insurance_win">Insurance win</string>
+    <string name="fragment_main_game_insurance_lose">Insurance lose</string>
+    <string name="fragment_main_game_shuffle_deck">Red card, dealer shuffle the deck</string>
+    <string name="new_game_dialog_delete_save">Delete a save slot before make new game.</string>
+    <string name="fragment_main_game_hit">Hit</string>
+    <string name="fragment_main_game_stop">Stop</string>
+    <string name="fragment_main_game_double">Double</string>
+    <string name="fragment_main_game_split">Split</string>
+    <string name="fragment_main_game_fab_description">Bet choice</string>
+    <string name="fragment_main_screen_facebook_sign">Sign with facebook</string>
+    <string name="fragment_main_screen_google_sign">Sign with goole</string>
+    <string name="main_screen_fragment_login_successfull">Successfully logged in</string>
+    <string name="facebook_sigin_in_activity_failure">Authentication failed</string>
+    <string name="fragment_main_screen_play_online">Play online</string>
+    <string name="activity_online_main_screen_search_game">Search online game</string>
+    <string name="online_main_screen_adapter_is_playing">Is playing</string>
+    <string name="online_main_screen_adapter_is_online">Online</string>
+    <string name="fragment_detail_online_user_add_friend_description">Add friend</string>
+    <string name="fragment_detail_online_user_play_with">Play with him</string>
+    <string name="online_main_screen_adapter_is_offline">Is offline</string>
+    <string name="online_main_screen_adapter_ask_for_play">Ask for play</string>
+    <string name="detail_online_user_fragment_somebody_want_to_play">Somebody want to play with you.</string>
+    <string name="detail_online_user_fragment_invitation_to_play">Invitation to play</string>
+    <string name="detail_online_user_fragment_play">play</string>
+    <string name="detail_online_user_fragment_cancel">Cancel</string>
+    <string name="dialog_invitation_to_play_positive_btn">Play</string>
+    <string name="dialog_invitation_to_play_negative_btn">Cancel</string>
+    <string name="invitation_to_play_dialog_message">want to play with you. Did you accept?</string>
+    <string name="dialog_invitation_to_play_title">Invitation to play</string>
+    <string name="dialog_waiting_for_answer_title">Waiting for opponent answer</string>
+    <string name="online_main_screen_adapter_waiting_answer">Waiting for opponent answer</string>
+    <string name="online_game_fragment_opponent_leave">leave the game.</string>
+    <string name="online_game_fragment_server_shutdown">Server shutdown</string>
+    <string name="online_game_fragment_blackjack">BJ</string>
+    <string name="online_game_fragment_contract_loan">Contract loan</string>
+    <string name="online_game_fragment_loan_explication">You can contract a new loan to get 1500 in your wallet but you increase your number of loan by +1</string>
+    <string name="fragment_online_main_screen_fab_description">chat_fab</string>
+    <string name="fragment_online_main_screen_chat_input_hint">message</string>
+    <string name="disconnected_dialog_title">Disconnected</string>
+    <string name="disconnected_dialog_message">You are disconnected for no action long activity. Do you want to reconnect?</string>
+    <string name="activity_main_screen_drawer_menu_logout">Logout</string>
+    <string name="activity_main_screen_drawer_menu_setting">Setting</string>
+    <string name="activity_main_screen_drawer_menu_profile">Profile</string>
+    <string name="fragment_setting_menu">SETTING</string>
+    <string name="username">username: </string>
+    <string name="number_of_loan">number of loan: </string>
+    <string name="fragment_profile_title">Edit Profile</string>
+    <string name="fragment_profile_save_btn">save</string>
+    <string name="fragment_profile_hint_name">name</string>
+    <string name="fragment_profile_rotate_image">rotate</string>
+    <string name="fragment_profile_image_over_size">Image size is too high, please select an another.</string>
+    <string name="fragment_detail_online_user_add_friend">Add Friend</string>
+
+    <string name="online_main_screen_activity_players_view">Players View</string>
+    <string name="online_main_screen_activity_chat_view">Chat View</string>
+
+    <string name="online_game_activity_board_view">Board</string>
+    <string name="online_game_activity_chat_view">Chat</string>
+
+    <string name="online_game_activity_quit">Quit</string>
+    <string name="online_game_activity_quit_message">Quit the game and go to main menu?</string>
+    <string name="online_game_activity_yes">YES</string>
+    <string name="online_game_activity_no">NO</string>
+    <string name="online_game_activity_new_message">NEW MESSAGE</string>
+
+    <string name="opponent_quit_game_dialog_title">Opponent leave</string>
+    <string name="opponent_quit_game_dialog_message">Your opponent leave the game, server shutdown</string>
+    <string name="opponent_quit_game_dialog_positive_btn">OK</string>
+
+    <string name="online_game_fragment_welcome">Welcome to the BlackChat ;) have fun</string>
+
+    <string name="waiting_for_answer_dialog_opponent_cancel_request">Opponent cancel the request</string>
+
+    <string name="profile_fragment_title">Profile</string>
+    <string name="profile_fragment_menu">Save</string>
+
+    <string name="profile_activity_toolbar_title">Profile</string>
+
+    <string name="setting_menu_activity_toolbar_title">SETTING</string>
+
+    <string name="activity_main_screen_drawer_menu_home">Home</string>
+
+    <string name="dialog_load_game_slot_1">Load slot 1</string>
+    <string name="dialog_load_game_slot_2">Load slot 2</string>
+    <string name="dialog_load_game_slot_3">Load slot 3</string>
+    <string name="dialog_load_game_delete_1">Delete slot 1</string>
+    <string name="dialog_load_game_delete_2">Delete slot 2</string>
+    <string name="dialog_load_game_delete_3">Delete slot 3</string>
+    <string name="dialog_bet_thousand">Thousand</string>
+    <string name="dialog_bet_ten_of_thousand">Ten of thousand</string>
+    <string name="dialog_bet_hundred">Hundred</string>
+    <string name="dialog_bet_dozens">Dozens</string>
+    <string name="dialog_bet_unity">Unity</string>
+
+
+</resources>

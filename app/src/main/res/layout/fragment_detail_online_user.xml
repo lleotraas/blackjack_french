@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/player_info_dialog_user_picture"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/ic_account_circle"
+        android:transitionName="@string/animation_online_main_screen_to_detail"/>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/player_info_dialog_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_200"
+        app:layout_constraintTop_toBottomOf="@+id/player_info_dialog_user_picture"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/player_info_dialog_user_pseudo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/player_info_dialog_user_picture"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="@dimen/text_normal_size"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="@dimen/margin_normal_size"
+            android:layout_marginTop="@dimen/margin_normal_size"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/player_info_dialog_user_wallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/player_info_dialog_user_pseudo"
+            app:layout_constraintStart_toStartOf="@+id/player_info_dialog_user_pseudo"
+            android:textSize="@dimen/text_normal_size"
+            android:textColor="@color/black"
+            android:layout_marginBottom="@dimen/margin_normal_size"
+            android:layout_marginHorizontal="@dimen/margin_normal_size"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/player_info_dialog_play_with_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/player_info_dialog_linear_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/fragment_detail_online_user_play_with"
+        android:drawableTop="@drawable/ic_casino"
+        android:background="@android:color/transparent"
+        android:drawablePadding="@dimen/padding_normal_size"
+        android:layout_margin="@dimen/margin_normal_size"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/player_info_dialog_add_friend_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/player_info_dialog_linear_layout"
+        app:layout_constraintStart_toEndOf="@+id/player_info_dialog_play_with_btn"
+        android:text="@string/fragment_detail_online_user_add_friend"
+        android:drawableTop="@drawable/ic_person_add"
+        android:background="@android:color/transparent"
+        android:drawablePadding="@dimen/padding_normal_size"
+        android:layout_margin="@dimen/margin_normal_size"/>
+
+    <com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
+        android:id="@+id/player_info_graph"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/player_info_dialog_play_with_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

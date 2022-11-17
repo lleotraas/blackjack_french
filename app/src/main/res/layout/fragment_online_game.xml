@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/carpet_color">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragment_online_game_fab"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        app:layout_constraintTop_toTopOf="@+id/fragment_online_game_card_view"
+        app:layout_constraintBottom_toTopOf="@id/fragment_online_game_card_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/fragment_main_game_fab_description"
+        android:backgroundTint="@color/white"
+        android:elevation="0dp"
+        app:borderWidth="2dp"
+        app:backgroundTint="@color/black"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fragment_online_game_fab_border_img"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        app:layout_constraintTop_toTopOf="@id/fragment_online_game_fab"
+        app:layout_constraintStart_toStartOf="@+id/fragment_online_game_fab"
+        app:layout_constraintEnd_toEndOf="@+id/fragment_online_game_fab"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_fab"
+        android:src="@drawable/round_button"
+        android:elevation="3dp"/>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fragment_online_game_bank_amount_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/fragment_online_game_fab"
+        app:layout_constraintStart_toStartOf="@+id/fragment_online_game_fab"
+        app:layout_constraintEnd_toEndOf="@+id/fragment_online_game_fab"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_fab"
+        android:textColor="@android:color/black"
+        android:elevation="40dp" />
+
+    <ProgressBar
+        android:id="@+id/fragment_online_game_player_two_first_split_progress_bar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_card_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/margin_normal_size"
+        android:visibility="gone"
+        android:progressDrawable="@drawable/custom_progress_bar"
+        android:background="@drawable/custom_progress_bar_background"
+        style="?android:attr/progressBarStyleHorizontal" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fragment_online_game_player_two_first_split_progress_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_two_first_split_progress_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_two_first_split_progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/fragment_online_game_player_two_first_split_progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/fragment_online_game_player_two_first_split_progress_bar"
+        android:textSize="@dimen/text_normal_size"
+        android:visibility="gone"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fragment_online_game_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="136dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="4dp"
+        app:cardUseCompatPadding="false" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/fragment_online_game_hit_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_stop_btn"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:background="@drawable/rounded_border_board_btn"
+                    style="@style/Button"
+                    android:text="@string/fragment_main_game_hit"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/fragment_online_game_stop_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:background="@drawable/rounded_border_board_btn"
+                    style="@style/Button"
+                    android:text="@string/fragment_main_game_stop"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/fragment_online_game_bet_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@+id/fragment_online_game_hit_btn"
+                    app:layout_constraintEnd_toStartOf="@+id/fragment_online_game_split_btn"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@drawable/rounded_border_board_btn"
+                    style="@style/Button"
+                    android:text="@string/fragment_main_game_current_bet"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/fragment_online_game_double_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_split_btn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/rounded_border_board_btn"
+                    style="@style/Button"
+                    android:text="@string/fragment_main_game_double"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/fragment_online_game_split_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/rounded_border_board_btn"
+                    style="@style/Button"
+                    android:text="@string/fragment_main_game_split"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fragment_online_game_dealer_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/margin_normal_size"
+        android:text="@string/fragment_main_game_dealer_score"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/fragment_online_game_game_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/rounded_border_board_btn"
+        android:text="@string/fragment_main_game_start_game" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fragment_online_game_current_user_ready_img"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintTop_toBottomOf="@id/fragment_online_game_game_start"
+        app:layout_constraintStart_toStartOf="@id/fragment_online_game_game_start"
+        app:layout_constraintEnd_toStartOf="@id/fragment_online_game_opponent_ready_img"
+        android:src="@drawable/ic_account_circle"
+        android:elevation="96dp"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fragment_online_game_opponent_ready_img"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintTop_toBottomOf="@id/fragment_online_game_game_start"
+        app:layout_constraintEnd_toEndOf="@id/fragment_online_game_game_start"
+        app:layout_constraintStart_toEndOf="@id/fragment_online_game_current_user_ready_img"
+        android:src="@drawable/ic_account_circle"
+        android:elevation="96dp"/>
+
+
+    <!-- Dealer hand -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_online_game_dealer_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/fragment_online_game_dealer_title_tv"
+        app:layout_constraintStart_toEndOf="@+id/fragment_online_game_dealer_score_tv"
+        android:layout_margin="28dp"
+        android:background="@drawable/rounded_border_hand"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fragment_online_game_dealer_result_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/fragment_online_game_dealer_recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_dealer_recycler_view"
+        android:layout_marginHorizontal="56dp"
+        android:textSize="@dimen/text_large_size"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fragment_online_game_dealer_score_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/fragment_online_game_dealer_recycler_view"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_dealer_recycler_view"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_margin="8dp" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/fragment_online_game_nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_online_game_dealer_recycler_view"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_fab_border_img">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fragment_online_game_constraint_layout_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_screen_player_ui_layout">
+
+            <!-- Main hand -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_online_game_player_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_score_tv"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginHorizontal="28dp"
+                android:background="@drawable/rounded_border_hand"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/fragment_online_game_user_img"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_recycler_view"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_recycler_view"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/ic_account_circle"
+                android:visibility="gone"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_score_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/fragment_online_game_user_img"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_result_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_online_game_player_recycler_view"
+                app:layout_constraintEnd_toEndOf="@id/fragment_online_game_player_recycler_view"
+                app:layout_constraintTop_toTopOf="@id/fragment_online_game_player_recycler_view"
+                android:layout_marginEnd="@dimen/margin_xlarge"
+                android:textSize="@dimen/text_large_size"
+                android:elevation="24dp"/>
+
+            <ProgressBar
+                android:id="@+id/fragment_online_game_player_one_main_hand_progress_bar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintBaseline_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="@dimen/margin_xlarge"
+                android:visibility="gone"
+                android:progressDrawable="@drawable/custom_progress_bar"
+                android:background="@drawable/custom_progress_bar_background"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:indeterminate="false"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_one_main_hand_progress_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_one_main_hand_progress_bar"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_one_main_hand_progress_bar"
+                app:layout_constraintStart_toStartOf="@+id/fragment_online_game_player_one_main_hand_progress_bar"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_online_game_player_one_main_hand_progress_bar"
+                android:textSize="@dimen/text_normal_size"
+                android:visibility="gone"/>
+
+            <!-- First split -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_online_game_player_first_split_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_player_recycler_view"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_first_split_score_tv"
+                android:layout_marginHorizontal="28dp"
+                android:background="@drawable/rounded_border_hand"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/fragment_online_game_user_first_split_img"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_first_split_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_first_split_recycler_view"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_first_split_recycler_view"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/ic_account_circle"
+                android:visibility="gone"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_first_split_score_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/fragment_online_game_user_first_split_img"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_first_split_result_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/fragment_online_game_player_first_split_recycler_view"
+                app:layout_constraintEnd_toEndOf="@id/fragment_online_game_player_first_split_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_online_game_player_first_split_recycler_view"
+                android:layout_marginEnd="@dimen/margin_xlarge"
+                android:textSize="@dimen/text_large_size"/>
+
+            <ProgressBar
+                android:id="@+id/fragment_online_game_player_one_first_split_progress_bar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_first_split_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_first_split_recycler_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="@dimen/margin_xlarge"
+                android:visibility="gone"
+                android:progressDrawable="@drawable/custom_progress_bar"
+                android:background="@drawable/custom_progress_bar_background"
+                style="?android:attr/progressBarStyleHorizontal" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_one_first_split_progress_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_one_first_split_progress_bar"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_one_first_split_progress_bar"
+                app:layout_constraintStart_toStartOf="@+id/fragment_online_game_player_one_first_split_progress_bar"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_online_game_player_one_first_split_progress_bar"
+                android:textSize="@dimen/text_normal_size"
+                android:visibility="gone"/>
+
+            <!-- Second split -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_online_game_player_second_split_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_player_first_split_recycler_view"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_second_split_score_tv"
+                android:layout_marginHorizontal="28dp"
+                android:background="@drawable/rounded_border_hand"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/fragment_online_game_user_second_split_img"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_second_split_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_second_split_recycler_view"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_second_split_recycler_view"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/ic_account_circle"
+                android:visibility="gone"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_second_split_score_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/fragment_online_game_user_second_split_img"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginStart="8dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_second_split_result_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/fragment_online_game_player_second_split_recycler_view"
+                app:layout_constraintEnd_toEndOf="@id/fragment_online_game_player_second_split_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_online_game_player_second_split_recycler_view"
+                android:layout_marginEnd="@dimen/margin_xlarge"
+                android:textSize="@dimen/text_large_size" />
+
+            <ProgressBar
+                android:id="@+id/fragment_online_game_player_one_second_split_progress_bar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_second_split_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_second_split_recycler_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="@dimen/margin_xlarge"
+                android:visibility="gone"
+                android:progressDrawable="@drawable/custom_progress_bar"
+                android:background="@drawable/custom_progress_bar_background"
+                style="?android:attr/progressBarStyleHorizontal" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_one_second_split_progress_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_one_second_split_progress_bar"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_one_second_split_progress_bar"
+                app:layout_constraintStart_toStartOf="@+id/fragment_online_game_player_one_second_split_progress_bar"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_online_game_player_one_second_split_progress_bar"
+                android:textSize="@dimen/text_normal_size"
+                android:visibility="gone"/>
+
+            <!-- Player two Main hand -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_online_game_player_two_main_hand_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_player_second_split_recycler_view"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_two_main_hand_score_tv"
+                android:layout_marginBottom="@dimen/margin_rv"
+                android:layout_marginHorizontal="@dimen/margin_rv"
+                android:background="@drawable/rounded_border_hand"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_two_main_hand_score_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_online_game_opponent_img"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/fragment_online_game_opponent_img"
+                android:layout_width="@dimen/fragment_online_game_opponent_img_width"
+                android:layout_height="@dimen/fragment_online_game_opponent_img_height"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_two_main_hand_recycler_view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_two_main_hand_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_two_main_hand_recycler_view"
+                android:src="@drawable/ic_account_circle"
+                android:visibility="gone"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_two_main_hand_result_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/fragment_online_game_player_two_main_hand_recycler_view"
+                app:layout_constraintEnd_toEndOf="@id/fragment_online_game_player_two_main_hand_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_online_game_player_two_main_hand_recycler_view"
+                android:layout_marginEnd="@dimen/margin_xlarge"
+                android:textSize="@dimen/text_large_size" />
+
+            <ProgressBar
+                android:id="@+id/fragment_online_game_player_two_main_hand_progress_bar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="@dimen/margin_xlarge"
+                android:visibility="gone"
+                android:progressDrawable="@drawable/custom_progress_bar"
+                android:background="@drawable/custom_progress_bar_background"
+                style="?android:attr/progressBarStyleHorizontal" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_two_main_hand_progress_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_two_main_hand_progress_bar"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_two_main_hand_progress_bar"
+                app:layout_constraintStart_toStartOf="@+id/fragment_online_game_player_two_main_hand_progress_bar"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_online_game_player_two_main_hand_progress_bar"
+                android:textSize="@dimen/text_normal_size"
+                android:visibility="gone"/>
+
+            <!-- Player two first split -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_online_game_player_two_first_split_hand_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_player_two_main_hand_recycler_view"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_two_main_hand_recycler_view"
+                android:layout_marginHorizontal="@dimen/margin_rv"
+                android:background="@drawable/rounded_border_hand"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_two_first_split_score_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_online_game_opponent_first_split_img"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/fragment_online_game_opponent_first_split_img"
+                android:layout_width="@dimen/fragment_online_game_opponent_img_width"
+                android:layout_height="@dimen/fragment_online_game_opponent_img_height"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_two_first_split_hand_recycler_view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_two_first_split_hand_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_two_first_split_hand_recycler_view"
+                android:src="@drawable/ic_account_circle"
+                android:visibility="gone"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_two_first_split_result_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_large_size"
+                android:layout_marginEnd="56dp"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_online_game_player_two_first_split_hand_recycler_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/fragment_online_game_player_two_first_split_hand_recycler_view" />
+
+            <!-- Player two second split -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_online_game_player_two_second_split_hand_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_player_two_first_split_hand_recycler_view"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_two_first_split_hand_recycler_view"
+                android:layout_marginHorizontal="@dimen/margin_rv"
+                android:background="@drawable/rounded_border_hand"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_two_second_split_score_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_online_game_opponent_second_split_img"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/fragment_online_game_opponent_second_split_img"
+                android:layout_width="@dimen/fragment_online_game_opponent_img_width"
+                android:layout_height="@dimen/fragment_online_game_opponent_img_height"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_two_second_split_hand_recycler_view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_two_second_split_hand_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_two_second_split_hand_recycler_view"
+                android:src="@drawable/ic_account_circle"
+                android:visibility="gone"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_two_second_split_result_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_large_size"
+                android:layout_marginEnd="56dp"
+                app:layout_constraintBottom_toBottomOf="@id/fragment_online_game_player_two_second_split_hand_recycler_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/fragment_online_game_player_two_second_split_hand_recycler_view" />
+
+            <ProgressBar
+                android:id="@+id/fragment_online_game_player_two_second_split_progress_bar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_two_second_split_hand_recycler_view"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_two_second_split_hand_recycler_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="@dimen/margin_xlarge"
+                android:visibility="gone"
+                android:progressDrawable="@drawable/custom_progress_bar"
+                android:background="@drawable/custom_progress_bar_background"
+                style="?android:attr/progressBarStyleHorizontal" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fragment_online_game_player_two_second_split_progress_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/fragment_online_game_player_two_second_split_progress_bar"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_player_two_second_split_progress_bar"
+                app:layout_constraintStart_toStartOf="@+id/fragment_online_game_player_two_second_split_progress_bar"
+                app:layout_constraintEnd_toEndOf="@+id/fragment_online_game_player_two_second_split_progress_bar"
+                android:textSize="@dimen/text_normal_size"
+                android:visibility="gone"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

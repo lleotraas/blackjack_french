@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/new_game_dialog_enter_name_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="250dp"
+        android:layout_marginHorizontal="@dimen/padding_xlarge_size"
+        android:layout_marginTop="@dimen/padding_xlarge_size"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/new_game_dialog_positive_btn"
+        android:textColorHint="@color/black" >
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/new_game_dialog_enter_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:padding="@dimen/padding_large_size"
+            android:hint="@string/new_game_dialog_enter_name" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/new_game_dialog_positive_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/new_game_dialog_enter_name_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/new_game_dialog_negative_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/bet_dialog_ok"
+        style="@style/main_screen_button"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/new_game_dialog_negative_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/new_game_dialog_enter_name_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/new_game_dialog_positive_btn"
+        android:text="@string/bet_dialog_cancel"
+        style="@style/main_screen_button"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

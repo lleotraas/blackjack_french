@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/rounded_border">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dialog_invitation_to_play_title_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_invitation_to_play_positive_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/margin_large_size"
+        android:text="@string/dialog_invitation_to_play_title"
+        android:textSize="@dimen/text_large_size"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dialog_invitation_to_play_message_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_invitation_to_play_title_tv"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_invitation_to_play_positive_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="@dimen/margin_xlarge"
+        android:layout_marginHorizontal="@dimen/margin_normal_size"
+        android:textSize="@dimen/text_normal_size"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/dialog_invitation_to_play_positive_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_invitation_to_play_message_tv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/dialog_invitation_to_play_negative_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/dialog_invitation_to_play_positive_btn"
+        style="@style/main_screen_button"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/dialog_invitation_to_play_negative_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_invitation_to_play_message_tv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_invitation_to_play_positive_btn"
+        android:text="@string/dialog_invitation_to_play_negative_btn"
+        style="@style/main_screen_button"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

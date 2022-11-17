@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/fragment_main_screen_google_sign_in_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fragment_main_screen_facebook_sign_btn"
+        android:text="@string/fragment_main_screen_google_sign"
+        android:textColor="@color/white"
+        android:paddingHorizontal="@dimen/padding_xlarge_size"
+        android:drawableStart="@drawable/ic_google_logo"
+        android:background="@drawable/google_btn"
+        style="@style/main_screen_button" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/fragment_main_screen_facebook_sign_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_main_screen_google_sign_in_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:drawableStart="@drawable/ic_facebook_logo"
+        android:background="@drawable/facebook_btn"
+        android:text="@string/fragment_main_screen_facebook_sign"
+        android:textColor="@color/white"
+        android:paddingHorizontal="@dimen/padding_large_size"
+        style="@style/main_screen_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
