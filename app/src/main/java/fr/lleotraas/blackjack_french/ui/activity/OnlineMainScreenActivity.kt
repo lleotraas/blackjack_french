@@ -1,9 +1,11 @@
 package fr.lleotraas.blackjack_french.ui.activity
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -23,6 +25,7 @@ import fr.lleotraas.blackjack_french.utils.Utils.Companion.PICTURE_ROTATION
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.PSEUDO
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.USER_ID
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.USER_PICTURE
+import java.io.Serializable
 
 @AndroidEntryPoint
 class OnlineMainScreenActivity : AppCompatActivity() {
@@ -134,19 +137,24 @@ class OnlineMainScreenActivity : AppCompatActivity() {
     private fun updateUi() {
         if (mViewModel.isCurrentUserLogged()) {
             mViewModel.updateImageList()
-            mViewModel.getRealOnlineUser(mViewModel.getCurrentUser()?.uid.toString()).observe(this) { user ->
-                currentUserId = user?.onlineUser?.get(USER_ID)?.toString() ?: ""
-                username.text = user?.onlineUser?.get(PSEUDO)?.toString()
-//                mViewModel.getAllImage().observe(this) { allImage ->
-//                    Glide.with(this)
-//                        .load(allImage[currentUserId] ?: user?.onlineUser?.get(USER_PICTURE))
-//                        .circleCrop()
-//                        .into(userImg)
-//                    userImg.rotation = user?.onlineUser?.get(PICTURE_ROTATION).toString().toFloat()
-//                    Log.e(javaClass.simpleName, "updateUi: user image loaded")
-//                }
+            mViewModel.getOnlineUser(mViewModel.getCurrentUser()?.uid.toString()).observe(this) { user ->
+                currentUserId = user?.id.toString()
+                username.text = user?.pseudo.toString()
+                glideImage(applicationContext, user?.userPicture, userImg)
+                userImg.rotation = user?.pictureRotation ?: 0f
+                mViewModel.getAllImage().observe(this) { allImage ->
+                    glideImage(this, allImage?.get(currentUserId) ?: user?.userPicture, userImg)
+                    Log.e(javaClass.simpleName, "updateUi: user image loaded")
+                }
             }
         }
+    }
+
+    private fun glideImage(context: Context, load: Serializable?, into: ImageView) {
+        Glide.with(context)
+            .load(load)
+            .circleCrop()
+            .into(into)
     }
 
     private fun newMessageInChatUpdate() {

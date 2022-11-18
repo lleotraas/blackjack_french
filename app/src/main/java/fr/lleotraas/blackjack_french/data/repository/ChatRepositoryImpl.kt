@@ -6,6 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import fr.lleotraas.blackjack_french.domain.repository.ChatRepository
 import fr.lleotraas.blackjack_french.domain.repository.FirebaseHelper
 import fr.lleotraas.blackjack_french.model.Message
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.CUSTOM_USER_PICTURE
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.DATE
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.MESSAGE
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.PICTURE_ROTATION
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.PSEUDO
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.USER_ID
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.USER_PICTURE
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.convertDocumentToMessage
 import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor (
@@ -15,7 +23,16 @@ class ChatRepositoryImpl @Inject constructor (
     private var listOfChat = MutableLiveData<List<Message>>()
 
     override fun sendMessage(message: Message) {
-        firebaseHelper.getChatCollectionReference().document(message.date!!).set(message)
+        val messageToSet = hashMapOf(
+            USER_ID to message.id,
+            PSEUDO to message.userName,
+            DATE to message.date,
+            MESSAGE to message.message,
+            USER_PICTURE to message.userPicture,
+            CUSTOM_USER_PICTURE to message.customUserPicture,
+            PICTURE_ROTATION to if (message.pictureRotation != null) message.pictureRotation else 0f
+        )
+        firebaseHelper.getChatCollectionReference().document(message.date!!).set(messageToSet)
     }
 
     override fun getAllMessage(): LiveData<List<Message>> {
@@ -23,7 +40,7 @@ class ChatRepositoryImpl @Inject constructor (
             if (task.isSuccessful) {
                 val onlineChat = ArrayList<Message>()
                 for (document in task.result) {
-                    onlineChat.add(document.toObject(Message::class.java))
+                    onlineChat.add(convertDocumentToMessage(document))
                 }
                 listOfChat.postValue(onlineChat)
             }
@@ -39,7 +56,7 @@ class ChatRepositoryImpl @Inject constructor (
             }
             val onlineChat = ArrayList<Message>()
             for (document in value!!) {
-                onlineChat.add(document.toObject(Message::class.java))
+                onlineChat.add(convertDocumentToMessage(document))
             }
             listOfChat.postValue(onlineChat)
         }

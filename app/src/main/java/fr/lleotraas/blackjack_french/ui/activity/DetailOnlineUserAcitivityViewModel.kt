@@ -10,7 +10,6 @@ import fr.lleotraas.blackjack_french.domain.repository.FirebaseHelper
 import fr.lleotraas.blackjack_french.domain.repository.OnlineGameChatRepository
 import fr.lleotraas.blackjack_french.domain.repository.UserRepository
 import fr.lleotraas.blackjack_french.model.Message
-import fr.lleotraas.blackjack_french.model.OnlineUser
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,11 +35,11 @@ class DetailOnlineUserActivityViewModel @Inject constructor(
         userRepository.createOnlineUser()
     }
 
-    fun getOnlineUser(userId: String): LiveData<OnlineUser?> {
+    fun getOnlineUser(userId: String): LiveData<User?> {
         return userRepository.getCurrentOnlineUser(userId)
     }
 
-    fun getSearchedUser(userId: String): LiveData<OnlineUser?> {
+    fun getSearchedUser(userId: String): LiveData<User?> {
         return userRepository.getSearchedUser(userId)
     }
 

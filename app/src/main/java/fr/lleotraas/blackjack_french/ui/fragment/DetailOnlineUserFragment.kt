@@ -13,20 +13,12 @@ import com.github.aachartmodel.aainfographics.aachartcreator.*
 import dagger.hilt.android.AndroidEntryPoint
 import fr.lleotraas.blackjack_french.databinding.FragmentDetailOnlineUserBinding
 import fr.lleotraas.blackjack_french.model.OnlineStatusType
-import fr.lleotraas.blackjack_french.model.OnlineUser
 import fr.lleotraas.blackjack_french.model.User
 import fr.lleotraas.blackjack_french.ui.activity.DetailOnlineUserActivityViewModel
 import fr.lleotraas.blackjack_french.ui.dialog.InvitationToPlayDialog
 import fr.lleotraas.blackjack_french.ui.dialog.WaitingForAnswerDialog
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.CURRENT_USER_ID
-import fr.lleotraas.blackjack_french.utils.Utils.Companion.IS_DEFAULT_IMAGE_PROFILE
-import fr.lleotraas.blackjack_french.utils.Utils.Companion.ONLINE_STATUS
-import fr.lleotraas.blackjack_french.utils.Utils.Companion.PICTURE_ROTATION
-import fr.lleotraas.blackjack_french.utils.Utils.Companion.PSEUDO
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.SEARCHED_USER_ID
-import fr.lleotraas.blackjack_french.utils.Utils.Companion.USER_ID
-import fr.lleotraas.blackjack_french.utils.Utils.Companion.USER_PICTURE
-import fr.lleotraas.blackjack_french.utils.Utils.Companion.WALLET
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.formatDate
 
 @AndroidEntryPoint
@@ -35,9 +27,9 @@ class DetailOnlineUserFragment : Fragment() {
     private lateinit var mBinding: FragmentDetailOnlineUserBinding
 
     private val mViewModel: DetailOnlineUserActivityViewModel by viewModels()
-    private var currentUser: OnlineUser? = null
-    private lateinit var searchedUSer: OnlineUser
-    private lateinit var getCurrentUser: LiveData<OnlineUser?>
+    private var currentUser: User? = null
+    private lateinit var searchedUSer: User
+    private lateinit var getCurrentUser: LiveData<User?>
     private var isUserClickOnDetailActivity = false
     private var isUserAskForPlay = false
 
@@ -60,7 +52,7 @@ class DetailOnlineUserFragment : Fragment() {
         getCurrentUser.observe(viewLifecycleOwner) { currentUserOnline ->
             currentUser = currentUserOnline
 
-            if (currentUserOnline?.onlineUser?.get(ONLINE_STATUS) == OnlineStatusType.ASK_FOR_PLAY && !isUserAskForPlay) {
+            if (currentUserOnline?.onlineStatus == OnlineStatusType.ASK_FOR_PLAY && !isUserAskForPlay) {
                 isUserAskForPlay = true
                 isUserClickOnDetailActivity = true
                 val alertDialog = InvitationToPlayDialog()
@@ -71,7 +63,7 @@ class DetailOnlineUserFragment : Fragment() {
                 alertDialog.show(requireActivity().supportFragmentManager, alertDialog.tag)
             }
 
-            if (currentUserOnline?.onlineUser?.get(ONLINE_STATUS) == OnlineStatusType.ONLINE) {
+            if (currentUserOnline?.onlineStatus == OnlineStatusType.ONLINE) {
                 isUserAskForPlay = false
             }
 
@@ -81,11 +73,11 @@ class DetailOnlineUserFragment : Fragment() {
             if ( userSearched != null) {
                 mBinding.apply {
                     searchedUSer = userSearched
-                    playerInfoDialogUserPseudo.text = userSearched.onlineUser[PSEUDO].toString()
-                    playerInfoDialogUserWallet.text = userSearched.onlineUser[WALLET].toString()
-                    if (userSearched.onlineUser[IS_DEFAULT_IMAGE_PROFILE] == true) {
+                    playerInfoDialogUserPseudo.text = userSearched.pseudo
+                    playerInfoDialogUserWallet.text = userSearched.wallet.toString()
+                    if (userSearched.isDefaultProfileImage == true) {
                         Glide.with(mBinding.root)
-                            .load(userSearched.onlineUser[USER_PICTURE])
+                            .load(userSearched.userPicture)
                             .circleCrop()
                             .into(playerInfoDialogUserPicture)
                     } else {
@@ -95,7 +87,7 @@ class DetailOnlineUserFragment : Fragment() {
                                 .circleCrop()
                                 .into(playerInfoDialogUserPicture)
 
-                            playerInfoDialogUserPicture.rotation = (userSearched.onlineUser[PICTURE_ROTATION] ?: 0f) as Float
+                            playerInfoDialogUserPicture.rotation = (userSearched.pictureRotation ?: 0f) as Float
                         }
                     }
 
@@ -173,9 +165,7 @@ class DetailOnlineUserFragment : Fragment() {
         super.onStop()
         Log.e(javaClass.simpleName, "onStop: activity stopped" )
         if (!isUserClickOnDetailActivity) {
-            currentUser?.onlineUser?.get(USER_ID)?.let {
-                mViewModel.updateOnlineUserStatus(it.toString(), OnlineStatusType.OFFLINE)
-            }
+            mViewModel.updateOnlineUserStatus(currentUser?.id.toString(), OnlineStatusType.OFFLINE)
         }
     }
 

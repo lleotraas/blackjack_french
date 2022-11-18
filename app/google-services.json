@@ -7,59 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:752234267388:android:12d09fa263620c665e0d79",
-        "android_client_info": {
-          "package_name": "fr.lleotraas.blackjack"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "752234267388-1qeikqhe5rvkq9k1nom3rabqtum0fl5o.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "fr.lleotraas.blackjack",
-            "certificate_hash": "69f2994adc4a172b3a77febffc229c3f25bd6195"
-          }
-        },
-        {
-          "client_id": "752234267388-nqvikbo1ce2r2si32h07of4kv5ns7v1c.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "fr.lleotraas.blackjack",
-            "certificate_hash": "c1c13b25061365e646b17fb4abc6b658170b5a5b"
-          }
-        },
-        {
-          "client_id": "752234267388-t7cg1ooj4d38hv7m5196oetncob2g3us.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "fr.lleotraas.blackjack",
-            "certificate_hash": "27f4d13ad336d42e8bc71c89eb45d72ab33e034f"
-          }
-        },
-        {
-          "client_id": "752234267388-fgaat8sqor7bb0l3c7g67s0e2ih88j5e.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBF6X9fzwn-1VQ8PGbgNOFsbxVH9CXSbX4"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "752234267388-fgaat8sqor7bb0l3c7g67s0e2ih88j5e.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:752234267388:android:d8ad0196b3e825635e0d79",
         "android_client_info": {
           "package_name": "fr.lleotraas.blackjack_french"

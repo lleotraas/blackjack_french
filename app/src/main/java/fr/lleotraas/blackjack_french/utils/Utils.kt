@@ -27,6 +27,9 @@ class Utils {
         const val SECOND_SPLIT_BET = "second_split_bet"
         const val INSURANCE_BET = "insurance_bet"
         const val TOTAL_BET = "total_bet"
+        const val HAND = "hand"
+        const val FIRST_SPLIT_HAND = "firstSplitHand"
+        const val SECOND_SPLIT_HAND = "secondSplitHand"
         const val MAIN_HAND = 0
         const val FIRST_SPLIT = 1
         const val SECOND_SPLIT = 2
@@ -49,6 +52,10 @@ class Utils {
         const val IS_SPLITTING = "isSplitting"
         const val DECK_LIST = "deckList"
         const val INDEX = "index"
+        const val DATE = "date"
+        const val MESSAGE = "message"
+        const val CUSTOM_USER_PICTURE = "custom_user_picture"
+        const val WALLET_STATE = "walletStateWhenGameEnding"
 
         fun createDeck(): Deck {
             var color: ColorType
@@ -420,21 +427,21 @@ class Utils {
 
         fun getInvertedTabIndex(tabSize: Int, index: Int) = abs((tabSize - 1) - index)
 
-        private fun createCustomUser(user: OnlineUser, listOfImage: HashMap<String, ByteArray>) = CustomUser(
-            user.onlineUser[USER_ID]!!.toString(),
-            user.onlineUser[WALLET]!!.toString().toDouble(),
-            user.onlineUser[PSEUDO]!!.toString(),
-            if (user.onlineUser[IS_DEFAULT_IMAGE_PROFILE].toString().toBoolean()) user.onlineUser[USER_PICTURE] else listOfImage[user.onlineUser[USER_ID].toString()],
-            OnlineStatusType.valueOf(user.onlineUser[ONLINE_STATUS]!!.toString()),
-            user.onlineUser[PICTURE_ROTATION]!!.toString().toFloat()
+        private fun createCustomUser(user: User, listOfImage: HashMap<String, ByteArray>?) = CustomUser(
+            user.id.toString(),
+            user.wallet.toString().toDouble(),
+            user.pseudo.toString(),
+            if (user.isDefaultProfileImage == true) user.userPicture else listOfImage?.get(user.id.toString()),
+            user.onlineStatus!!,
+            user.pictureRotation!!
         )
 
-        fun createListOfCustomUser(listOfOnlineUser: ArrayList<OnlineUser>?, allImage: HashMap<String, ByteArray>, userId: String): ArrayList<CustomUser> {
+        fun createListOfCustomUser(listOfOnlineUser: ArrayList<User>?, allImage: HashMap<String, ByteArray>?, userId: String): ArrayList<CustomUser> {
             val listOFCustomUser = ArrayList<CustomUser>()
             if (listOfOnlineUser != null) {
                 for (user in listOfOnlineUser) {
-                    if (user.onlineUser[USER_ID].toString() != userId) {
-                        Log.e("OnlineMainScreen", "updateUserList: username: ${user.onlineUser[PSEUDO]}")
+                    if (user.id.toString() != userId) {
+                        Log.e("OnlineMainScreen", "updateUserList: username: ${user.pseudo}")
                         listOFCustomUser.add(createCustomUser(user, allImage))
                     }
                 }
@@ -460,42 +467,55 @@ class Utils {
         }
 
         fun loadCustomPhotoInChat(listOfChat: ArrayList<Message>, listOfImage: HashMap<String, ByteArray>): ArrayList<Message> {
-            for (chat in listOfChat) {
-                listOfImage.forEach {
+            listOfChat.forEach { chat ->
+                listOfImage.forEach { image ->
                     if (chat.userPicture?.contains("http") == false &&
-                                chat.id == it.key
+                                chat.id == image.key
                             ) {
-                        chat.customUserPicture = it.value
+                        chat.customUserPicture = image.value
                     }
                 }
             }
             return listOfChat
         }
 
-        fun convertDocumentToUser(documentSnapshot: DocumentSnapshot): OnlineUser? {
-            val hashMap = HashMap<String, Any?>()
-            documentSnapshot.data?.entries?.forEach { entry ->
-                hashMap[entry.key] = entry.value
-            }
-            return OnlineUser(hashMap)
-//            return User(
-//                documentSnapshot.data?.get(USER_ID).toString(),
-//                documentSnapshot.data?.get(NUMBER_OF_LOAN).toString().toInt(),
-//                documentSnapshot.data?.get(WALLET).toString().toDouble(),
-//                documentSnapshot.data?.get(BET) as HashMap<String, Double>,
-//                documentSnapshot.data?.get(PSEUDO).toString(),
-//                documentSnapshot.data?.get(USER_PICTURE).toString(),
-//                documentSnapshot.data?.get(PICTURE_ROTATION).toString().toFloat(),
-//                OnlineStatusType.valueOf(documentSnapshot.data?.get(ONLINE_STATUS).toString()),
-//                documentSnapshot.data?.get(OPPONENT).toString(),
-//                if (documentSnapshot.data?.get(PLAYER_TURN) != null) PlayerNumberType.valueOf(documentSnapshot.data?.get(PLAYER_TURN).toString()) else null,
-//                if (documentSnapshot.data?.get(SPLIT_TYPE) != null) HandType.valueOf(documentSnapshot.data?.get(SPLIT_TYPE).toString()) else null,
-//                documentSnapshot.data?.get(NUMBER_OF_GAME_PLAYED).toString().toInt(),
-//                documentSnapshot.data?.get(IS_DEFAULT_IMAGE_PROFILE).toString().toBoolean(),
-//                documentSnapshot.data?.get(IS_GAME_HOST).toString().toBoolean(),
-//                documentSnapshot.data?.get(IS_USER_READY).toString().toBoolean(),
-//                documentSnapshot.data?.get(IS_SPLITTING).toString().toBoolean(),
-//            )
+        fun convertDocumentToUser(documentSnapshot: DocumentSnapshot?): User? {
+            return if(documentSnapshot?.data?.isNotEmpty() == true) User(
+                documentSnapshot.data?.get(USER_ID).toString(),
+                documentSnapshot.data?.get(NUMBER_OF_LOAN).toString().toInt(),
+                documentSnapshot.data?.get(WALLET).toString().toDouble(),
+                documentSnapshot.data?.get(BET) as HashMap<String, Double>,
+                documentSnapshot.data?.get(PSEUDO).toString(),
+                documentSnapshot.data?.get(USER_PICTURE).toString(),
+                documentSnapshot.data?.get(PICTURE_ROTATION).toString().toFloat(),
+                documentSnapshot.data?.get(ONLINE_STATUS).toString().toOnlineStatusType(),
+                documentSnapshot.data?.get(OPPONENT).toString(),
+                if (documentSnapshot.data?.get(PLAYER_TURN) != null) documentSnapshot.data?.get(PLAYER_TURN).toString().toPlayerNumberType() else null,
+                if (documentSnapshot.data?.get(SPLIT_TYPE) != null) documentSnapshot.data?.get(SPLIT_TYPE).toString().toSplitType() else null,
+                documentSnapshot.data?.get(NUMBER_OF_GAME_PLAYED).toString().toInt(),
+                documentSnapshot.data?.get(IS_DEFAULT_IMAGE_PROFILE).toString().toBoolean(),
+                documentSnapshot.data?.get(IS_GAME_HOST).toString().toBoolean(),
+                documentSnapshot.data?.get(IS_USER_READY).toString().toBoolean(),
+                documentSnapshot.data?.get(IS_SPLITTING).toString().toBoolean(),
+            ) else null
         }
+
+        fun convertDocumentToMessage(documentSnapshot: DocumentSnapshot) =
+                Message(
+                    documentSnapshot.data?.get(USER_ID).toString(),
+                    documentSnapshot.data?.get(PSEUDO).toString(),
+                    documentSnapshot.data?.get(DATE).toString(),
+                    documentSnapshot.data?.get(MESSAGE).toString(),
+                    documentSnapshot.data?.get(USER_PICTURE).toString(),
+                    if (documentSnapshot.data?.get(CUSTOM_USER_PICTURE) != null) documentSnapshot.data?.get(CUSTOM_USER_PICTURE).toString().toByteArray() else null,
+                    if (documentSnapshot.data?.get(PICTURE_ROTATION) != null) documentSnapshot.data?.get(PICTURE_ROTATION).toString().toFloat() else 0f
+                )
+
+        private fun String.toOnlineStatusType() = OnlineStatusType.valueOf(this)
+
+        private fun String.toPlayerNumberType() = PlayerNumberType.valueOf(this)
+
+        private fun String.toSplitType() = HandType.valueOf(this)
+
     }
 }

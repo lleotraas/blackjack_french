@@ -38,28 +38,28 @@ class WaitingForAnswerDialog : DialogFragment() {
     private fun waitingOpponentAnswer(currentUserid: String, searchedUserId: String) {
         val intent = Intent(requireActivity(), OnlineGameActivity::class.java)
         mViewModel.getOnlineUser(currentUserid).observe(viewLifecycleOwner) { currentUserOnline ->
-//            if (currentUserOnline?.onlineStatus == OnlineStatusType.PLAYING) {
-//                intent.putExtra(CURRENT_USER_ID, currentUserid)
-//                intent.putExtra(SEARCHED_USER_ID, searchedUserId)
-//                startActivity(intent)
-//                dismiss()
-//            }
-//
-//            if (currentUserOnline?.onlineStatus == OnlineStatusType.ONLINE) {
-//                mBinding.apply {
-//                    dialogWaitingForAnswerTitle.text = requireContext().resources.getString(R.string.waiting_for_answer_dialog_opponent_cancel_request)
-//                    dialogWaitingForAnswerNegativeBtn.text = requireContext().resources.getString(R.string.bet_dialog_ok)
-//                    dialogWaitingForAnswerProgressBar.visibility = View.GONE
-//                }
-//            }
-//
-//            if (currentUserOnline?.onlineStatus == OnlineStatusType.WAITING_ANSWER) {
-//                mBinding.apply {
-//                    dialogWaitingForAnswerTitle.text = requireContext().resources.getString(R.string.dialog_waiting_for_answer_title)
-//                    dialogWaitingForAnswerNegativeBtn.text = requireContext().resources.getString(R.string.bet_dialog_cancel)
-//                    dialogWaitingForAnswerProgressBar.visibility = View.VISIBLE
-//                }
-//            }
+            if (currentUserOnline?.onlineStatus == OnlineStatusType.PLAYING) {
+                intent.putExtra(CURRENT_USER_ID, currentUserid)
+                intent.putExtra(SEARCHED_USER_ID, searchedUserId)
+                startActivity(intent)
+                dismiss()
+            }
+
+            if (currentUserOnline?.onlineStatus == OnlineStatusType.ONLINE) {
+                mBinding.apply {
+                    dialogWaitingForAnswerTitle.text = requireContext().resources.getString(R.string.waiting_for_answer_dialog_opponent_cancel_request)
+                    dialogWaitingForAnswerNegativeBtn.text = requireContext().resources.getString(R.string.bet_dialog_ok)
+                    dialogWaitingForAnswerProgressBar.visibility = View.GONE
+                }
+            }
+
+            if (currentUserOnline?.onlineStatus == OnlineStatusType.WAITING_ANSWER) {
+                mBinding.apply {
+                    dialogWaitingForAnswerTitle.text = requireContext().resources.getString(R.string.dialog_waiting_for_answer_title)
+                    dialogWaitingForAnswerNegativeBtn.text = requireContext().resources.getString(R.string.bet_dialog_cancel)
+                    dialogWaitingForAnswerProgressBar.visibility = View.VISIBLE
+                }
+            }
         }
     }
 

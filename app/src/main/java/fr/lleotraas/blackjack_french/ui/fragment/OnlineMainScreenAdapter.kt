@@ -44,6 +44,7 @@ class OnlineMainScreenAdapter(
             onlineMainScreenRowUserWallet.text = user.wallet.toString()
             loadProfileImage(user, holder)
             loadOnlineStatus(user, holder)
+            Log.e("ViewHolder", "onBindViewHolder: user loaded pseudo: ${user.pseudo}")
         }
     }
 

@@ -13,16 +13,15 @@ android {
         applicationId "fr.lleotraas.blackjack_french"
         minSdk 21
         targetSdk 32
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.1.1"
 
         testInstrumentationRunner "fr.lleotraas.blackjack_french.HiltTestRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

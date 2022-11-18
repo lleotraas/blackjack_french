@@ -1,5 +1,6 @@
 package fr.lleotraas.blackjack_french.ui.activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import fr.lleotraas.blackjack_french.R
 import fr.lleotraas.blackjack_french.databinding.ActivityMainScreenBinding
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.CURRENT_USER_ID
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.observeOnce
+import java.io.Serializable
 
 @AndroidEntryPoint
 open class MainScreenActivity : AppCompatActivity() {
@@ -26,12 +28,10 @@ open class MainScreenActivity : AppCompatActivity() {
     private lateinit var userImg: ImageView
     private val mViewModel: MainScreenActivityViewModel by viewModels()
     private var currentUserId: String? = null
-    private lateinit var getAllImage: LiveData<HashMap<String, ByteArray>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainScreenBinding.inflate(layoutInflater)
-        getAllImage = mViewModel.getAllImage()
         setContentView(mBinding.root)
         configureToolbar()
         configureNavigationDrawer()
@@ -90,23 +90,31 @@ open class MainScreenActivity : AppCompatActivity() {
             mViewModel.getOnlineUser(mViewModel.getCurrentUser()?.uid.toString()).observeOnce(this) { user ->
                 currentUserId = user?.id.toString()
                 username.text = user?.pseudo
-                getAllImage.observe(this) { allImage ->
-                    Glide.with(this)
-                        .load(allImage[user?.id] ?: user?.userPicture)
-                        .circleCrop()
-                        .into(userImg)
-                    userImg.rotation = user?.pictureRotation ?: 0f
-                    Log.e(javaClass.simpleName, "updateUi: user image loaded")
+                glideImage(applicationContext, user?.userPicture, userImg)
+                userImg.rotation = user?.pictureRotation ?: 0f
+
+                mViewModel.getAllImage().observe(this) { allImage ->
+                glideImage(this, allImage?.get(currentUserId) ?: user?.userPicture, userImg)
+                userImg.rotation = user?.pictureRotation ?: 0f
+                Log.e(javaClass.simpleName, "updateUi: user image loaded")
                 }
             }
         } else {
             currentUserId = null
             username.text = ""
+            glideImage(this, ContextCompat.getDrawable(this, R.drawable.ic_account_circle), userImg)
             Glide.with(this)
                 .load(ContextCompat.getDrawable(this, R.drawable.ic_account_circle))
                 .circleCrop()
                 .into(userImg)
         }
+    }
+
+    private fun glideImage(context: Context, load: Any?, into: ImageView) {
+        Glide.with(context)
+            .load(load)
+            .circleCrop()
+            .into(into)
     }
 
     override fun onBackPressed() {

@@ -19,52 +19,65 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import com.google.firebase.storage.ktx.component1
 import com.google.firebase.storage.ktx.component2
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.BET
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.FIRST_SPLIT_HAND
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.HAND
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.IS_DEFAULT_IMAGE_PROFILE
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.IS_GAME_HOST
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.IS_SPLITTING
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.IS_USER_READY
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.NUMBER_OF_GAME_PLAYED
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.NUMBER_OF_LOAN
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.ONLINE_STATUS
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.OPPONENT
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.PICTURE_ROTATION
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.PLAYER_TURN
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.PSEUDO
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.SECOND_SPLIT_HAND
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.SPLIT_TYPE
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.USER_ID
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.USER_PICTURE
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.WALLET
+import fr.lleotraas.blackjack_french.utils.Utils.Companion.WALLET_STATE
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.convertDocumentToUser
 
 class UserRepositoryImpl @Inject constructor (
     private val mFirebaseHelper: FirebaseHelper
 ): UserRepository {
 
-    private var currentUser = MutableLiveData<OnlineUser?>()
-    private var searchedUser = MutableLiveData<OnlineUser?>()
-    private var listOfOnlineUser = MutableLiveData<ArrayList<OnlineUser>>()
-    private var listOfImageByteArray = MutableLiveData<HashMap<String ,ByteArray>>()
+    private var currentUser = MutableLiveData<User?>()
+    private var searchedUser = MutableLiveData<User?>()
+    private var listOfOnlineUser = MutableLiveData<ArrayList<User>>()
+    private var listOfImageByteArray = MutableLiveData<HashMap<String ,ByteArray>?>()
     private var listOfGamePlayed = MutableLiveData<ArrayList<UserStats>>()
     private var isUserUpdateNumberOfPlayedGames = false
     private var isTaskExecuted = MutableLiveData(false)
-    private var fakeUser = MutableLiveData<User?>()
-
-    override fun getFakeUser(): LiveData<User?> {
-        return fakeUser
-    }
 
     override fun createOnlineUser() {
         val connectedUser = mFirebaseHelper.getCurrentUser()
         val onlineUser =
             hashMapOf(
-            "id" to connectedUser?.uid,
-            "numberOfLoan" to 0,
-            "wallet" to 1500.0,
-            "bet" to Utils.createBet(),
-            "pseudo" to connectedUser?.displayName,
-            "profilePicture" to connectedUser?.photoUrl,
-            "pictureRotation" to 0f,
-            "onlineStatus" to OnlineStatusType.OFFLINE,
-            "opponentId" to "",
-            "playerTurn" to null,
-            "splitType" to null,
-            "numberOfGamePlayed" to 0,
-            "isDefaultImageProfile" to true,
-            "isGameHost" to false,
-            "isUserReady" to false,
-            "isSplitting" to false
+            USER_ID to connectedUser?.uid,
+            NUMBER_OF_LOAN to 0,
+            WALLET to 1500.0,
+            BET to Utils.createBet(),
+            PSEUDO to connectedUser?.displayName,
+            USER_PICTURE to connectedUser?.photoUrl,
+            PICTURE_ROTATION to 0f,
+            ONLINE_STATUS to OnlineStatusType.OFFLINE,
+            OPPONENT to "",
+            PLAYER_TURN to null,
+            SPLIT_TYPE to null,
+            NUMBER_OF_GAME_PLAYED to 0,
+            IS_DEFAULT_IMAGE_PROFILE to true,
+            IS_GAME_HOST to false,
+            IS_USER_READY to false,
+            IS_SPLITTING to false
         )
-
-//            createUser(connectedUser!!)
 
         if (connectedUser != null) {
             mFirebaseHelper.getUserCollectionReference().document(connectedUser.uid).set(onlineUser)
-            currentUser.postValue(OnlineUser(onlineUser))
+            currentUser.postValue(createUser(connectedUser))
         }
     }
 
@@ -89,10 +102,10 @@ class UserRepositoryImpl @Inject constructor (
         )
     }
 
-    override fun getCurrentOnlineUser(userId: String): LiveData<OnlineUser?> {
+    override fun getCurrentOnlineUser(userId: String): LiveData<User?> {
         mFirebaseHelper.getUserCollectionReference().document(userId).get().addOnSuccessListener { documentSnapshot ->
             val userOnline = convertDocumentToUser(documentSnapshot)
-            if (userOnline?.onlineUser?.size != 0) {
+            if (userOnline != null) {
                 currentUser.postValue(userOnline)
                 isTaskExecuted.postValue(false)
             } else {
@@ -111,7 +124,7 @@ class UserRepositoryImpl @Inject constructor (
         return currentUser
     }
 
-    override fun getSearchedUser(userId: String): LiveData<OnlineUser?> {
+    override fun getSearchedUser(userId: String): LiveData<User?> {
 //        val onlineUser = ArrayList<User?>()
         mFirebaseHelper.getUserCollectionReference().document(userId).get().addOnSuccessListener { documentSnapshot ->
 //            onlineUser.add(documentSnapshot.toObject(User::class.java))
@@ -130,10 +143,10 @@ class UserRepositoryImpl @Inject constructor (
         return searchedUser
     }
 
-    override fun getAllOnlineUsers(): LiveData<ArrayList<OnlineUser>> {
-        mFirebaseHelper.getUserCollectionReference().whereNotEqualTo("onlineStatus", OnlineStatusType.OFFLINE).get().addOnCompleteListener { task ->
+    override fun getAllOnlineUsers(): LiveData<ArrayList<User>> {
+        mFirebaseHelper.getUserCollectionReference().whereNotEqualTo(ONLINE_STATUS, OnlineStatusType.OFFLINE).get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val onlineUserList = ArrayList<OnlineUser>()
+                val onlineUserList = ArrayList<User>()
                 for (document in task.result) {
                     if (mFirebaseHelper.getCurrentUser()!!.uid != document.id) {
                         onlineUserList.add(convertDocumentToUser(document)!!)
@@ -147,15 +160,15 @@ class UserRepositoryImpl @Inject constructor (
         return listOfOnlineUser
     }
 
-    override fun allUserUpdated(): LiveData<ArrayList<OnlineUser>> {
-        val allOnline = mFirebaseHelper.getUserCollectionReference().whereNotEqualTo("onlineStatus", OnlineStatusType.OFFLINE)
+    override fun allUserUpdated(): LiveData<ArrayList<User>> {
+        val allOnline = mFirebaseHelper.getUserCollectionReference().whereNotEqualTo(ONLINE_STATUS, OnlineStatusType.OFFLINE)
         allOnline.addSnapshotListener { value, exception ->
             if (exception != null) {
                 Log.w(ContentValues.TAG, "Listen failed.",exception)
                 return@addSnapshotListener
             }
 
-            val onlineUserList = ArrayList<OnlineUser>()
+            val onlineUserList = ArrayList<User>()
             for (document in value!!) {
                 if (mFirebaseHelper.getCurrentUser()!!.uid != document.id) {
                     onlineUserList.add(convertDocumentToUser(document)!!)
@@ -172,8 +185,8 @@ class UserRepositoryImpl @Inject constructor (
         userOnlineStatus: OnlineStatusType
     ) {
         mFirebaseHelper.getUserCollectionReference().document(currentUserId).update(
-            "onlineStatus", userOnlineStatus,
-            "opponent", ""
+            ONLINE_STATUS, userOnlineStatus,
+            OPPONENT, ""
         )
     }
 
@@ -181,7 +194,7 @@ class UserRepositoryImpl @Inject constructor (
         user: User?
     ) {
         mFirebaseHelper.getUserCollectionReference().document(user?.id.toString()).update(
-            "userPicture", user?.isDefaultProfileImage
+            USER_PICTURE, user?.isDefaultProfileImage
         )
     }
 
@@ -191,83 +204,83 @@ class UserRepositoryImpl @Inject constructor (
         userOnlineStatus: OnlineStatusType
     ) {
         mFirebaseHelper.getUserCollectionReference().document(searchedUserId).update(
-            "onlineStatus", OnlineStatusType.ASK_FOR_PLAY,
-            "opponent", currentUserId,
-            "playerTurn", PlayerNumberType.PLAYER_TWO
+            ONLINE_STATUS, OnlineStatusType.ASK_FOR_PLAY,
+            OPPONENT, currentUserId,
+            PLAYER_TURN, PlayerNumberType.PLAYER_TWO
         )
         mFirebaseHelper.getUserCollectionReference().document(currentUserId).update(
-            "onlineStatus", userOnlineStatus,
-            "opponent", searchedUserId,
-            "playerTurn", PlayerNumberType.PLAYER_ONE
+            ONLINE_STATUS, userOnlineStatus,
+            OPPONENT, searchedUserId,
+            PLAYER_TURN, PlayerNumberType.PLAYER_ONE
         )
     }
 
     override fun updateOnlineStatusPlaying(currentUserId: String, searchedUserId: String) {
         mFirebaseHelper.getUserCollectionReference().document(searchedUserId).update(
-            "onlineStatus", OnlineStatusType.PLAYING,
-            "opponent", currentUserId
+            ONLINE_STATUS, OnlineStatusType.PLAYING,
+            OPPONENT, currentUserId
         )
         mFirebaseHelper.getUserCollectionReference().document(currentUserId).update(
-            "onlineStatus", OnlineStatusType.PLAYING,
-            "opponent", searchedUserId,
-            "isUserReady", false,
-            "bet", Utils.createBet(),
-            "isSplitting", false
+            ONLINE_STATUS, OnlineStatusType.PLAYING,
+            OPPONENT, searchedUserId,
+            IS_USER_READY, false,
+            BET, Utils.createBet(),
+            IS_SPLITTING, false
         )
     }
 
     override fun updateIsGameHost(currentUserId: String, userIsGameHost: Boolean) {
         mFirebaseHelper.getUserCollectionReference().document(currentUserId).update(
-            "isGameHost", userIsGameHost,
-            "isUserReady", false,
-            "bet", Utils.createBet(),
-            "isSplitting", false
+            IS_GAME_HOST, userIsGameHost,
+            IS_USER_READY, false,
+            BET, Utils.createBet(),
+            IS_SPLITTING, false
         )
     }
 
     override fun updateUserIsReady(currentUserId: String, userIsReady: Boolean) {
-        mFirebaseHelper.getUserCollectionReference().document(currentUserId).update("isUserReady", userIsReady)
+        mFirebaseHelper.getUserCollectionReference().document(currentUserId).update(IS_USER_READY, userIsReady)
     }
 
     override fun updateOnlineUserWalletAndIsSplitting(user: User?, isSplitting: Boolean) {
         mFirebaseHelper.getUserCollectionReference().document(user?.id!!).update(
-            "bet", user.bet,
-            "wallet", user.wallet,
-            "isSplitting", isSplitting
+            BET, user.bet,
+            WALLET, user.wallet,
+            IS_SPLITTING, isSplitting
         )
     }
 
     override fun updateOnlineUserBetAndWallet(user: User) {
         mFirebaseHelper.getUserCollectionReference().document(user.id!!).update(
-            "bet", user.bet,
-            "wallet", user.wallet
+            BET, user.bet,
+            WALLET, user.wallet
         )
     }
 
     override fun updateSplitType(user: User) {
         mFirebaseHelper.getUserCollectionReference().document(user.id!!).update(
-            "splitType", user.splitType
+            SPLIT_TYPE, user.splitType
         )
     }
 
     override fun updateIsSplitting(userId: String, isSplitting: Boolean) {
         mFirebaseHelper.getUserCollectionReference().document(userId).update(
-            "isSplitting", isSplitting
+            IS_SPLITTING, isSplitting
         )
     }
 
     override fun updateOnlineUserWalletAndLoan(user: User) {
         mFirebaseHelper.getUserCollectionReference().document(user.id!!).update(
-            "wallet", user.wallet,
-            "numberOfLoan", user.numberOfLoan
+            WALLET, user.wallet,
+            NUMBER_OF_LOAN, user.numberOfLoan
         )
     }
 
     override fun updateOnlineUserHand(userId: String, userHand: ArrayList<Card>, userFirstSplitHand: ArrayList<Card>, userSecondSplitHand: ArrayList<Card>) {
         mFirebaseHelper.getUserCollectionReference().document(userId).update(
-            "hand", userHand,
-            "firstSplitHand", userFirstSplitHand,
-            "secondSplitHand", userSecondSplitHand
+            HAND, userHand,
+            FIRST_SPLIT_HAND, userFirstSplitHand,
+            SECOND_SPLIT_HAND, userSecondSplitHand
         )
     }
 
@@ -276,9 +289,9 @@ class UserRepositoryImpl @Inject constructor (
         userReady: Boolean?
     ) {
         mFirebaseHelper.getUserCollectionReference().document(user?.id!!).update(
-            "bet", user.bet,
-            "wallet", user.wallet,
-            "isUserReady", userReady,
+            BET, user.bet,
+            WALLET, user.wallet,
+            IS_USER_READY, userReady,
         )
     }
 
@@ -287,7 +300,7 @@ class UserRepositoryImpl @Inject constructor (
             isUserUpdateNumberOfPlayedGames  = true
             user.numberOfGamePlayed = user.numberOfGamePlayed?.plus(1)
             mFirebaseHelper.getUserCollectionReference().document(user.id.toString()).update(
-                "numberOfGamePlayed", user.numberOfGamePlayed
+                NUMBER_OF_GAME_PLAYED, user.numberOfGamePlayed
             ).addOnCompleteListener {
                 createUserStatsToCurrentDate(user)
             }
@@ -300,24 +313,24 @@ class UserRepositoryImpl @Inject constructor (
 
     override fun resetCurrentUserAndHandType(user: User?, splitType: HandType, isSplitting: Boolean) {
         mFirebaseHelper.getUserCollectionReference().document(user?.id!!).update(
-            "bet", user.bet,
-            "wallet", user.wallet,
-            "splitType", splitType,
-            "isSplitting", isSplitting
+            BET, user.bet,
+            WALLET, user.wallet,
+            SPLIT_TYPE, splitType,
+            IS_SPLITTING, isSplitting
         )
     }
 
     override fun updateUser(currentUser: User?) {
         mFirebaseHelper.getUserCollectionReference().document(currentUser?.id!!).update(
-            "pseudo", currentUser.pseudo,
-            "isDefaultProfileImage", currentUser.isDefaultProfileImage,
-            "pictureRotation", currentUser.pictureRotation
+            PSEUDO, currentUser.pseudo,
+            IS_DEFAULT_IMAGE_PROFILE, currentUser.isDefaultProfileImage,
+            PICTURE_ROTATION, currentUser.pictureRotation
         )
     }
 
     override fun signOut(currentUserId: String): LiveData<Boolean> {
         mFirebaseHelper.getUserCollectionReference().document(currentUserId).update(
-            "onlineStatus", OnlineStatusType.OFFLINE
+            ONLINE_STATUS, OnlineStatusType.OFFLINE
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 mFirebaseHelper.signOut()
@@ -359,10 +372,10 @@ class UserRepositoryImpl @Inject constructor (
 
     override fun updateUserImageList(userId: String?, uri: Uri, image: ByteArray) {
         mFirebaseHelper.getUserCollectionReference().document(userId.toString()).update(
-            "userPicture", makeStringFromUri(uri)
+            USER_PICTURE, makeStringFromUri(uri)
         )
-        val imageList = listOfImageByteArray.value!!
-        imageList[userId.toString()] = image
+        val imageList = listOfImageByteArray.value
+        imageList?.set(userId.toString(), image)
         listOfImageByteArray.postValue(imageList)
     }
 
@@ -373,13 +386,13 @@ class UserRepositoryImpl @Inject constructor (
         } else {
             HashMap()
         }
-        mFirebaseHelper.getUserCollectionReference().whereEqualTo("isDefaultProfileImage", false).get().addOnSuccessListener { documents ->
+        mFirebaseHelper.getUserCollectionReference().whereEqualTo(IS_DEFAULT_IMAGE_PROFILE, false).get().addOnSuccessListener { documents ->
             for (document in documents) {
-                val user = document.toObject<User>()
-                val url = mFirebaseHelper.getImageStorageCollectionReference().child(user.id.toString()).child(user.userPicture.toString())
+                val user = convertDocumentToUser(document)
+                val url = mFirebaseHelper.getImageStorageCollectionReference().child(user?.id.toString()).child(user?.userPicture.toString())
                 Log.e(javaClass.simpleName, "updateImageList: PATH: $url")
                 url.getBytes(oneMegabyte).addOnSuccessListener { byteArray ->
-                    array[user.id.toString()] = byteArray
+                    array[user?.id.toString()] = byteArray
                     listOfImageByteArray.postValue(array)
                     Log.e(javaClass.simpleName, "updateImageList: download Success array size: ${array.size}")
                 }.addOnFailureListener { exception ->
@@ -399,10 +412,10 @@ class UserRepositoryImpl @Inject constructor (
         if (listOfImageByteArray.value?.isNotEmpty() == true) {
             hashMap = listOfImageByteArray.value!!
         }
-        mFirebaseHelper.getUserCollectionReference().whereEqualTo("isDefaultProfileImage", false).get().addOnSuccessListener { documents ->
+        mFirebaseHelper.getUserCollectionReference().whereEqualTo(IS_DEFAULT_IMAGE_PROFILE, false).get().addOnSuccessListener { documents ->
             documents.forEach { document ->
 
-                val user = document.toObject<User>()
+                val user = convertDocumentToUser(document)
 
                 mFirebaseHelper.getImageStorageCollectionReference().listAll().addOnSuccessListener { (_, prefixes) ->
 
@@ -413,7 +426,7 @@ class UserRepositoryImpl @Inject constructor (
                         prefix.list(1).addOnSuccessListener { (items2,_) ->
 
                             items2.forEach { item2 ->
-                                if (user.isDefaultProfileImage == false) {
+                                if (user?.isDefaultProfileImage == false) {
 
                                     if (user.userPicture != item2.name && user.id.toString() == prefix.name) {
                                         hashMap[item2.name]
@@ -431,7 +444,7 @@ class UserRepositoryImpl @Inject constructor (
         }
     }
 
-    override fun getAllImage(): LiveData<HashMap<String, ByteArray>> = listOfImageByteArray
+    override fun getAllImage(): MutableLiveData<HashMap<String, ByteArray>?> = listOfImageByteArray
 
     override fun createUserStatsToCurrentDate(user: User) {
         val userStats = UserStats(Date(), user.wallet)
@@ -443,7 +456,7 @@ class UserRepositoryImpl @Inject constructor (
 
     override fun updateUserStats(user: User) {
         mFirebaseHelper.getUserStatsDocumentReference(user.id.toString(), user.numberOfGamePlayed.toString()).update(
-            "walletStateWhenGameEnding", user.wallet ?: 0.0
+            WALLET_STATE, user.wallet ?: 0.0
         )
     }
 

@@ -16,16 +16,12 @@ import fr.lleotraas.blackjack_french.R
 import fr.lleotraas.blackjack_french.databinding.FragmentOnlineMainScreenBinding
 import fr.lleotraas.blackjack_french.model.CustomUser
 import fr.lleotraas.blackjack_french.model.OnlineStatusType
-import fr.lleotraas.blackjack_french.model.OnlineUser
 import fr.lleotraas.blackjack_french.model.User
 import fr.lleotraas.blackjack_french.ui.activity.DetailOnlineUserActivity
 import fr.lleotraas.blackjack_french.ui.activity.OnlineMainScreenActivityViewModel
 import fr.lleotraas.blackjack_french.ui.dialog.InvitationToPlayDialog
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.CURRENT_USER_ID
-import fr.lleotraas.blackjack_french.utils.Utils.Companion.ONLINE_STATUS
-import fr.lleotraas.blackjack_french.utils.Utils.Companion.OPPONENT
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.SEARCHED_USER_ID
-import fr.lleotraas.blackjack_french.utils.Utils.Companion.USER_ID
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.createListOfCustomUser
 
 @AndroidEntryPoint
@@ -35,8 +31,8 @@ class OnlineMainScreenFragment : Fragment() {
     private val mViewModel: OnlineMainScreenActivityViewModel by viewModels()
     private lateinit var onlineMainScreenAdapter: OnlineMainScreenAdapter
 
-    private lateinit var getCurrentUser: LiveData<OnlineUser?>
-    private var currentUser: OnlineUser? = null
+    private lateinit var getCurrentUser: LiveData<User?>
+    private var currentUser: User? = null
     private var isUserClickOnDetailActivity = false
     private var isUserAskForPlay = false
 
@@ -47,7 +43,7 @@ class OnlineMainScreenFragment : Fragment() {
     ): View {
         mBinding = FragmentOnlineMainScreenBinding.inflate(inflater, container, false)
         val currentUserId = requireActivity().intent.extras!!.get(CURRENT_USER_ID) as String
-        getCurrentUser = mViewModel.getRealOnlineUser(currentUserId)
+        getCurrentUser = mViewModel.getOnlineUser(currentUserId)
         mViewModel.updateOnlineUserStatus(currentUserId, OnlineStatusType.ONLINE)
         initAdapters(currentUserId)
         setupOnlineUserRecyclerView()
@@ -80,8 +76,8 @@ class OnlineMainScreenFragment : Fragment() {
             mBinding.apply {
 
                 if (
-                    currentUser?.onlineUser?.get(ONLINE_STATUS) != OnlineStatusType.ASK_FOR_PLAY &&
-                    currentUser?.onlineUser?.get(ONLINE_STATUS) != OnlineStatusType.PLAYING
+                    currentUser?.onlineStatus != OnlineStatusType.ASK_FOR_PLAY &&
+                    currentUser?.onlineStatus != OnlineStatusType.PLAYING
                 ) {
                     mViewModel.updateOnlineUserStatus(currentUserId, OnlineStatusType.ONLINE)
                     mViewModel.updateUserIsGameHost(currentUserId, false)
@@ -89,7 +85,7 @@ class OnlineMainScreenFragment : Fragment() {
                 }
 
                 if (
-                    currentUser?.onlineUser?.get(ONLINE_STATUS) == OnlineStatusType.ASK_FOR_PLAY &&
+                    currentUser?.onlineStatus == OnlineStatusType.ASK_FOR_PLAY &&
                     !isUserAskForPlay
                 ) {
                     isUserAskForPlay = true
@@ -97,14 +93,14 @@ class OnlineMainScreenFragment : Fragment() {
                         val alertDialog = InvitationToPlayDialog()
                         val bundle = Bundle()
                         bundle.putString(CURRENT_USER_ID, currentUserId)
-                        bundle.putString(SEARCHED_USER_ID, currentUser.onlineUser[OPPONENT].toString())
+                        bundle.putString(SEARCHED_USER_ID, currentUser.opponent)
                         alertDialog.arguments = bundle
                         getCurrentUser.removeObserver {}
                         alertDialog.show(requireActivity().supportFragmentManager, alertDialog.tag)
                     Log.e(javaClass.simpleName, "updateUI: user is ask for play")
                 }
 
-                if (currentUser?.onlineUser?.get(ONLINE_STATUS) == OnlineStatusType.ONLINE) {
+                if (currentUser?.onlineStatus == OnlineStatusType.ONLINE) {
                     isUserAskForPlay = false
                 }
             }
@@ -113,18 +109,23 @@ class OnlineMainScreenFragment : Fragment() {
     }
 
     private fun updateUserList() {
+        var listOfImage = HashMap<String, ByteArray>()
         mViewModel.getAllImage().observe(viewLifecycleOwner) { allImage ->
-            Log.e(javaClass.simpleName, "updateUserList: allImage size: ${allImage.size}")
-            mViewModel.getAllOnlineUser().observe(viewLifecycleOwner) { listOfOnlineUser ->
-                mViewModel.compareImageList()
-                Log.e(javaClass.simpleName, "updateUserList: listOfOnlineUser size:${listOfOnlineUser.size}")
-                loadOnlineUserIntoRecyclerView(createListOfCustomUser(listOfOnlineUser, allImage, mViewModel.getCurrentUser()!!.uid))
+            if (allImage != null) {
+                listOfImage = allImage
+                Log.e(javaClass.simpleName, "updateUserList: allImage size: ${allImage.size}")
             }
+        }
 
-            mViewModel.allUserUpdated().observe(viewLifecycleOwner) { listOfOnlineUser ->
-                Log.e(javaClass.simpleName, "updateUserList: listOfOnlineUserUpdated size:${listOfOnlineUser.size}")
-                loadOnlineUserIntoRecyclerView(createListOfCustomUser(listOfOnlineUser, allImage, mViewModel.getCurrentUser()!!.uid))
-            }
+        mViewModel.getAllOnlineUser().observe(viewLifecycleOwner) { listOfOnlineUser ->
+            mViewModel.compareImageList()
+            Log.e(javaClass.simpleName, "updateUserList: listOfOnlineUser size:${listOfOnlineUser.size}")
+            loadOnlineUserIntoRecyclerView(createListOfCustomUser(listOfOnlineUser, listOfImage, mViewModel.getCurrentUser()!!.uid))
+        }
+
+        mViewModel.allUserUpdated().observe(viewLifecycleOwner) { listOfOnlineUser ->
+            Log.e(javaClass.simpleName, "updateUserList: listOfOnlineUserUpdated size:${listOfOnlineUser.size}")
+            loadOnlineUserIntoRecyclerView(createListOfCustomUser(listOfOnlineUser, listOfImage, mViewModel.getCurrentUser()!!.uid))
         }
     }
 
@@ -150,8 +151,8 @@ class OnlineMainScreenFragment : Fragment() {
         Log.e(javaClass.simpleName, "onResume: resumed")
         isUserClickOnDetailActivity = false
         mViewModel.compareImageList()
-        if (currentUser?.onlineUser?.get(ONLINE_STATUS) == OnlineStatusType.OFFLINE) {
-            mViewModel.updateOnlineUserStatus(currentUser?.onlineUser!![USER_ID].toString(), OnlineStatusType.ONLINE)
+        if (currentUser?.onlineStatus == OnlineStatusType.OFFLINE) {
+            mViewModel.updateOnlineUserStatus(currentUser?.id.toString(), OnlineStatusType.ONLINE)
         }
     }
 

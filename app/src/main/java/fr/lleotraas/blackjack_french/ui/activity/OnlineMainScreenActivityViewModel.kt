@@ -10,7 +10,6 @@ import fr.lleotraas.blackjack_french.model.User
 import fr.lleotraas.blackjack_french.domain.repository.ChatRepository
 import fr.lleotraas.blackjack_french.domain.repository.FirebaseHelper
 import fr.lleotraas.blackjack_french.domain.repository.UserRepository
-import fr.lleotraas.blackjack_french.model.OnlineUser
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,11 +30,8 @@ class OnlineMainScreenActivityViewModel @Inject constructor (
     fun signOut(currentUserId: String) = userRepository.signOut(currentUserId)
 
     fun getOnlineUser(userId: String): LiveData<User?> {
-        return userRepository.getFakeUser()
-//        return userRepository.getCurrentOnlineUser(userId)
+        return userRepository.getCurrentOnlineUser(userId)
     }
-
-    fun getRealOnlineUser(userId: String) = userRepository.getCurrentOnlineUser(userId)
 
     fun updateOnlineUserStatus(currentUserId: String, userOnlineStatus: OnlineStatusType) {
         userRepository.updateOnlineStatusAskForPlay(currentUserId, userOnlineStatus)

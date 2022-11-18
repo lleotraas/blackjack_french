@@ -28,15 +28,11 @@ class OnlineGameActivityViewModel @Inject constructor (
         return firebaseHelper.getCurrentUser()
     }
 
-    fun getOnlineUser(userId: String): LiveData<User?> {
-        return userRepository.getFakeUser()
-//        return userRepository.getCurrentOnlineUser(userId)
-    }
+    fun getOnlineUser(userId: String) = userRepository.getCurrentOnlineUser(userId)
 
-    fun getSearchedUser(userId: String): LiveData<User?> {
-        return userRepository.getFakeUser()
-//        return userRepository.getSearchedUser(userId)
-    }
+
+    fun getSearchedUser(userId: String) = userRepository.getSearchedUser(userId)
+
 
     fun updateUserIsReady(currentUserId: String, userIsReady: Boolean) {
         userRepository.updateUserIsReady(currentUserId, userIsReady)

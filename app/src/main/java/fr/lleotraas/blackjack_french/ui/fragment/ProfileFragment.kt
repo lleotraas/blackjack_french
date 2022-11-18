@@ -8,10 +8,12 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.MenuProvider
@@ -81,21 +83,22 @@ class ProfileFragment : Fragment() {
             mBinding.apply {
                 if (user.isDefaultProfileImage == false) {
                     mViewModel.getAllImage().observe(viewLifecycleOwner) { allImage ->
-                        Glide.with(root)
-                            .load(allImage[user.id])
-                            .circleCrop()
-                            .into(fragmentProfileImg)
+                        glideImage(root, allImage?.get(user.id), fragmentProfileImg)
                     }
                 } else {
-                    Glide.with(root)
-                        .load(user.userPicture)
-                        .circleCrop()
-                        .into(fragmentProfileImg)
+                    glideImage(root, user.userPicture, fragmentProfileImg)
                 }
                 fragmentProfileUsernameInput.setText(user.pseudo)
                 fragmentProfileImg.rotation = user.pictureRotation!!
             }
         }
+    }
+
+    private fun glideImage(context: ConstraintLayout, load: Any?, into: ImageView) {
+        Glide.with(context)
+            .load(load)
+            .circleCrop()
+            .into(into)
     }
 
     private fun createGraphView(arrayList: ArrayList<Any>, arrayList2: ArrayList<String>) {

@@ -42,7 +42,7 @@ class InvitationToPlayDialog : DialogFragment() {
 
     private fun updateUI(searchedUserId: String) {
         mViewModel.getSearchedUser(searchedUserId).observe(viewLifecycleOwner) { searchedUserOnline ->
-            mBinding.dialogInvitationToPlayMessageTv.text = String.format("%s %s", searchedUserOnline!!.onlineUser[PSEUDO], requireContext().resources.getString(R.string.invitation_to_play_dialog_message))
+            mBinding.dialogInvitationToPlayMessageTv.text = String.format("%s %s", searchedUserOnline!!.pseudo, requireContext().resources.getString(R.string.invitation_to_play_dialog_message))
 
             mBinding.apply {
                 dialogInvitationToPlayTitleTv.text = requireContext().resources.getString(R.string.dialog_invitation_to_play_title)
@@ -51,7 +51,7 @@ class InvitationToPlayDialog : DialogFragment() {
                 dialogInvitationToPlayNegativeBtn.text = requireContext().resources.getString(R.string.bet_dialog_cancel)
             }
 
-            if (searchedUserOnline.onlineUser[ONLINE_STATUS] == OnlineStatusType.ONLINE) {
+            if (searchedUserOnline.onlineStatus == OnlineStatusType.ONLINE) {
                 mBinding.apply {
                     dialogInvitationToPlayTitleTv.text = requireContext().resources.getString(R.string.waiting_for_answer_dialog_opponent_cancel_request)
                     dialogInvitationToPlayMessageTv.visibility = View.GONE

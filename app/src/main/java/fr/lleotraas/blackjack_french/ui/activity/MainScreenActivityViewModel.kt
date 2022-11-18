@@ -52,10 +52,7 @@ class MainScreenActivityViewModel @Inject constructor (
          firebaseHelper.signOut()
     }
 
-    fun getOnlineUser(userId: String): LiveData<User?> {
-        return userRepository.getFakeUser()
-//        userRepository.getCurrentOnlineUser(userId)
-    }
+    fun getOnlineUser(userId: String) = userRepository.getCurrentOnlineUser(userId)
 
     fun getAllImage() = userRepository.getAllImage()
 

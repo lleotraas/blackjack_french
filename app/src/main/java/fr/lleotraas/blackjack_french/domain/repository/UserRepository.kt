@@ -7,19 +7,17 @@ import fr.lleotraas.blackjack_french.model.*
 
 interface UserRepository {
 
-    fun getFakeUser(): LiveData<User?>
-
     fun createOnlineUser()
 
     fun createUser(connectedUser: FirebaseUser): User
 
-    fun getCurrentOnlineUser(userId: String): LiveData<OnlineUser?>
+    fun getCurrentOnlineUser(userId: String): LiveData<User?>
 
-    fun getSearchedUser(userId: String): LiveData<OnlineUser?>
+    fun getSearchedUser(userId: String): LiveData<User?>
 
-    fun getAllOnlineUsers(): LiveData<ArrayList<OnlineUser>>
+    fun getAllOnlineUsers(): LiveData<ArrayList<User>>
 
-    fun allUserUpdated():LiveData<ArrayList<OnlineUser>>
+    fun allUserUpdated():LiveData<ArrayList<User>>
 
     fun updateOnlineStatusAskForPlay(
         currentUserId: String,
@@ -76,7 +74,7 @@ interface UserRepository {
 
     fun compareImageList()
 
-    fun getAllImage(): LiveData<HashMap<String, ByteArray>>
+    fun getAllImage(): LiveData<HashMap<String, ByteArray>?>
 
     fun createUserStatsToCurrentDate(user: User)
 

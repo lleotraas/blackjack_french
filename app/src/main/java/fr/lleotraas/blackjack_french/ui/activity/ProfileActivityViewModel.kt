@@ -16,8 +16,7 @@ class ProfileActivityViewModel @Inject constructor (
 ) : ViewModel() {
 
     fun getOnlineUser(userId: String): LiveData<User?> {
-        return userRepository.getFakeUser()
-//        return userRepository.getCurrentOnlineUser(userId)
+        return userRepository.getCurrentOnlineUser(userId)
     }
 
     fun updateUserPicture(user: User?) {
