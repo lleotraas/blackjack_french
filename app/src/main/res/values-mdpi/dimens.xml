@@ -17,14 +17,11 @@
     <!-- NavigationView height -->
     <dimen name="nav_header_height">350dp</dimen>
     <dimen name="fragment_online_game_opponent_img_width">24dp</dimen>
-    <dimen name="fragment_online_game_opponent_img_height">@dimen/fragment_online_game_opponent_img_width</dimen>
+    <dimen name="fragment_online_game_opponent_img_height">
+        @dimen/fragment_online_game_opponent_img_width
+    </dimen>
     <dimen name="margin_rv">28dp</dimen>
     <dimen name="margin_xlarge_size">48dp</dimen>
     <dimen name="margin_little_size">4dp</dimen>
     <dimen name="padding_xlarge_size">20dp</dimen>
-
-    <!-- MIN SIZE -->
-    <dimen name="min_height">48dp</dimen>
-    <dimen name="min_width">48dp</dimen>
-
 </resources>

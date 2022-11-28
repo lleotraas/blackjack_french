@@ -34,7 +34,7 @@ class OnlineGameChatFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentOnlineChatBinding.inflate(inflater, container, false)
-        onBackPressed()
+//        onBackPressed()
         getCurrentUser()
         setupChatRecyclerView()
         initAdapter()
@@ -68,7 +68,11 @@ class OnlineGameChatFragment : Fragment() {
                 val chatList = ArrayList<Message>()
                 chatList.addAll(listOfChat)
                 mViewModel.getAllImage().observe(viewLifecycleOwner) { listOfImage ->
-                    loadChatIntoRecyclerView(loadCustomPhotoInChat(chatList, listOfImage))
+                    listOfImage?.let {
+                        loadCustomPhotoInChat(chatList,
+                            it
+                        )
+                    }?.let { loadChatIntoRecyclerView(it) }
                 }
             }
         }

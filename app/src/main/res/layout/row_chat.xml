@@ -23,9 +23,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/row_chat_text_container"
         app:layout_constraintStart_toStartOf="@+id/row_chat_text_container"
-
         android:paddingHorizontal="@dimen/padding_normal_size"
-        android:textSize="12sp" />
+        style="@style/text_view"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/row_chat_text_container"
@@ -35,7 +34,8 @@
         app:layout_constraintStart_toEndOf="@+id/row_chat_profile_img"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
-        android:layout_marginStart="@dimen/margin_little_size">
+        android:layout_marginStart="@dimen/margin_little_size"
+        android:minHeight="@dimen/min_height">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/row_chat_username"
@@ -47,8 +47,7 @@
             android:textColor="@color/black"
             android:layout_marginEnd="@dimen/margin_normal_size"
             android:padding="@dimen/padding_normal_size"
-            android:background="@drawable/rounded_border_btn"
-            android:textSize="20sp"/>
+            android:background="@drawable/rounded_border_btn"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

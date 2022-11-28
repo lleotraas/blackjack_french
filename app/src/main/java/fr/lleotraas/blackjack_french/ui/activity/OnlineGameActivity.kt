@@ -39,6 +39,15 @@ class OnlineGameActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        mBinding.apply {
+            if (activityOnlineGameTabs.getTabAt(1)?.isSelected == true) {
+                activityOnlineGameViewPager.currentItem = 0
+            }
+        }
+    }
+
     private fun setTabLayoutName() {
         mBinding.apply {
             TabLayoutMediator(activityOnlineGameTabs, activityOnlineGameViewPager) { tab, position ->

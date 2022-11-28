@@ -18,7 +18,6 @@
     <string name="fragment_main_game_you_win">WIN</string>
     <string name="fragment_main_game_you_lose">LOSE</string>
     <string name="online_game_fragment_bust">BUST</string>
-    <string name="fragment_main_game_dealer_bust">DEALER BUST</string>
     <string name="fragment_main_game_draw">DRAW</string>
     <string name="bet_dialog_one_token">1</string>
     <string name="bet_dialog_five_token">5</string>

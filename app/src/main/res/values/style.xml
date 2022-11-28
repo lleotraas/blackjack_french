@@ -13,9 +13,13 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <!-- BUTTON -->
     <style name="Button" parent="Widget.AppCompat.Button">
         <item name="android:padding">@dimen/padding_large_size</item>
         <item name="android:layout_margin">@dimen/margin_normal_size</item>
+        <item name="android:minHeight">@dimen/min_height</item>
+        <item name="android:minWidth">@dimen/min_width</item>
+        <item name="android:textSize">@dimen/text_normal_size</item>
     </style>
 
     <style name="Image_button" parent="Widget.AppCompat.ImageButton">
@@ -30,6 +34,12 @@
         <item name="android:background">@drawable/rounded_corner_colored</item>
         <item name="android:tint">@color/purple_200</item>
     </style>
+
+    <!-- TEXT VIEW -->
+    <style name="text_view" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">@dimen/text_normal_size</item>
+    </style>
+
 
     <!-- ANIMATION -->
     <style name="DialogAnimation">

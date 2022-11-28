@@ -25,6 +25,5 @@
 
     <!-- MIN SIZE -->
     <dimen name="min_height">48dp</dimen>
-    <dimen name="min_width">48dp</dimen>
-
+    <dimen name="min_width">72dp</dimen>
 </resources>

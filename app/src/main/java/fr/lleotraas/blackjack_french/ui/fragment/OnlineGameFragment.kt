@@ -19,6 +19,7 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -252,9 +253,14 @@ class OnlineGameFragment : Fragment() {
     }
 
     private fun updateUI(currentUserId: String, searchedUserId: String) {
+        setDealerPicture()
         hidePictures()
         getCurrentUser(currentUserId)
         getOpponent(searchedUserId)
+    }
+
+    private fun setDealerPicture() {
+        useGlide(mBinding.root, ContextCompat.getDrawable(requireContext(), R.drawable.dealer)!!, mBinding.fragmentOnlineGameDealerImg, 0f)
     }
 
     private fun getCurrentUser(currentUserId: String) {
@@ -265,13 +271,18 @@ class OnlineGameFragment : Fragment() {
         this.currentUser = currentUser!!
         isCurrentUserQuit = currentUser.onlineStatus == OnlineStatusType.OFFLINE
         loadCurrentUserProfileImage(currentUser)
-        showBet(currentUser)
+        updatePlayerBet(currentUser)
         opponentLeaveGame(currentUser)
         readyPictureCurrentUserVisibility(currentUser)
         prepareDeck(currentUser)
         gameStart()
         contractLoan()
         saveGameStats()
+        updateCurrentUserNameBet(currentUser)
+    }
+
+    private fun updateCurrentUserNameBet(currentUser: User) {
+        mBinding.fragmentOnlineGamePlayerNameBet.text = currentUser.pseudo
     }
 
     private fun loadCurrentUserProfileImage(user: User) {
@@ -280,21 +291,22 @@ class OnlineGameFragment : Fragment() {
         }
     }
 
-    private fun loadUserImageProfile(user: User, listOfAllImage: HashMap<String, ByteArray>) {
-        val userPicture = if (user.isDefaultProfileImage == true) user.userPicture else listOfAllImage[user.id]
+    private fun loadUserImageProfile(user: User, listOfAllImage: HashMap<String, ByteArray>?) {
+        val userPicture = if (user.isDefaultProfileImage == true) user.userPicture else listOfAllImage?.get(user.id)
         mBinding.apply {
             useGlide(root, userPicture!!, fragmentOnlineGameUserImg, user.pictureRotation!!)
             useGlide(root, userPicture, fragmentOnlineGameUserFirstSplitImg, user.pictureRotation!!)
             useGlide(root, userPicture, fragmentOnlineGameUserSecondSplitImg, user.pictureRotation!!)
             useGlide(root, userPicture, fragmentOnlineGameCurrentUserReadyImg, user.pictureRotation!!)
             fragmentOnlineGameBankAmountTv.text = currentUser.wallet.toString()
-            fragmentOnlineGameBetBtn.text = currentUser.bet?.get(TOTAL_BET)?.toString() ?: ""
+            fragmentOnlineGamePlayerBetBtn.text = currentUser.bet?.get(TOTAL_BET)?.toString() ?: ""
         }
     }
 
     private fun contractLoan() {
         if (currentUser.wallet!! < 25.0 && !isLoanDialogOpen) {
-            showLoanDialog().show()
+            showLoanDialog()
+                .show()
             isLoanDialogOpen = true
             stopAndResetTimer()
         }
@@ -303,6 +315,7 @@ class OnlineGameFragment : Fragment() {
     private fun showLoanDialog() = AlertDialog.Builder(requireContext()).apply {
         setTitle(requireContext().resources.getString(R.string.online_game_fragment_contract_loan))
         setMessage(requireContext().resources.getString(R.string.online_game_fragment_loan_explication))
+        setCancelable(false)
         setPositiveButton(requireContext().resources.getString(R.string.dialog_invitation_to_play_positive_btn)) { dialogInterface, _ ->
             isLoanDialogOpen = false
             currentUser.wallet = currentUser.wallet?.plus(1500.0)
@@ -331,7 +344,7 @@ class OnlineGameFragment : Fragment() {
         }
     }
 
-    private fun showBet(currentUser: User) {
+    private fun updatePlayerBet(currentUser: User) {
         mBinding.fragmentOnlineGameGameStart.text = String.format("%s \n %s",requireContext().resources.getString(R.string.fragment_main_game_start_game) ,currentUser.bet!![MAIN_HAND_BET].toString())
     }
 
@@ -341,6 +354,7 @@ class OnlineGameFragment : Fragment() {
 
     private fun updateOpponent(opponent: User?) {
         this.opponent = opponent!!
+        Log.e(javaClass.simpleName, "updateOpponent: opponent updated")
         loadOpponentProfileImage(opponent)
         opponentLeaveGame(opponent)
         readyPictureOpponentVisibility(opponent)
@@ -348,6 +362,21 @@ class OnlineGameFragment : Fragment() {
         if (opponent.onlineStatus != OnlineStatusType.OFFLINE && opponent.bet!![FIRST_SPLIT_BET]!! > 0) {
             opponentSplitHand()
         }
+        updateOpponentNameBet(opponent)
+        updateOpponentBet(opponent)
+    }
+
+    private fun updateOpponentNameBet(opponent: User) {
+        mBinding.fragmentOnlineGameOpponentNameBet.text = opponent.pseudo
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateOpponentBet(opponent: User) {
+        Log.e(javaClass.simpleName, "updateOpponentNameBet: opponentBet = ${opponent.bet?.get(TOTAL_BET)} opponentMainHand = ${opponent.bet?.get(MAIN_HAND_BET)}")
+        mBinding.fragmentOnlineGameOpponentBetBtn.text =
+            (opponent.bet?.get(MAIN_HAND_BET)!! +
+            opponent.bet?.get(FIRST_SPLIT_BET)!! +
+            opponent.bet?.get(SECOND_SPLIT_BET)!!).toString()
     }
 
     private fun loadOpponentProfileImage(opponent: User) {
@@ -356,9 +385,9 @@ class OnlineGameFragment : Fragment() {
         }
     }
 
-    private fun loadOpponentImageProfile(opponent: User, listOfAllImage: HashMap<String, ByteArray>) {
+    private fun loadOpponentImageProfile(opponent: User, listOfAllImage: HashMap<String, ByteArray>?) {
         mBinding.apply {
-            val opponentPicture = if (opponent.isDefaultProfileImage == true) opponent.userPicture else listOfAllImage[opponent.id]
+            val opponentPicture = if (opponent.isDefaultProfileImage == true) opponent.userPicture else listOfAllImage?.get(opponent.id)
             useGlide(root, opponentPicture!!, fragmentOnlineGameOpponentImg, opponent.pictureRotation!!)
             useGlide(root, opponentPicture, fragmentOnlineGameOpponentFirstSplitImg, opponent.pictureRotation!!)
             useGlide(root, opponentPicture, fragmentOnlineGameOpponentSecondSplitImg, opponent.pictureRotation!!)
@@ -460,7 +489,7 @@ class OnlineGameFragment : Fragment() {
         if (dealer.score < 22) {
             showPlayerOrOpponentResult(player, playerOneResultTvTab[handType], playerTwoResultTvTab[handType]).text = messageResult
         } else {
-            mBinding.fragmentOnlineGameDealerResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_dealer_bust)
+            mBinding.fragmentOnlineGameDealerResultTv.text = requireContext().resources.getString(R.string.online_game_fragment_bust)
         }
     }
 
@@ -533,6 +562,7 @@ class OnlineGameFragment : Fragment() {
         loadPlayersHandsIntoRecyclerViews(getCurrentPlayer().hand[MAIN_HAND], getCurrentOpponent().hand[MAIN_HAND])
         refreshScoreUI()
         mBinding.apply {
+            fragmentOnlineGameDealerImg.visibility = View.VISIBLE
             fragmentOnlineGameDealerScoreTv.visibility = View.VISIBLE
             fragmentOnlineGameUserImg.visibility = View.VISIBLE
             animation = animateImageForPlayer(fragmentOnlineGameUserImg)
@@ -541,7 +571,9 @@ class OnlineGameFragment : Fragment() {
             fragmentOnlineGamePlayerTwoMainHandScoreTv.visibility = View.VISIBLE
         }
         getCurrentUser(currentUser.id!!)
-        mViewModel.updateOnlineDeckIndex(isCurrentUserOrOpponent().id!!, deck.index!!)
+        if (currentUser.isGameHost == true) {
+            mViewModel.updateOnlineDeckIndex(isCurrentUserOrOpponent().id!!, deck.index!!)
+        }
         showInsurance()
         playerHaveBlackJack()
         resetTimer()
@@ -963,6 +995,7 @@ class OnlineGameFragment : Fragment() {
         }
         mBinding.apply {
             fragmentOnlineGameDealerResultTv.text = ""
+            fragmentOnlineGameDealerImg.visibility = View.GONE
             fragmentOnlineGameDealerScoreTv.visibility = View.GONE
             fragmentOnlineGameUserImg.visibility = View.GONE
             fragmentOnlineGameUserFirstSplitImg.visibility = View.GONE
@@ -1097,6 +1130,7 @@ class OnlineGameFragment : Fragment() {
         mBinding.apply {
             fragmentOnlineGameCurrentUserReadyImg.visibility = View.GONE
             fragmentOnlineGameOpponentReadyImg.visibility = View.GONE
+//            fragmentOnlineGameDealerImg.visibility = View.GONE
 
             fragmentOnlineGameUserFirstSplitImg.visibility = View.GONE
             fragmentOnlineGameUserSecondSplitImg.visibility = View.GONE
@@ -1244,6 +1278,7 @@ class OnlineGameFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         Log.e(javaClass.simpleName, "onDestroy: destroyed")
+        mViewModel.updateOnlineStatus(currentUser.id.toString(), OnlineStatusType.OFFLINE)
         deleteOnlineDeckAndMessage()
         stopTimer()
         stopServiceAndUnregisterReceiver()

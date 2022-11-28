@@ -180,6 +180,12 @@ class OnlineMainScreenActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        startActivity(Intent(this, MainScreenActivity::class.java))
+        mBinding.apply {
+            if (activityOnlineMainScreenTabs.getTabAt(1)?.isSelected == true) {
+                activityOnlineMainScreenViewPager.currentItem = 0
+            } else {
+                startActivity(Intent(applicationContext, MainScreenActivity::class.java))
+            }
+        }
     }
 }

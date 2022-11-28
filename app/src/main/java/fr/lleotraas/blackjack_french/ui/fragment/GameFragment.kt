@@ -525,7 +525,7 @@ class GameFragment : Fragment() {
                         mBinding.fragmentOnlineGameResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_win)
                     } else {
                         mBinding.fragmentOnlineGameResultTv.text =
-                            requireContext().resources.getString(R.string.fragment_main_game_dealer_bust)
+                            requireContext().resources.getString(R.string.online_game_fragment_bust)
                         increaseBank(bet.totalBet * 2)
                     }
                     showGameOver()

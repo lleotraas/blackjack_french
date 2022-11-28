@@ -94,6 +94,7 @@ class OnlineMainScreenFragment : Fragment() {
                         val bundle = Bundle()
                         bundle.putString(CURRENT_USER_ID, currentUserId)
                         bundle.putString(SEARCHED_USER_ID, currentUser.opponent)
+                        alertDialog.isCancelable = false
                         alertDialog.arguments = bundle
                         getCurrentUser.removeObserver {}
                         alertDialog.show(requireActivity().supportFragmentManager, alertDialog.tag)

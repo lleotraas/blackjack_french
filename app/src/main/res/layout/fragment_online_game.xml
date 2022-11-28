@@ -79,11 +79,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/fragment_online_game_hit_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_stop_btn"
                     app:layout_constraintStart_toStartOf="parent"
                     android:background="@drawable/rounded_border_board_btn"
@@ -94,27 +94,66 @@
                     android:id="@+id/fragment_online_game_stop_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_online_game_hit_btn"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:background="@drawable/rounded_border_board_btn"
                     style="@style/Button"
                     android:text="@string/fragment_main_game_stop"/>
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/fragment_online_game_player_name_bet"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_player_bet_btn"
+                    app:layout_constraintStart_toStartOf="@+id/fragment_online_game_player_bet_btn"
+                    app:layout_constraintEnd_toEndOf="@+id/fragment_online_game_player_bet_btn"
+                    android:textColor="@color/black"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    style="@style/text_view"/>
+
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/fragment_online_game_bet_btn"
+                    android:id="@+id/fragment_online_game_player_bet_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/fragment_online_game_stop_btn"
                     app:layout_constraintStart_toEndOf="@+id/fragment_online_game_hit_btn"
-                    app:layout_constraintEnd_toStartOf="@+id/fragment_online_game_split_btn"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/fragment_online_game_opponent_bet_btn"
+                    app:layout_constraintBottom_toBottomOf="@+id/fragment_online_game_stop_btn"
                     android:background="@drawable/rounded_border_board_btn"
                     style="@style/Button"
                     android:text="@string/fragment_main_game_current_bet"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/fragment_online_game_opponent_name_bet"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_player_bet_btn"
+                    app:layout_constraintStart_toStartOf="@+id/fragment_online_game_opponent_bet_btn"
+                    app:layout_constraintEnd_toEndOf="@+id/fragment_online_game_opponent_bet_btn"
+                    android:textColor="@color/black"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    style="@style/text_view"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/fragment_online_game_opponent_bet_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/fragment_online_game_split_btn"
+                    app:layout_constraintStart_toEndOf="@+id/fragment_online_game_player_bet_btn"
+                    app:layout_constraintEnd_toStartOf="@+id/fragment_online_game_split_btn"
+                    app:layout_constraintBottom_toBottomOf="@id/fragment_online_game_split_btn"
+                    android:background="@drawable/rounded_border_board_btn"
+                    style="@style/Button"
+                    android:text="@string/fragment_main_game_current_bet" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/fragment_online_game_double_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_split_btn"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:background="@drawable/rounded_border_board_btn"
@@ -125,6 +164,7 @@
                     android:id="@+id/fragment_online_game_split_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_online_game_double_btn"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:background="@drawable/rounded_border_board_btn"
@@ -135,16 +175,6 @@
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/fragment_online_game_dealer_title_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="@dimen/margin_normal_size"
-        android:text="@string/fragment_main_game_dealer_score"/>
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/fragment_online_game_game_start"
         android:layout_width="wrap_content"
@@ -154,6 +184,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/rounded_border_board_btn"
+        style="@style/Button"
         android:text="@string/fragment_main_game_start_game" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -182,7 +213,7 @@
         android:id="@+id/fragment_online_game_dealer_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/fragment_online_game_dealer_title_tv"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@+id/fragment_online_game_dealer_score_tv"
         android:layout_margin="28dp"
         android:background="@drawable/rounded_border_hand"
@@ -209,12 +240,21 @@
         android:textStyle="bold"
         android:layout_margin="8dp" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/fragment_online_game_dealer_img"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_dealer_score_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/fragment_online_game_nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/fragment_online_game_dealer_recycler_view"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_fab_border_img">
+        app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_fab_border_img"
+        android:layout_marginTop="@dimen/margin_large_size">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/fragment_online_game_constraint_layout_rv"

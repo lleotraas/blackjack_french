@@ -3,7 +3,7 @@
 
     <!-- PADDING -->
     <dimen name="padding_normal_size">8dp</dimen>
-    <dimen name="padding_large_size">12dp</dimen>
+    <dimen name="padding_large_size">2dp</dimen>
 
     <!-- MARGIN -->
     <dimen name="margin_normal_size">12dp</dimen>
@@ -25,6 +25,6 @@
 
     <!-- MIN SIZE -->
     <dimen name="min_height">48dp</dimen>
-    <dimen name="min_width">48dp</dimen>
+    <dimen name="min_width">76dp</dimen>
 
 </resources>

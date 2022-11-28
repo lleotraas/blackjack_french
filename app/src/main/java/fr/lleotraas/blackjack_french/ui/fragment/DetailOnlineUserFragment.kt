@@ -60,6 +60,7 @@ class DetailOnlineUserFragment : Fragment() {
                 bundle.putString(CURRENT_USER_ID, currentUserId)
                 bundle.putString(SEARCHED_USER_ID, searchedUserId)
                 alertDialog.arguments = bundle
+                alertDialog.isCancelable = false
                 alertDialog.show(requireActivity().supportFragmentManager, alertDialog.tag)
             }
 
@@ -83,7 +84,7 @@ class DetailOnlineUserFragment : Fragment() {
                     } else {
                         mViewModel.getAllProfileImage().observe(viewLifecycleOwner) { listOfAllImage ->
                             Glide.with(mBinding.root)
-                                .load(listOfAllImage[searchedUserId])
+                                .load(listOfAllImage?.get(searchedUserId))
                                 .circleCrop()
                                 .into(playerInfoDialogUserPicture)
 
