@@ -1,6 +1,11 @@
 package fr.lleotraas.blackjack_french.ui.fragment
 
+import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import fr.lleotraas.blackjack_french.R
 import fr.lleotraas.blackjack_french.databinding.FragmentOnlineGameBinding
 import fr.lleotraas.blackjack_french.model.*
+import fr.lleotraas.blackjack_french.service.TimeService
 import fr.lleotraas.blackjack_french.ui.activity.GameActivityViewModel
 import fr.lleotraas.blackjack_french.ui.dialog.BetDialog
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.FIRST_SPLIT
@@ -25,6 +31,7 @@ import fr.lleotraas.blackjack_french.utils.Utils.Companion.createDeck
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.shuffleDeck
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.math.round
 
 @AndroidEntryPoint
 class GameFragment : Fragment() {
@@ -47,6 +54,11 @@ class GameFragment : Fragment() {
     private lateinit var dealerHandAdapter: GameAdapter
     private var bank: Bank? = null
     private var bet = Bet(0.0,0.0,0.0,0.0,0.0, 0.0)
+    private var serviceIntent: Intent? = null
+    private var broadcastTimer: Intent? = null
+    private var time = -1.0
+    private var currentTime = 0.0
+    private var isTimerStarted = false
     private val mViewModel: GameActivityViewModel by viewModels()
 
     override fun onCreateView(
@@ -55,13 +67,12 @@ class GameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentOnlineGameBinding.inflate(inflater, container, false)
-        playerHandAdapter = GameAdapter()
-        playerFirstSplitAdapter = GameAdapter()
-        playerSecondSplitAdapter = GameAdapter()
-        dealerHandAdapter = GameAdapter()
         val bankId = requireActivity().intent.extras!!.get(PLAYER_SAVE_ID) as Long
+        initAdapter()
         loadBank(bankId)
         loadBet()
+        updateUI()
+        initBroadcastTimer()
         configureListeners()
         prepareDeck()
         disableHitAndStopButtons()
@@ -73,12 +84,93 @@ class GameFragment : Fragment() {
         return mBinding.root
     }
 
+    private fun updateUI() {
+        mBinding.fragmentOnlineGameOpponentBetBtn.visibility = View.GONE
+    }
+
+    private fun initAdapter() {
+        playerHandAdapter = GameAdapter()
+        playerFirstSplitAdapter = GameAdapter()
+        playerSecondSplitAdapter = GameAdapter()
+        dealerHandAdapter = GameAdapter()
+    }
+
     private fun loadBank(bankId: Long) {
         mViewModel.getBank(bankId).observe(viewLifecycleOwner) { currentBank ->
             bank = currentBank
             mBinding.fragmentOnlineGameBankAmountTv.text = String.format("%s", currentBank.amount)
-//            mBinding.fragmentMainScreenPlayerInformation.text = String.format(" %s %s %s", bank!!.pseudo, requireContext().resources.getString(R.string.fragment_main_game_current_bet), bet.playerBet)
+
+            Log.e(TAG, "refreshTotalSpent: initial bet: ${this.bet.playerBet} \tmain hand bet: ${this.bet.mainHandBet} \tfirst split bet: ${this.bet.firstSplitBet} \tsecond split bet: ${this.bet.secondSplitBet} \ttotal bet: ${this.bet.totalBet}")
         }
+    }
+
+    private fun showLoanDialog() = AlertDialog.Builder(requireContext()).apply {
+        setTitle(requireContext().resources.getString(R.string.online_game_fragment_contract_loan))
+        setMessage(requireContext().resources.getString(R.string.online_game_fragment_loan_offline_message))
+        setCancelable(false)
+        setPositiveButton(requireContext().resources.getString(R.string.dialog_invitation_to_play_positive_btn)) { dialogInterface, _ ->
+            bank?.amount = bank?.amount?.plus(500.0)!!
+            lifecycleScope.launch {
+                mViewModel.updateBank(bank!!)
+            }
+            mBinding.fragmentOnlineGameContractLoanBtn.visibility = View.GONE
+            dialogInterface.dismiss()
+        }
+        setNegativeButton(requireContext().resources.getString(R.string.dialog_invitation_to_play_negative_btn)) { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+    }
+
+    private fun initBroadcastTimer() {
+        serviceIntent = Intent(requireContext(), TimeService::class.java)
+        broadcastTimer = requireActivity().registerReceiver(updateTime, IntentFilter(TimeService.TIMER_UPDATED))
+    }
+
+    private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
+
+        @SuppressLint("SetTextI18n")
+        override fun onReceive(context: Context, intent: Intent) {
+            time = intent.getDoubleExtra(TimeService.TIME_EXTRA, 0.0)
+            event(time)
+            Log.e(javaClass.simpleName, "updateTime onReceive: ${time}sec")
+        }
+    }
+
+    private fun resetTimer() {
+        time = -1.0
+        currentTime = 0.0
+    }
+
+    private fun event(time: Double) {
+        if (time == currentTime && dealer.score < 17) {
+            currentTime++
+            dealerDrawCard()
+        }
+
+        if (time == currentTime && dealer.score > 16) {
+            resetTimer()
+            stopTimer()
+            dealerSequence()
+        }
+    }
+
+    private fun startTimer() {
+        if (!isTimerStarted) {
+            serviceIntent?.putExtra(TimeService.TIME_EXTRA, time)
+            requireActivity().startService(serviceIntent)
+            isTimerStarted = true
+        }
+    }
+
+    private fun stopTimer() {
+        if (isTimerStarted) {
+            requireActivity().stopService(serviceIntent)
+            isTimerStarted = false
+        }
+    }
+
+    private fun stopServiceAndUnregisterReceiver() {
+        requireActivity().unregisterReceiver(updateTime)
     }
 
     private fun loadBet() {
@@ -86,9 +178,7 @@ class GameFragment : Fragment() {
             bet = currentBet
             bet.totalBet = currentBet.playerBet
             bet.mainHandBet = currentBet.playerBet
-            if (bank != null) {
-//                mBinding.fragmentMainScreenPlayerInformation.text = String.format(" %s %s %s", bank!!.pseudo, requireContext().resources.getString(R.string.fragment_main_game_current_bet), currentBet.playerBet)
-            }
+            showBetInUI()
             if (bet.playerBet > 0) {
                 mBinding.fragmentOnlineGameGameStart.isEnabled = true
             }
@@ -227,6 +317,11 @@ class GameFragment : Fragment() {
             bundle.putLong(PLAYER_SAVE_ID, bank!!.id)
             betDialog.arguments = bundle
             betDialog.show(requireActivity().supportFragmentManager, betDialog.tag)
+        }
+
+        // LOAN DIALOG
+        mBinding.fragmentOnlineGameContractLoanBtn.setOnClickListener {
+            showLoanDialog().show()
         }
     }
 
@@ -484,62 +579,63 @@ class GameFragment : Fragment() {
             }
             // Bank draw cards.
             else -> {
-                while (dealer.score < 17) {
-                    dealerDrawCard()
+                startTimer()
+                disableHitAndStopButtons()
+            }
+        }
+    }
+
+    private fun dealerSequence() {
+
+        if (dealer.score < 22) {
+
+            if (player.score[FIRST_SPLIT] > 0 ) {
+                mBinding.fragmentOnlineGameFirstSplitResultTv.text = compareScore(player.score[FIRST_SPLIT], bet.firstSplitBet)
+                mBinding.fragmentOnlineGameFirstSplitResultTv.visibility = View.VISIBLE
+            }
+
+            if (player.score[SECOND_SPLIT] > 0) {
+                mBinding.fragmentOnlineGameSecondSplitResultTv.text = compareScore(player.score[SECOND_SPLIT], bet.secondSplitBet)
+                mBinding.fragmentOnlineGameSecondSplitResultTv.visibility = View.VISIBLE
+            }
+
+            if (dealer.score == 21 && dealer.hand.size == 2) {
+                if (bet.insuranceBet > 0) {
+                    increaseBankWithInsurance()
+                    Log.e(TAG, "refreshTotalSpent: initial bet: ${bet.playerBet} \tmain hand bet: ${bet.mainHandBet} \tfirst split bet: ${bet.firstSplitBet} \tsecond split bet: ${bet.secondSplitBet} \tinsurance bet: ${bet.insuranceBet} \ttotal bet: ${bet.totalBet}")
+                    Toast.makeText(requireContext(), requireContext().resources.getString(R.string.fragment_main_game_insurance_win), Toast.LENGTH_SHORT).show()
                 }
-                if (dealer.score < 22) {
-
-                    if (player.score[FIRST_SPLIT] > 0 ) {
-                        mBinding.fragmentOnlineGameFirstSplitResultTv.text = compareScore(player.score[FIRST_SPLIT], bet.firstSplitBet)
-                            mBinding.fragmentOnlineGameFirstSplitResultTv.visibility = View.VISIBLE
-                    }
-
-                    if (player.score[SECOND_SPLIT] > 0) {
-                        mBinding.fragmentOnlineGameSecondSplitResultTv.text = compareScore(player.score[SECOND_SPLIT], bet.secondSplitBet)
-                            mBinding.fragmentOnlineGameSecondSplitResultTv.visibility = View.VISIBLE
-                    }
-
-                    if (dealer.score == 21 && dealer.hand.size == 2) {
-                        if (bet.insuranceBet > 0) {
-                            increaseBankWithInsurance()
-                            Log.e(TAG, "refreshTotalSpent: initial bet: ${bet.playerBet} \tmain hand bet: ${bet.mainHandBet} \tfirst split bet: ${bet.firstSplitBet} \tsecond split bet: ${bet.secondSplitBet} \tinsurance bet: ${bet.insuranceBet} \ttotal bet: ${bet.totalBet}")
-                            Toast.makeText(requireContext(), requireContext().resources.getString(R.string.fragment_main_game_insurance_win), Toast.LENGTH_SHORT).show()
-                        }
-                        compareWithDealerBlackjack()
-                    } else if (player.score[MAIN_HAND] == 21 && player.hand[MAIN_HAND].size == 2 && player.hand[FIRST_SPLIT].size == 0) {
-                        increaseBankWithBlackjack()
-                        showGameOver()
-                        mBinding.fragmentOnlineGameResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_win)
-                    } else {
-                        mBinding.fragmentOnlineGameResultTv.text = compareScore(player.score[MAIN_HAND], bet.mainHandBet)
-                        if (bet.insuranceBet > 0) {
-                            Toast.makeText(requireContext(), requireContext().resources.getString(R.string.fragment_main_game_insurance_lose), Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                    updatePlayerBankAmount()
-                    disableHitAndStopButtons()
-                } else {
-                    if (player.score[MAIN_HAND] == 21 && player.hand[MAIN_HAND].size == 2 && player.hand[FIRST_SPLIT].size == 0) {
-                        increaseBankWithBlackjack()
-                        mBinding.fragmentOnlineGameResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_win)
-                    } else {
-                        mBinding.fragmentOnlineGameResultTv.text =
-                            requireContext().resources.getString(R.string.online_game_fragment_bust)
-                        increaseBank(bet.totalBet * 2)
-                    }
-                    showGameOver()
-                    updatePlayerBankAmount()
-                    disableHitAndStopButtons()
-                }
-                // Dealer does not have enough card to continue and shuffle the deck
-                if (cardsDraw > 260) {
-                    Toast.makeText(requireContext(), requireContext().resources.getString(R.string.fragment_main_game_shuffle_deck), Toast.LENGTH_SHORT).show()
-                    cardsDraw = 0
-                    deck.deckList.clear()
-                    prepareDeck()
+                compareWithDealerBlackjack()
+            } else if (player.score[MAIN_HAND] == 21 && player.hand[MAIN_HAND].size == 2 && player.hand[FIRST_SPLIT].size == 0) {
+                increaseBankWithBlackjack()
+                showGameOver()
+                mBinding.fragmentOnlineGameResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_win)
+            } else {
+                mBinding.fragmentOnlineGameResultTv.text = compareScore(player.score[MAIN_HAND], bet.mainHandBet)
+                if (bet.insuranceBet > 0) {
+                    Toast.makeText(requireContext(), requireContext().resources.getString(R.string.fragment_main_game_insurance_lose), Toast.LENGTH_SHORT).show()
                 }
             }
+
+            updatePlayerBankAmount()
+        } else {
+            if (player.score[MAIN_HAND] == 21 && player.hand[MAIN_HAND].size == 2 && player.hand[FIRST_SPLIT].size == 0) {
+                increaseBankWithBlackjack()
+                mBinding.fragmentOnlineGameResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_win)
+            } else {
+                mBinding.fragmentOnlineGameDealerResultTv.text =
+                    requireContext().resources.getString(R.string.online_game_fragment_bust)
+                increaseBank(bet.totalBet * 2)
+            }
+            showGameOver()
+            updatePlayerBankAmount()
+        }
+        // Dealer does not have enough card to continue and shuffle the deck
+        if (cardsDraw > 260) {
+            Toast.makeText(requireContext(), requireContext().resources.getString(R.string.fragment_main_game_shuffle_deck), Toast.LENGTH_SHORT).show()
+            cardsDraw = 0
+            deck.deckList.clear()
+            prepareDeck()
         }
     }
 
@@ -626,6 +722,23 @@ class GameFragment : Fragment() {
     private fun showGameOver() {
         mBinding.fragmentOnlineGameGameStart.visibility = View.VISIBLE
         mBinding.fragmentOnlineGameResultTv.visibility = View.VISIBLE
+        showLoanBtn()
+    }
+
+    private fun showLoanBtn() {
+        if (
+            bank != null &&
+            bank?.amount!! < 100
+        ) {
+            mBinding.fragmentOnlineGameContractLoanBtn.visibility = View.VISIBLE
+        } else {
+            mBinding.fragmentOnlineGameContractLoanBtn.visibility = View.GONE
+        }
+    }
+
+    private fun showBetInUI() {
+        val betToShow = if (bet.totalBet.toString().last() == '0') bet.totalBet.toInt() else bet.totalBet
+        mBinding.fragmentOnlineGamePlayerBetBtn.text = String.format(" %s%s", requireContext().resources.getString(R.string.fragment_main_game_current_bet), betToShow)
     }
 
     private fun hideGameOver() {
@@ -634,7 +747,7 @@ class GameFragment : Fragment() {
         mBinding.fragmentOnlineGameFirstSplitResultTv.visibility = View.GONE
         mBinding.fragmentOnlineGameSecondSplitResultTv.visibility = View.GONE
         mBinding.fragmentOnlineGamePlayerFirstSplitScoreTv.visibility = View.GONE
-        mBinding.fragmentOnlineGamePlayerFirstSplitScoreTv.visibility = View.GONE
+        mBinding.fragmentOnlineGamePlayerSecondSplitScoreTv.visibility = View.GONE
     }
 
     private fun hideReadyPictures() {
@@ -682,5 +795,11 @@ class GameFragment : Fragment() {
 
     companion object {
         const val PLAYER_SAVE_ID = "player_save_id"
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopTimer()
+        stopServiceAndUnregisterReceiver()
     }
 }

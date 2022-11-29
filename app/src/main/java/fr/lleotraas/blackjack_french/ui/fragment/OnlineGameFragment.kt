@@ -314,7 +314,7 @@ class OnlineGameFragment : Fragment() {
 
     private fun showLoanDialog() = AlertDialog.Builder(requireContext()).apply {
         setTitle(requireContext().resources.getString(R.string.online_game_fragment_contract_loan))
-        setMessage(requireContext().resources.getString(R.string.online_game_fragment_loan_explication))
+        setMessage(requireContext().resources.getString(R.string.online_game_fragment_loan_online_message))
         setCancelable(false)
         setPositiveButton(requireContext().resources.getString(R.string.dialog_invitation_to_play_positive_btn)) { dialogInterface, _ ->
             isLoanDialogOpen = false

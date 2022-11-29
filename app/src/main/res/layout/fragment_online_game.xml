@@ -66,6 +66,17 @@
         android:textSize="@dimen/text_normal_size"
         android:visibility="gone"/>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/fragment_online_game_contract_loan_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_online_game_card_view"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/rounded_border_board_btn"
+        android:text="@string/fragment_online_game_loan"
+        style="@style/Button"
+        android:visibility="gone"/>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/fragment_online_game_card_view"
         android:layout_width="match_parent"

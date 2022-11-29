@@ -75,7 +75,9 @@
     <string name="online_game_fragment_server_shutdown">Server shutdown</string>
     <string name="online_game_fragment_blackjack">BJ</string>
     <string name="online_game_fragment_contract_loan">Contract loan</string>
-    <string name="online_game_fragment_loan_explication">You can contract a new loan to get 1500 in your wallet but you increase your number of loan by +1</string>
+    <string name="fragment_online_game_loan">Loan</string>
+    <string name="online_game_fragment_loan_online_message">You can contract a new loan to get 1500 in your wallet but you increase your number of loan by +1</string>
+    <string name="online_game_fragment_loan_offline_message">You can contract a new loan to get 500 in your wallet</string>
     <string name="fragment_online_main_screen_fab_description">chat_fab</string>
     <string name="fragment_online_main_screen_chat_input_hint">message</string>
     <string name="disconnected_dialog_title">Disconnected</string>
