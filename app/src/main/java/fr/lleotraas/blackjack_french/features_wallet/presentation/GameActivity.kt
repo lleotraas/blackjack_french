@@ -1,4 +1,4 @@
-package fr.lleotraas.blackjack_french.ui.activity
+package fr.lleotraas.blackjack_french.features_wallet.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

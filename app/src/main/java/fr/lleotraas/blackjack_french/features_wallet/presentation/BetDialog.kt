@@ -1,4 +1,4 @@
-package fr.lleotraas.blackjack_french.ui.dialog
+package fr.lleotraas.blackjack_french.features_wallet.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,10 +10,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import fr.lleotraas.blackjack_french.R
 import fr.lleotraas.blackjack_french.databinding.DialogBetBinding
-import fr.lleotraas.blackjack_french.model.Bank
-import fr.lleotraas.blackjack_french.model.Bet
-import fr.lleotraas.blackjack_french.ui.activity.GameActivityViewModel
-import fr.lleotraas.blackjack_french.ui.fragment.GameFragment.Companion.PLAYER_SAVE_ID
+import fr.lleotraas.blackjack_french.features_wallet.domain.model.Wallet
+import fr.lleotraas.blackjack_french.features_wallet.domain.model.Bet
+import fr.lleotraas.blackjack_french.features_wallet.presentation.GameFragment.Companion.PLAYER_SAVE_ID
 import fr.lleotraas.blackjack_french.utils.Utils
 
 @AndroidEntryPoint
@@ -46,9 +45,9 @@ class BetDialog : BottomSheetDialogFragment() {
         }
     }
 
-    private fun updateUser(bank: Bank) {
+    private fun updateUser(wallet: Wallet) {
         mBinding.apply {
-            betDialogBetBankTv.text = bank.amount.toString()
+            betDialogBetBankTv.text = wallet.amount.toString()
             if (bet.playerBet > 0.0) {
                 val betArray =
                     Utils.getArrayOfBetString(bet.playerBet.toString())
@@ -56,35 +55,35 @@ class BetDialog : BottomSheetDialogFragment() {
                 for (index in betArray.indices) {
                     betTabTv[Utils.getIndex(betArray.size, betTabTv.size, index)].value = betArray[index].toString().toInt()
                 }
-                betDialogBetBankTv.text = (bank.amount.minus(bet())).toString()
+                betDialogBetBankTv.text = (wallet.amount.minus(bet())).toString()
             }
 
         }
-        configureListeners(bank)
+        configureListeners(wallet)
 //           setPickerMaxValue()
 
     }
 
-    private fun configureListeners(bank: Bank) {
+    private fun configureListeners(wallet: Wallet) {
         mBinding.apply {
             dialogBetTenOfThousandsBet.setOnValueChangedListener { _, _, _ ->
-                updateTextView(bank)
+                updateTextView(wallet)
             }
 
             dialogBetThousandBet.setOnValueChangedListener { _, _, _ ->
-                updateTextView(bank)
+                updateTextView(wallet)
             }
 
             dialogBetHundredBet.setOnValueChangedListener { _, _, _ ->
-                updateTextView(bank)
+                updateTextView(wallet)
             }
 
             dialogBetDozensBet.setOnValueChangedListener { _, _, _ ->
-                updateTextView(bank)
+                updateTextView(wallet)
             }
 
             dialogBetUnityBet.setOnValueChangedListener { _, _, _ ->
-                updateTextView(bank)
+                updateTextView(wallet)
             }
 
             betDialogOkBtn.setOnClickListener {
@@ -95,7 +94,7 @@ class BetDialog : BottomSheetDialogFragment() {
                     dialogBetThousandBet.value,
                     dialogBetTenOfThousandsBet.value
                 )
-                if (bank.amount < bet.playerBet) {
+                if (wallet.amount < bet.playerBet) {
                     Toast.makeText(requireContext(), requireContext().resources.getString(R.string.bet_dialog_not_enough_money), Toast.LENGTH_SHORT).show()
                 } else {
                     setBet(bet)
@@ -105,8 +104,8 @@ class BetDialog : BottomSheetDialogFragment() {
         }
     }
 
-    private fun updateTextView(bank: Bank) {
-        mBinding.betDialogBetBankTv.text = ((bank.amount) - bet()).toString()
+    private fun updateTextView(wallet: Wallet) {
+        mBinding.betDialogBetBankTv.text = ((wallet.amount) - bet()).toString()
     }
 
     private fun bet() = Utils.makeBet(

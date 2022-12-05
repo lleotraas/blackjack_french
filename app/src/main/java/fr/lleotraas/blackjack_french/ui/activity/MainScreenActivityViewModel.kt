@@ -4,40 +4,39 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import fr.lleotraas.blackjack_french.data.repository.PlayerBankRepositoryImpl
+import fr.lleotraas.blackjack_french.features_wallet.data.repository.WalletRepositoryImpl
 import fr.lleotraas.blackjack_french.domain.repository.FirebaseHelper
 import fr.lleotraas.blackjack_french.domain.repository.UserRepository
-import fr.lleotraas.blackjack_french.model.Bank
-import fr.lleotraas.blackjack_french.model.User
+import fr.lleotraas.blackjack_french.features_wallet.domain.model.Wallet
 import javax.inject.Inject
 import javax.inject.Named
 
 @HiltViewModel
 @Named("MainScreenActivityViewModel")
 class MainScreenActivityViewModel @Inject constructor (
-    private val playerBankRepository: PlayerBankRepositoryImpl,
+    private val playerBankRepository: WalletRepositoryImpl,
     private val firebaseHelper: FirebaseHelper,
     private val userRepository: UserRepository
 ): ViewModel() {
 
-    suspend fun insertBank(bank: Bank): Long {
-        return playerBankRepository.insertBank(bank)
+    suspend fun insertBank(wallet: Wallet): Long {
+        return playerBankRepository.insertWallet(wallet)
     }
 
-    suspend fun updateBank(bank: Bank) {
-        playerBankRepository.updateBank(bank)
+    suspend fun updateBank(wallet: Wallet) {
+        playerBankRepository.updateWallet(wallet)
     }
 
     suspend fun deleteBank(id: Long): Int {
-        return playerBankRepository.deleteBank(id)
+        return playerBankRepository.deleteWallet(id)
     }
 
-    fun getBank(id: Long): LiveData<Bank> {
-        return playerBankRepository.getBank(id)
+    fun getBank(id: Long): LiveData<Wallet> {
+        return playerBankRepository.getWallet(id)
     }
 
-    fun getAllBank(): LiveData<List<Bank>> {
-        return playerBankRepository.getAllBank()
+    fun getAllBank(): LiveData<List<Wallet>> {
+        return playerBankRepository.getAllWallet()
     }
 
     fun getCurrentUser(): FirebaseUser? {

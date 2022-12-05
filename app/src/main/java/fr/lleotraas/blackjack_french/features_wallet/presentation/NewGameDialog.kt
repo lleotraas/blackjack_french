@@ -1,4 +1,4 @@
-package fr.lleotraas.blackjack_french.ui.dialog
+package fr.lleotraas.blackjack_french.features_wallet.presentation
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,10 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import fr.lleotraas.blackjack_french.R
 import fr.lleotraas.blackjack_french.databinding.DialogNewGameBinding
-import fr.lleotraas.blackjack_french.model.Bank
-import fr.lleotraas.blackjack_french.ui.activity.GameActivity
+import fr.lleotraas.blackjack_french.features_wallet.domain.model.Wallet
 import fr.lleotraas.blackjack_french.ui.activity.MainScreenActivityViewModel
-import fr.lleotraas.blackjack_french.ui.fragment.GameFragment.Companion.PLAYER_SAVE_ID
+import fr.lleotraas.blackjack_french.features_wallet.presentation.GameFragment.Companion.PLAYER_SAVE_ID
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -49,7 +48,7 @@ class NewGameDialog : DialogFragment() {
             newGameDialogPositiveBtn.setOnClickListener {
                 if (newGameDialogEnterName.text!!.isNotEmpty()) {
                     lifecycleScope.launch {
-                        val playerId = mViewModelScreen.insertBank(Bank(0, 500.0, newGameDialogEnterName.text.toString()))
+                        val playerId = mViewModelScreen.insertBank(Wallet(0, 500.0, newGameDialogEnterName.text.toString()))
                         beginNewGame(playerId)
                         dismiss()
                     }

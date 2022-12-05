@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import fr.lleotraas.blackjack_french.databinding.FragmentMainScreenBinding
-import fr.lleotraas.blackjack_french.ui.dialog.LoadGameDialog
-import fr.lleotraas.blackjack_french.ui.dialog.NewGameDialog
+import fr.lleotraas.blackjack_french.features_wallet.presentation.LoadGameDialog
+import fr.lleotraas.blackjack_french.features_wallet.presentation.NewGameDialog
 import fr.lleotraas.blackjack_french.ui.dialog.OnlineGameDialog
 
 @AndroidEntryPoint

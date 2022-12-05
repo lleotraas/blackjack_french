@@ -6,6 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import fr.lleotraas.blackjack_french.data.repository.*
 import fr.lleotraas.blackjack_french.domain.repository.*
+import fr.lleotraas.blackjack_french.features_wallet.data.repository.BetRepositoryImpl
+import fr.lleotraas.blackjack_french.features_wallet.data.repository.WalletRepositoryImpl
+import fr.lleotraas.blackjack_french.features_wallet.domain.repository.BetRepository
+import fr.lleotraas.blackjack_french.features_wallet.domain.repository.WalletRepository
 import javax.inject.Singleton
 
 @Module
@@ -41,4 +45,10 @@ abstract class RepositoryModule {
     abstract fun bindOnlineGameChatRepository(
         onlineGameChatRepositoryImpl: OnlineGameChatRepositoryImpl
     ): OnlineGameChatRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindWalletRepository(
+        walletRepositoryImpl: WalletRepositoryImpl
+    ): WalletRepository
 }

@@ -7,8 +7,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import fr.lleotraas.blackjack_french.database.BlackjackDatabase
-import fr.lleotraas.blackjack_french.database.dao.BankDao
+import fr.lleotraas.blackjack_french.features_wallet.data.data_source.BlackjackDatabase
+import fr.lleotraas.blackjack_french.features_wallet.data.data_source.BankDao
 import fr.lleotraas.blackjack_french.domain.repository.FirebaseHelper
 import fr.lleotraas.blackjack_french.data.repository.FirebaseHelperImpl
 import javax.inject.Singleton

@@ -1,25 +1,24 @@
-package fr.lleotraas.blackjack_french.database.dao
+package fr.lleotraas.blackjack_french.features_wallet.data.data_source
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import fr.lleotraas.blackjack_french.model.Bank
-import kotlinx.coroutines.flow.Flow
+import fr.lleotraas.blackjack_french.features_wallet.domain.model.Wallet
 
 
 @Dao
 interface BankDao{
 
     @Query("SELECT * FROM player_bank WHERE player_id = :id")
-    fun getBankById(id: Long): LiveData<Bank>
+    fun getBankById(id: Long): LiveData<Wallet>
 
     @Query("SELECT * FROM player_bank")
-    fun getAllBank(): LiveData<List<Bank>>
+    fun getAllBank(): LiveData<List<Wallet>>
 
     @Update
-    suspend fun updateBank(bank: Bank)
+    suspend fun updateBank(wallet: Wallet)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertBank(bank: Bank): Long
+    suspend fun insertBank(wallet: Wallet): Long
 
     @Query("DELETE FROM player_bank WHERE player_id = :id")
     suspend fun deleteBank(id: Long): Int

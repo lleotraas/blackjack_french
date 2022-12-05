@@ -1,4 +1,4 @@
-package fr.lleotraas.blackjack_french.model
+package fr.lleotraas.blackjack_french.features_wallet.domain.model
 
 class Bet(
     var playerBet: Double,

@@ -55,7 +55,7 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.GameActivity"
+            android:name=".features_wallet.presentation.GameActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.sign.GoogleSignInActivity"

@@ -1,7 +1,7 @@
-package fr.lleotraas.blackjack_french.domain.repository
+package fr.lleotraas.blackjack_french.features_wallet.domain.repository
 
 import androidx.lifecycle.LiveData
-import fr.lleotraas.blackjack_french.model.Bet
+import fr.lleotraas.blackjack_french.features_wallet.domain.model.Bet
 
 interface BetRepository {
 

@@ -1,12 +1,12 @@
-package fr.lleotraas.blackjack_french.data.repository
+package fr.lleotraas.blackjack_french.features_wallet.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import fr.lleotraas.blackjack_french.domain.repository.BetRepository
-import fr.lleotraas.blackjack_french.model.Bet
+import fr.lleotraas.blackjack_french.features_wallet.domain.repository.BetRepository
+import fr.lleotraas.blackjack_french.features_wallet.domain.model.Bet
 import javax.inject.Inject
 
-class BetRepositoryImpl @Inject constructor(): BetRepository{
+class BetRepositoryImpl @Inject constructor(): BetRepository {
     private var playerBet = MutableLiveData<Bet>()
     private var opponentBet = MutableLiveData<Bet>()
 

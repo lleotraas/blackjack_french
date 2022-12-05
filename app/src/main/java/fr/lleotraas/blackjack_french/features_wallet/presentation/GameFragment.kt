@@ -1,4 +1,4 @@
-package fr.lleotraas.blackjack_french.ui.fragment
+package fr.lleotraas.blackjack_french.features_wallet.presentation
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -20,10 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import fr.lleotraas.blackjack_french.R
 import fr.lleotraas.blackjack_french.databinding.FragmentOnlineGameBinding
+import fr.lleotraas.blackjack_french.features_wallet.domain.model.Bet
+import fr.lleotraas.blackjack_french.features_wallet.domain.model.Wallet
 import fr.lleotraas.blackjack_french.model.*
 import fr.lleotraas.blackjack_french.service.TimeService
-import fr.lleotraas.blackjack_french.ui.activity.GameActivityViewModel
-import fr.lleotraas.blackjack_french.ui.dialog.BetDialog
+import fr.lleotraas.blackjack_french.ui.fragment.GameAdapter
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.FIRST_SPLIT
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.MAIN_HAND
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.SECOND_SPLIT
@@ -31,7 +32,6 @@ import fr.lleotraas.blackjack_french.utils.Utils.Companion.createDeck
 import fr.lleotraas.blackjack_french.utils.Utils.Companion.shuffleDeck
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.math.round
 
 @AndroidEntryPoint
 class GameFragment : Fragment() {
@@ -52,7 +52,7 @@ class GameFragment : Fragment() {
     private lateinit var playerFirstSplitAdapter: GameAdapter
     private lateinit var playerSecondSplitAdapter: GameAdapter
     private lateinit var dealerHandAdapter: GameAdapter
-    private var bank: Bank? = null
+    private var wallet: Wallet? = null
     private var bet = Bet(0.0,0.0,0.0,0.0,0.0, 0.0)
     private var serviceIntent: Intent? = null
     private var broadcastTimer: Intent? = null
@@ -97,7 +97,7 @@ class GameFragment : Fragment() {
 
     private fun loadBank(bankId: Long) {
         mViewModel.getBank(bankId).observe(viewLifecycleOwner) { currentBank ->
-            bank = currentBank
+            wallet = currentBank
             mBinding.fragmentOnlineGameBankAmountTv.text = String.format("%s", currentBank.amount)
 
             Log.e(TAG, "refreshTotalSpent: initial bet: ${this.bet.playerBet} \tmain hand bet: ${this.bet.mainHandBet} \tfirst split bet: ${this.bet.firstSplitBet} \tsecond split bet: ${this.bet.secondSplitBet} \ttotal bet: ${this.bet.totalBet}")
@@ -109,9 +109,9 @@ class GameFragment : Fragment() {
         setMessage(requireContext().resources.getString(R.string.online_game_fragment_loan_offline_message))
         setCancelable(false)
         setPositiveButton(requireContext().resources.getString(R.string.dialog_invitation_to_play_positive_btn)) { dialogInterface, _ ->
-            bank?.amount = bank?.amount?.plus(500.0)!!
+            wallet?.amount = wallet?.amount?.plus(500.0)!!
             lifecycleScope.launch {
-                mViewModel.updateBank(bank!!)
+                mViewModel.updateBank(wallet!!)
             }
             mBinding.fragmentOnlineGameContractLoanBtn.visibility = View.GONE
             dialogInterface.dismiss()
@@ -187,7 +187,7 @@ class GameFragment : Fragment() {
 
     private fun updatePlayerBankAmount() {
         lifecycleScope.launch {
-            mViewModel.updateBank(bank!!)
+            mViewModel.updateBank(wallet!!)
         }
     }
 
@@ -207,7 +207,7 @@ class GameFragment : Fragment() {
     private fun configureListeners() {
         // Start Button
         mBinding.fragmentOnlineGameGameStart.setOnClickListener {
-            if (bank!!.amount >= bet.playerBet) {
+            if (wallet!!.amount >= bet.playerBet) {
                 player.score[MAIN_HAND] = 0
                 player.score[FIRST_SPLIT] = 0
                 player.score[SECOND_SPLIT] = 0
@@ -270,7 +270,7 @@ class GameFragment : Fragment() {
 
         //Double
         mBinding.fragmentOnlineGameDoubleBtn.setOnClickListener {
-            if (bank!!.amount >= bet.playerBet) {
+            if (wallet!!.amount >= bet.playerBet) {
                 playerDrawCard()
                 decreaseBank()
                 updatePlayerBankAmount()
@@ -288,7 +288,7 @@ class GameFragment : Fragment() {
 
         //Split
         mBinding.fragmentOnlineGameSplitBtn.setOnClickListener {
-            if (bank!!.amount >= bet.playerBet) {
+            if (wallet!!.amount >= bet.playerBet) {
                 splitPlayerGame()
                 decreaseBank()
                 updatePlayerBankAmount()
@@ -314,7 +314,7 @@ class GameFragment : Fragment() {
         mBinding.fragmentOnlineGameFab.setOnClickListener {
             val betDialog = BetDialog()
             val bundle = Bundle()
-            bundle.putLong(PLAYER_SAVE_ID, bank!!.id)
+            bundle.putLong(PLAYER_SAVE_ID, wallet!!.id)
             betDialog.arguments = bundle
             betDialog.show(requireActivity().supportFragmentManager, betDialog.tag)
         }
@@ -330,7 +330,7 @@ class GameFragment : Fragment() {
         alertDialog.setTitle(requireContext().resources.getString(R.string.fragment_main_game_insurance_title))
         alertDialog.setMessage(requireContext().resources.getString(R.string.fragment_main_game_insurance))
         alertDialog.setPositiveButton(requireContext().resources.getString(R.string.bet_dialog_ok)) { dialog, _ ->
-            if (bank!!.amount >= bet.playerBet) {
+            if (wallet!!.amount >= bet.playerBet) {
                 insuranceBet()
                 decreaseBankWithInsurance()
                 updatePlayerBankAmount()
@@ -359,29 +359,29 @@ class GameFragment : Fragment() {
     }
 
     private fun decreaseBank() {
-        if (bank!!.amount >= bet.playerBet) {
-            bank!!.amount -= bet.playerBet
+        if (wallet!!.amount >= bet.playerBet) {
+            wallet!!.amount -= bet.playerBet
         }
         Log.e(TAG, "refreshTotalSpent: initial bet: ${bet.playerBet} \tmain hand bet: ${bet.mainHandBet} \tfirst split bet: ${bet.firstSplitBet} \tsecond split bet: ${bet.secondSplitBet} \ttotal bet: ${bet.totalBet}")
     }
 
     private fun decreaseBankWithInsurance() {
-        if (bank!!.amount > bet.insuranceBet) {
-            bank!!.amount -= bet.insuranceBet
+        if (wallet!!.amount > bet.insuranceBet) {
+            wallet!!.amount -= bet.insuranceBet
         }
     }
 
     private fun increaseBank(bet: Double) {
-        bank!!.amount += bet
+        wallet!!.amount += bet
         Log.e(TAG, "refreshTotalSpent: initial bet: ${this.bet.playerBet} \tmain hand bet: ${this.bet.mainHandBet} \tfirst split bet: ${this.bet.firstSplitBet} \tsecond split bet: ${this.bet.secondSplitBet} \ttotal bet: ${this.bet.totalBet}")
     }
 
     private fun increaseBankWithBlackjack() {
-        bank!!.amount += ((bet.playerBet * 2) + (bet.playerBet / 2))
+        wallet!!.amount += ((bet.playerBet * 2) + (bet.playerBet / 2))
     }
 
     private fun increaseBankWithInsurance() {
-        bank!!.amount += bet.insuranceBet * 3
+        wallet!!.amount += bet.insuranceBet * 3
     }
 
     private fun insuranceBet() {
@@ -727,8 +727,8 @@ class GameFragment : Fragment() {
 
     private fun showLoanBtn() {
         if (
-            bank != null &&
-            bank?.amount!! < 100
+            wallet != null &&
+            wallet?.amount!! < 100
         ) {
             mBinding.fragmentOnlineGameContractLoanBtn.visibility = View.VISIBLE
         } else {
