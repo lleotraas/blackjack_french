@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="fr.lleotraas.blackjack_french">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -11,7 +10,7 @@
         android:maxSdkVersion="28"/>
 
     <application
-        android:name=".BlackjackApplication"
+        android:name=".di.BlackjackApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,21 +22,21 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name=".ui.activity.ProfileActivity"
+            android:name=".features_profile.presentation.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.SettingMenuActivity"
+            android:name=".features_setting_menu.presentation.SettingMenuActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.OnlineGameActivity"
+            android:name=".features_online_game.presentation.OnlineGameActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.activity.DetailOnlineUserActivity"
+            android:name=".features_detail.presentation.DetailOnlineUserActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.OnlineMainScreenActivity"
+            android:name=".features_online_main_screen.presentation.OnlineMainScreenActivity"
             android:exported="false" />
 
         <meta-data
@@ -45,7 +44,7 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".ui.activity.MainScreenActivity"
+            android:name=".features_offline_main_screen.presentation.MainScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,16 +54,16 @@
         </activity>
 
         <activity
-            android:name=".features_wallet.presentation.GameActivity"
+            android:name=".features_offline_game.presentation.GameActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.sign.GoogleSignInActivity"
+            android:name=".GoogleSignInActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.sign.FacebookSignInActivity"
+            android:name=".FacebookSignInActivity"
             android:exported="false" />
 
-        <service android:name=".service.TimeService" />
+        <service android:name=".features_offline_game.domain.service.TimeService" />
     </application>
 
 </manifest>

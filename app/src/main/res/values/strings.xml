@@ -135,6 +135,7 @@
     <string name="dialog_bet_hundred">Hundred</string>
     <string name="dialog_bet_dozens">Dozens</string>
     <string name="dialog_bet_unity">Unity</string>
+    <string name="dialog_bet_number_of_bet">Box</string>
 
 
 </resources>

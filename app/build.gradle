@@ -7,12 +7,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "fr.lleotraas.blackjack_french"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 6
         versionName "1.5"
 
@@ -62,6 +62,7 @@ dependencies {
 
     // Glide
     implementation "com.github.bumptech.glide:glide:$rootProject.bumptechGlideVersion"
+    implementation 'androidx.core:core-ktx:+'
     kapt "com.github.bumptech.glide:compiler:$rootProject.bumptechGlideVersion"
 
     //ROOM

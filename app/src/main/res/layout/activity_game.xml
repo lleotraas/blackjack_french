@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features_wallet.presentation.GameActivity">
+    tools:context=".features_offline_game.presentation.GameActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/activity_game_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="fr.lleotraas.blackjack_french.features_wallet.presentation.GameFragment" />
+        android:name="fr.lleotraas.blackjack_french.features_offline_game.presentation.offline_game.OfflineGameFragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

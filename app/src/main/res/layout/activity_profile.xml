@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.ProfileActivity">
+    tools:context=".features_profile.presentation.ProfileActivity">
 
     <include
         android:id="@+id/activity_profile_toolbar"
@@ -14,6 +14,6 @@
         android:id="@+id/activity_profile_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="fr.lleotraas.blackjack_french.ui.fragment.ProfileFragment"/>
+        android:name="fr.lleotraas.blackjack_french.features_profile.presentation.ProfileFragment"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

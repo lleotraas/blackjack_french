@@ -5,7 +5,7 @@
     android:id="@+id/activity_online_main_screen_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.OnlineMainScreenActivity"
+    tools:context=".features_online_main_screen.presentation.OnlineMainScreenActivity"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
