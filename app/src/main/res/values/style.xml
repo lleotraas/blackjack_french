@@ -63,14 +63,19 @@
 
     <style name="TitleTextView">
         <item name="android:layout_marginTop">@dimen/margin_little_size</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_medium_size</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="ValueTextView">
+        <item name="android:layout_marginStart">@dimen/margin_little_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_little_size</item>
+        <item name="android:layout_marginTop">@dimen/margin_little_size</item>
         <item name="android:layout_marginBottom">@dimen/margin_little_size</item>
+        <item name="android:paddingStart">@dimen/margin_little_size</item>
+        <item name="android:paddingEnd">@dimen/margin_little_size</item>
         <item name="android:textSize">@dimen/text_medium_size</item>
+<!--        <item name="android:background">@drawable/rounded_border</item>-->
         <item name="android:textColor">@color/black</item>
         <item name="android:gravity">center</item>
     </style>
@@ -83,8 +88,8 @@
     <style name="RecyclerView" >
         <item name="android:layout_marginEnd">@dimen/margin_normal_size</item>
         <item name="android:layout_marginStart">@dimen/margin_large_size</item>
-        <item name="android:layout_marginTop">@dimen/margin_large_size</item>
-        <item name="android:layout_marginBottom">@dimen/margin_large_size</item>
+<!--        <item name="android:layout_marginTop">@dimen/margin_large_size</item>-->
+<!--        <item name="android:layout_marginBottom">@dimen/margin_large_size</item>-->
     </style>
 
     <!-- ANIMATION -->

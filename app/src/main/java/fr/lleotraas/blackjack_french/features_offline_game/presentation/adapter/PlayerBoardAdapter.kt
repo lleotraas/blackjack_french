@@ -6,15 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import fr.lleotraas.blackjack_french.R
 import fr.lleotraas.blackjack_french.databinding.PlayerBoardRowBinding
 import fr.lleotraas.blackjack_french.features_offline_game.domain.model.Card
 import fr.lleotraas.blackjack_french.features_offline_game.domain.model.CustomPlayer
+import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.formatStringBet
 import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.utils.HandType
 
@@ -43,13 +46,68 @@ class PlayerBoardAdapter : ListAdapter<CustomPlayer, PlayerBoardAdapter.PlayerBo
         holder.binding.apply {
             playerBoardBetValueTv.text = currentPlayer.bet.formatStringBet()
             playerBoardScoreValueTv.text = currentPlayer.score.toString()
-            playerBoardInsuranceValueTv.text = currentPlayer.insuranceBet.toString()
+//            playerBoardInsuranceValueTv.text = currentPlayer.insuranceBet.toString()
             showCurrentPlayerIcon(currentPlayer, playerBoardCurrentPlayerIcon)
             showResultScore(currentPlayer, root, playerBoardPlayerResultIcon, playerBoardCurrentPlayerIcon)
             playerHaveBlackjack(currentPlayer, root.context, playerBoardScoreValueTv)
-
+            playerDouble(currentPlayer, root.context, playerBoardDoubleValueTv)
+            playerSplit(currentPlayer, root.context, playerBoardSplitTv)
+            playerCanInsure(currentPlayer, playerBoardInsuranceFab, playerBoardInsuranceTv)
+            playerInsurance(currentPlayer, root.context, playerBoardInsuranceValueTv)
             setupHorizontalRecyclerView(playerBoardCardRv, root.context)
             loadHandIntoRecyclerView(currentPlayer.hand, GameAdapter(), playerBoardCardRv)
+        }
+    }
+
+    private fun playerCanInsure(
+        currentPlayer: CustomPlayer,
+        playerBoardInsuranceFab: FloatingActionButton,
+        playerBoardInsuranceTv: AppCompatTextView
+    ) {
+        if (currentPlayer.isInsuranceOpen) {
+            playerBoardInsuranceFab.visibility = View.VISIBLE
+            playerBoardInsuranceTv.visibility = View.VISIBLE
+        }
+
+        playerBoardInsuranceFab.setOnClickListener {
+            currentPlayer.insuranceBet = currentPlayer.bet / 2
+            playerBoardInsuranceFab.visibility = View.GONE
+            playerBoardInsuranceTv.visibility = View.GONE
+        }
+    }
+
+    private fun playerInsurance(
+        currentPlayer: CustomPlayer,
+        context: Context,
+        playerBoardInsuranceValueTv: AppCompatTextView
+    ) {
+        if (currentPlayer.insuranceBet > 0.0) {
+            playerBoardInsuranceValueTv.setTextColor(ContextCompat.getColor(context, R.color.carpet_color))
+        }
+    }
+
+    private fun playerSplit(
+        currentPlayer: CustomPlayer,
+        context: Context,
+        playerBoardSplitTv: AppCompatTextView
+    ) {
+        if (
+            currentPlayer.isPlayerFirstSplit ||
+            currentPlayer.playerHandType == HandType.FirstSplit ||
+            currentPlayer.playerHandType == HandType.SecondSplit
+        ) {
+            val color = Utils.getColorByPlayerNumber(currentPlayer.playerNumber)
+            playerBoardSplitTv.setTextColor(ContextCompat.getColor(context, color))
+        }
+    }
+
+    private fun playerDouble(
+        currentPlayer: CustomPlayer,
+        context: Context,
+        playerBoardDoubleValueTv: AppCompatTextView
+    ) {
+        if (currentPlayer.isDouble) {
+            playerBoardDoubleValueTv.setTextColor(ContextCompat.getColor(context, R.color.red))
         }
     }
 

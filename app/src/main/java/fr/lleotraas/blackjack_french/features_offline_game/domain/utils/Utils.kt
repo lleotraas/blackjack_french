@@ -78,25 +78,33 @@ class Utils {
 //            deck.deckList.add(Card(NumberType.ACE,ColorType.SPADE,1))
 //            deck.deckList.add(Card(NumberType.FIVE,ColorType.HEART,5))
 //            deck.deckList.add(Card(NumberType.THREE,ColorType.DIAMOND,3))
-//            deck.deckList.add(Card(NumberType.ACE,ColorType.CLUB,1))
 //            deck.deckList.add(Card(NumberType.FOUR,ColorType.DIAMOND,4))
 //            deck.deckList.add(Card(NumberType.HEIGHT,ColorType.DIAMOND,8))
 //            deck.deckList.add(Card(NumberType.THREE,ColorType.SPADE,3))
 //            deck.deckList.add(Card(NumberType.THREE,ColorType.SPADE,3))
 //            deck.deckList.add(Card(NumberType.FOUR,ColorType.DIAMOND,4))
 //            deck.deckList.add(Card(NumberType.FOUR,ColorType.HEART,4))
-            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
-            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
-            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
-            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
-            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
-            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
-            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
-            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
-            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
-            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
-            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
-            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
+//            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
+//            deck.deckList.add(Card(NumberType.ACE,ColorType.CLUB,1))
+//            deck.deckList.add(Card(NumberType.ACE,ColorType.CLUB,1))
+//            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
+//            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
 
 
 
@@ -472,7 +480,16 @@ class Utils {
             hundred: Int,
             thousand: Int,
             tenOfThousand: Int
-        ) = (tenOfThousand * 10000.0 + thousand * 1000.0 + hundred * 100.0 + dozens * 10.0 + unity)
+        ) = tenOfThousand * 10000.0 + thousand * 1000.0 + hundred * 100.0 + dozens * 10.0 + unity
+
+        fun makeTotalBet(
+            unity: Int,
+            dozens: Int,
+            hundred: Int,
+            thousand: Int,
+            tenOfThousand: Int,
+            numberOfBox: Int
+        ) = (tenOfThousand * 10000.0 + thousand * 1000.0 + hundred * 100.0 + dozens * 10.0 + unity) * numberOfBox
 
         fun getArrayOfBetString(bet: String): CharArray {
             val string = bet.replaceAfter(".", "").replace(".","")
@@ -671,7 +688,8 @@ class Utils {
                         isPlayerDrawAce = false,
                         isPlayerScoreSoft = false,
                         isPlayerFirstSplit = false,
-                        isPlayerSecondSplit = false
+                        isPlayerSecondSplit = false,
+                        isInsuranceOpen = false
                     )
                 )
             }
@@ -732,7 +750,8 @@ class Utils {
                 isPlayerDrawAce = false,
                 isPlayerScoreSoft = false,
                 isPlayerFirstSplit = false,
-                isPlayerSecondSplit = false
+                isPlayerSecondSplit = false,
+                isInsuranceOpen = false
             )
         }
 
@@ -758,7 +777,8 @@ class Utils {
                 isPlayerDrawAce = false,
                 isPlayerScoreSoft = false,
                 isPlayerFirstSplit = false,
-                isPlayerSecondSplit = false
+                isPlayerSecondSplit = false,
+                isInsuranceOpen = false
             )
         }
 
@@ -807,6 +827,30 @@ class Utils {
                 }
             }
             return player
+        }
+
+        fun getColorByPlayerNumber(playerNumberType: PlayerNumberType): Int {
+            return when(playerNumberType) {
+                PlayerNumberType.PLAYER_ONE -> R.color.facebook
+                PlayerNumberType.PLAYER_TWO -> R.color.google
+                PlayerNumberType.PLAYER_THREE -> R.color.purple_200
+                PlayerNumberType.PLAYER_FOUR -> R.color.teal_200
+                PlayerNumberType.PLAYER_FIVE -> R.color.purple_700
+                PlayerNumberType.PLAYER_SIX -> R.color.yellow
+                else -> R.color.green
+            }
+        }
+
+        fun openInsurance(arrayOfCustomPlayer: ArrayList<CustomPlayer>) {
+            for (player in arrayOfCustomPlayer) {
+                player.isInsuranceOpen = true
+            }
+        }
+
+        fun closeInsurance(arrayOfCustomPlayer: ArrayList<CustomPlayer>) {
+            for (player in arrayOfCustomPlayer) {
+                player.isInsuranceOpen = false
+            }
         }
 
         private fun getHandTypeFromInt(index: Int): HandType {

@@ -14,4 +14,7 @@
     <color name="facebook">#3A5898</color>
     <color name="google">#F53E28</color>
     <color name="red">#DA0808</color>
+    <color name="gray">#E8E6E6</color>
+    <color name="yellow">#CDA826</color>
+    <color name="green">#1A8028</color>
 </resources>

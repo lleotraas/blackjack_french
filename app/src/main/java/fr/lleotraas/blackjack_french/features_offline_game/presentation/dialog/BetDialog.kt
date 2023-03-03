@@ -83,18 +83,23 @@ class BetDialog : BottomSheetDialogFragment() {
                 updateTextView(offlineUser.wallet)
             }
 
+            dialogBetNumberOfBet.setOnValueChangedListener { _, _, _ ->
+                updateTextView(offlineUser.wallet)
+            }
+
             betDialogOkBtn.setOnClickListener {
                     offlineUser.defaultBet = Utils.makeBet(
-                            dialogBetUnityBet.value,
-                            dialogBetDozensBet.value,
-                            dialogBetHundredBet.value,
-                            dialogBetThousandBet.value,
-                            dialogBetTenOfThousandsBet.value
-                        )
+                        dialogBetUnityBet.value,
+                        dialogBetDozensBet.value,
+                        dialogBetHundredBet.value,
+                        dialogBetThousandBet.value,
+                        dialogBetTenOfThousandsBet.value
+
+                    )
                 offlineUser.player = Utils.createCustomPlayerList(dialogBetNumberOfBet.value, offlineUser.defaultBet)
                 offlineUser.playerCount = dialogBetNumberOfBet.value
                 if(offlineUser.wallet?.amount != null) {
-                    if (offlineUser.wallet.amount < (offlineUser.defaultBet)) {
+                    if (offlineUser.wallet.amount < offlineUser.defaultBet) {
                         Toast.makeText(
                             requireContext(),
                             requireContext().resources.getString(R.string.bet_dialog_not_enough_money),
@@ -110,7 +115,7 @@ class BetDialog : BottomSheetDialogFragment() {
     }
 
     private fun updateTextView(wallet: Wallet?) {
-        mBinding.betDialogBetBankTv.text = ((wallet?.amount)?.minus(bet()).toString())
+        mBinding.betDialogBetBankTv.text = ((wallet?.amount)?.minus(totalBet()).toString())
     }
 
     private fun bet() = Utils.makeBet(
@@ -119,6 +124,15 @@ class BetDialog : BottomSheetDialogFragment() {
         mBinding.dialogBetHundredBet.value,
         mBinding.dialogBetThousandBet.value,
         mBinding.dialogBetTenOfThousandsBet.value
+    )
+
+    private fun totalBet() = Utils.makeTotalBet(
+        mBinding.dialogBetUnityBet.value,
+        mBinding.dialogBetDozensBet.value,
+        mBinding.dialogBetHundredBet.value,
+        mBinding.dialogBetThousandBet.value,
+        mBinding.dialogBetTenOfThousandsBet.value,
+        mBinding.dialogBetNumberOfBet.value
     )
 
     private fun createBetTabTv() = listOf(

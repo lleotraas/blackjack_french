@@ -19,6 +19,7 @@ import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Co
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.getIndex
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.getInvertedTabIndex
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.makeBet
+import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.makeTotalBet
 
 @AndroidEntryPoint
 class OnlineBetDialog : BottomSheetDialogFragment() {
@@ -65,13 +66,17 @@ class OnlineBetDialog : BottomSheetDialogFragment() {
                 updateTextView(user)
             }
 
+            dialogBetNumberOfBet.setOnValueChangedListener { _, _, _ ->
+                updateTextView(user)
+            }
+
             betDialogOkBtn.setOnClickListener {
                 currentUser.bet!![MAIN_HAND] = makeBet(
-                        dialogBetUnityBet.value,
-                        dialogBetDozensBet.value,
-                        dialogBetHundredBet.value,
-                        dialogBetThousandBet.value,
-                        dialogBetTenOfThousandsBet.value
+                    dialogBetUnityBet.value,
+                    dialogBetDozensBet.value,
+                    dialogBetHundredBet.value,
+                    dialogBetThousandBet.value,
+                    dialogBetTenOfThousandsBet.value
                 )
                 if (user.wallet!! < user.bet!![MAIN_HAND]!!) {
                     Toast.makeText(requireContext(), requireContext().resources.getString(R.string.bet_dialog_not_enough_money), Toast.LENGTH_SHORT).show()
@@ -84,7 +89,7 @@ class OnlineBetDialog : BottomSheetDialogFragment() {
     }
 
     private fun updateTextView(user: User) {
-        mBinding.betDialogBetBankTv.text = ((user.wallet ?: 0.0) - bet()).toString()
+        mBinding.betDialogBetBankTv.text = ((user.wallet ?: 0.0) - totalBet()).toString()
     }
 
     private fun getCurrentUser(currentUserId: String) {
@@ -117,6 +122,15 @@ class OnlineBetDialog : BottomSheetDialogFragment() {
         mBinding.dialogBetHundredBet.value,
         mBinding.dialogBetThousandBet.value,
         mBinding.dialogBetTenOfThousandsBet.value
+    )
+
+    private fun totalBet() = makeTotalBet(
+        mBinding.dialogBetUnityBet.value,
+        mBinding.dialogBetDozensBet.value,
+        mBinding.dialogBetHundredBet.value,
+        mBinding.dialogBetThousandBet.value,
+        mBinding.dialogBetTenOfThousandsBet.value,
+        mBinding.dialogBetNumberOfBet.value
     )
 
     private fun createBetTabTv() = listOf(

@@ -137,6 +137,11 @@
     <string name="player_board_bet_title">Bet</string>
     <string name="player_board_double_title">Double</string>
     <string name="player_board_insurance_title">Insurance</string>
+    <string name="player_board_split">S</string>
+    <string name="player_board_insurance">A</string>
+    <string name="player_board_double">X2</string>
+    <string name="insurance_fab_description">Button for insurance</string>
+    <string name="message_for_insurance">If you want to insure the box for the half of your bet, click on the A button corresponding to this box.</string>
 
 
 </resources>
