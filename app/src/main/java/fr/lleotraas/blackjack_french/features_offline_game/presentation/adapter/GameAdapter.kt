@@ -1,8 +1,10 @@
 package fr.lleotraas.blackjack_french.features_offline_game.presentation.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -33,20 +35,29 @@ class GameAdapter : ListAdapter<Card, GameAdapter.MainGameViewHolder> (Companion
     }
 
     override fun onBindViewHolder(holder: MainGameViewHolder, position: Int) {
-        if (currentList[position].isAnimate) {
+        val currentCard = currentList[position]
+        if (currentCard.isAnimate) {
             holder.binding.root.animation = AnimationUtils.loadAnimation(holder.itemView.context, R.anim.recycler_view)
 //            holder.binding.cardImageColorImg.animation = AnimationUtils.loadAnimation(holder.itemView.context, R.anim.card_fade_in)
 
-            currentList[position].isAnimate = false
+            currentCard.isAnimate = false
         }
+        if (currentCard.color != ColorType.RED) {
+            holder.binding.apply {
+                Glide.with(holder.binding.root)
+                    .load(cardImage(currentCard))
+                    .into(cardImageColorImg)
 
-        holder.binding.apply {
-            Glide.with(holder.binding.root)
-                .load(cardImage(currentList[position]))
-                .into(cardImageColorImg)
-
-            cardImageNumberTopTv.text = getCardText(currentList[position])
-            cardImageNumberBottomTv.text = getCardText(currentList[position])
+                cardImageNumberTopTv.text = getCardText(currentCard)
+                cardImageNumberBottomTv.text = getCardText(currentCard)
+            }
+        } else {
+            holder.binding.apply {
+                cardImageContainer.setBackgroundColor(ContextCompat.getColor(holder.binding.root.context, R.color.red))
+                cardImageColorImg.visibility = View.GONE
+                cardImageNumberTopTv.visibility = View.GONE
+                cardImageNumberBottomTv.visibility = View.GONE
+            }
         }
     }
 

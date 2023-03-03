@@ -11,7 +11,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="offline_game_fragment_bet_must_not_be_0">Bet is 0, choose your bet.</string>
     <string name="fragment_main_screen_new_game">Start new game</string>
     <string name="fragment_main_game_start_game">Start</string>
     <string name="fragment_main_game_dealer_score">DEALER SCORE</string>
@@ -19,10 +19,7 @@
     <string name="fragment_main_game_you_lose">LOSE</string>
     <string name="online_game_fragment_bust">BUST</string>
     <string name="fragment_main_game_draw">DRAW</string>
-    <string name="bet_dialog_one_token">1</string>
-    <string name="bet_dialog_five_token">5</string>
-    <string name="bet_dialog_ten_token">10</string>
-    <string name="bet_dialog_fifty_token">50</string>
+    <string name="fragment_main_game_none">NONE</string>
     <string name="bet_dialog_reset">reset</string>
     <string name="bet_dialog_default_bet">0</string>
     <string name="bet_dialog_ok">OK</string>
@@ -33,7 +30,7 @@
     <string name="load_game_dialog_bank_amout">"Bank amount: "</string>
     <string name="new_game_dialog_enter_name">Enter a save name</string>
     <string name="bet_dialog_cancel">Cancel</string>
-    <string name="fragment_main_game_current_bet">bet:</string>
+    <string name="fragment_main_game_current_bet">BET:</string>
     <string name="fragment_main_game_total_spent">Total spent:</string>
     <string name="fragment_main_game_blackjack">BJ</string>
     <string name="fragment_main_game_insurance">Would you like to assure?</string>
@@ -136,6 +133,10 @@
     <string name="dialog_bet_dozens">Dozens</string>
     <string name="dialog_bet_unity">Unity</string>
     <string name="dialog_bet_number_of_bet">Box</string>
+    <string name="player_board_score_title">Score</string>
+    <string name="player_board_bet_title">Bet</string>
+    <string name="player_board_double_title">Double</string>
+    <string name="player_board_insurance_title">Insurance</string>
 
 
 </resources>

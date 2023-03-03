@@ -1,4 +1,4 @@
-package fr.lleotraas.blackjack_french.features_online_main_screen.presentation.utils.adapter
+package fr.lleotraas.blackjack_french.features_online_main_screen.presentation.adapter
 
 
 import android.util.Log

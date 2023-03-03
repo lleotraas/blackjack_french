@@ -1,6 +1,7 @@
 package fr.lleotraas.blackjack_french.features_offline_game.domain.model
 
 enum class NumberType(val index: Int, val value: Int) {
+    RED(0,0),
     ACE(1, 1),
     TWO(2, 2),
     THREE(3, 3),

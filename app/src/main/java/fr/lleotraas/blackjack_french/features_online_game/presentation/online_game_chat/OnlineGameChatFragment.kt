@@ -15,7 +15,7 @@ import fr.lleotraas.blackjack_french.databinding.FragmentOnlineChatBinding
 import fr.lleotraas.blackjack_french.features_online_game.presentation.OnlineGameActivityViewModel
 import fr.lleotraas.blackjack_french.features_online_main_screen.domain.model.Message
 import fr.lleotraas.blackjack_french.features_online_main_screen.domain.model.User
-import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.utils.adapter.ChatAdapter
+import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.adapter.ChatAdapter
 import fr.lleotraas.blackjack_french.features_online_game.presentation.dialog.QuitOnlineGameDialog
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.loadCustomPhotoInChat
 import java.util.*

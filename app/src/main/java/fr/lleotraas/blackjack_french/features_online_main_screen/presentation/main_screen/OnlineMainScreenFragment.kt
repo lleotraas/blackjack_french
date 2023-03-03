@@ -19,7 +19,7 @@ import fr.lleotraas.blackjack_french.features_online_main_screen.domain.model.On
 import fr.lleotraas.blackjack_french.features_online_main_screen.domain.model.User
 import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.dialog.InvitationToPlayDialog
 import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.OnlineMainScreenActivityViewModel
-import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.utils.adapter.OnlineMainScreenAdapter
+import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.adapter.OnlineMainScreenAdapter
 import fr.lleotraas.blackjack_french.features_detail.presentation.DetailOnlineUserActivity
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.CURRENT_USER_ID
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.SEARCHED_USER_ID

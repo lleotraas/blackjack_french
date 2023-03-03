@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="40dp"
     android:layout_height="70dp"
     android:id="@+id/card_image_container"
     android:orientation="vertical"
     android:layout_margin="4dp"
     android:background="@drawable/rounded_border"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    >
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/card_image_number_top_tv"
@@ -34,13 +36,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/card_image_color_img"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/card_image_color_img"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_gravity="end"
         android:text="A"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="16sp"
         android:layout_marginHorizontal="2dp"/>
-
 
 </androidx.appcompat.widget.LinearLayoutCompat>

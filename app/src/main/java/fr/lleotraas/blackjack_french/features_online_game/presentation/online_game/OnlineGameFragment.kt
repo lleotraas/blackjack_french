@@ -53,7 +53,6 @@ import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Co
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.addCardToDealerList
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.addCardToPlayerHandList
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.changeTotalBet
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.compareScore
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.convertTimeInPercent
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.createBet
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.createDealer
@@ -79,7 +78,7 @@ import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Co
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.shuffleDeck
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.splitPlayerGame
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.updateInsurance
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.updateWallet
+import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.updateOnlineWallet
 
 @AndroidEntryPoint
 class OnlineGameFragment : Fragment() {
@@ -97,8 +96,8 @@ class OnlineGameFragment : Fragment() {
     private lateinit var playerTwoHandSecondSplitAdapter: GameAdapter
     private lateinit var dealerHandAdapter: GameAdapter
     private var dealer = createDealer()
-    private val playerOneHand = createPlayerHand(0)
-    private val playerTwoHand = createPlayerHand(1)
+    private val playerOneHand = createPlayerHand(0, 0.0)
+    private val playerTwoHand = createPlayerHand(1, 0.0)
     private val playerTab = listOf(playerOneHand, playerTwoHand)
     private var isEndOfGame = true
     private var serviceIntent: Intent? = null
@@ -307,9 +306,9 @@ class OnlineGameFragment : Fragment() {
     private fun loadUserImageProfile(user: User, listOfAllImage: HashMap<String, ByteArray>?) {
         val userPicture = if (user.isDefaultProfileImage == true) user.userPicture else listOfAllImage?.get(user.id)
         mBinding.apply {
-            useGlide(root, userPicture!!, fragmentOnlineGameUserImg, user.pictureRotation!!)
-            useGlide(root, userPicture, fragmentOnlineGameUserFirstSplitImg, user.pictureRotation!!)
-            useGlide(root, userPicture, fragmentOnlineGameUserSecondSplitImg, user.pictureRotation!!)
+            useGlide(root, userPicture!!, fragmentOnlineGamePlayerOneMainHandImg, user.pictureRotation!!)
+            useGlide(root, userPicture, fragmentOnlineGamePlayerOneFirstSplitImg, user.pictureRotation!!)
+            useGlide(root, userPicture, fragmentOnlineGamePlayerOneSecondSplitImg, user.pictureRotation!!)
             useGlide(root, userPicture, fragmentOnlineGameCurrentUserReadyImg, user.pictureRotation!!)
             fragmentOnlineGameBankAmountTv.text = currentUser.wallet.toString()
             fragmentOnlineGamePlayerBetBtn.text = currentUser.bet?.get(TOTAL)?.toString() ?: ""
@@ -353,7 +352,7 @@ class OnlineGameFragment : Fragment() {
             !playerTwoHand.isPlayerFirstSplit &&
             currentUser.playerTurn == PlayerNumberType.PLAYER_TWO
         ) {
-            animation = animateImageForPlayer(mBinding.fragmentOnlineGameUserImg)
+            animation = animateImageForPlayer(mBinding.fragmentOnlineGamePlayerOneMainHandImg)
         }
     }
 
@@ -404,9 +403,9 @@ class OnlineGameFragment : Fragment() {
     private fun loadOpponentImageProfile(opponent: User, listOfAllImage: HashMap<String, ByteArray>?) {
         mBinding.apply {
             val opponentPicture = if (opponent.isDefaultProfileImage == true) opponent.userPicture else listOfAllImage?.get(opponent.id)
-            useGlide(root, opponentPicture!!, fragmentOnlineGameOpponentImg, opponent.pictureRotation!!)
-            useGlide(root, opponentPicture, fragmentOnlineGameOpponentFirstSplitImg, opponent.pictureRotation!!)
-            useGlide(root, opponentPicture, fragmentOnlineGameOpponentSecondSplitImg, opponent.pictureRotation!!)
+            useGlide(root, opponentPicture!!, fragmentOnlineGamePlayerTwoMainHandImg, opponent.pictureRotation!!)
+            useGlide(root, opponentPicture, fragmentOnlineGamePlayerTwoFirstSplitImg, opponent.pictureRotation!!)
+            useGlide(root, opponentPicture, fragmentOnlineGamePlayerTwoSecondSplitImg, opponent.pictureRotation!!)
             useGlide(root, opponentPicture, fragmentOnlineGameOpponentReadyImg, opponent.pictureRotation!!)
         }
     }
@@ -475,7 +474,7 @@ class OnlineGameFragment : Fragment() {
                         }
                         else -> {
                             currentUser.bet!![getBetTypeByInt(index)] = paymentForPlayer(
-                                requireContext().resources.getString(R.string.fragment_main_game_you_lose),
+                                R.string.fragment_main_game_you_lose,
                                 currentUser.bet!![getBetTypeByInt(index)]!!
                             )
                         }
@@ -486,7 +485,7 @@ class OnlineGameFragment : Fragment() {
                 }
             }
             if (player.playerNumberType == currentUser.playerTurn) {
-                mViewModel.updateOnlineUserBetAndWallet(updateWallet(currentUser))
+                mViewModel.updateOnlineUserBetAndWallet(updateOnlineWallet(currentUser))
             }
         }
     }
@@ -494,10 +493,10 @@ class OnlineGameFragment : Fragment() {
     private fun payment(messageResult: String, bet: Double): Double {
         return when {
             dealer.score < 22 || messageResult == "BJ" -> {
-                paymentForPlayer(messageResult, bet)
+                paymentForPlayer(R.string.online_game_fragment_blackjack, bet)
             }
             else -> {
-                paymentForPlayer(requireContext().resources.getString(R.string.fragment_main_game_you_win), bet)
+                paymentForPlayer(R.string.fragment_main_game_you_win, bet)
             }
         }
     }
@@ -513,7 +512,7 @@ class OnlineGameFragment : Fragment() {
     }
 
     private fun createPlayerOneResultTvTab() = listOf(
-            mBinding.fragmentOnlineGameResultTv,
+            mBinding.fragmentOnlineGamePlayerOneMainHandResultTv,
             mBinding.fragmentOnlineGameFirstSplitResultTv,
             mBinding.fragmentOnlineGameSecondSplitResultTv
         )
@@ -525,7 +524,7 @@ class OnlineGameFragment : Fragment() {
         )
 
     private fun createPlayerOneScoreTab() = listOf(
-        mBinding.fragmentOnlineGamePlayerScoreTv,
+        mBinding.fragmentOnlineGamePlayerOneMainHandScoreTv,
         mBinding.fragmentOnlineGamePlayerFirstSplitScoreTv,
         mBinding.fragmentOnlineGamePlayerSecondSplitScoreTv
     )
@@ -587,10 +586,10 @@ class OnlineGameFragment : Fragment() {
         mBinding.apply {
             fragmentOnlineGameDealerImg.visibility = View.VISIBLE
             fragmentOnlineGameDealerScoreTv.visibility = View.VISIBLE
-            fragmentOnlineGameUserImg.visibility = View.VISIBLE
-            animation = animateImageForPlayer(fragmentOnlineGameUserImg)
-            fragmentOnlineGameOpponentImg.visibility = View.VISIBLE
-            fragmentOnlineGamePlayerScoreTv.visibility = View.VISIBLE
+            fragmentOnlineGamePlayerOneMainHandImg.visibility = View.VISIBLE
+            animation = animateImageForPlayer(fragmentOnlineGamePlayerOneMainHandImg)
+            fragmentOnlineGamePlayerTwoMainHandImg.visibility = View.VISIBLE
+            fragmentOnlineGamePlayerOneMainHandScoreTv.visibility = View.VISIBLE
             fragmentOnlineGamePlayerTwoMainHandScoreTv.visibility = View.VISIBLE
         }
         getCurrentUser(currentUser.id!!)
@@ -618,9 +617,9 @@ class OnlineGameFragment : Fragment() {
 
     private fun distributionPlayersDrawCard() {
         for (index in 0 until 2) {
-            addCardToPlayerHandList(playerTab[index], deck, currentUser.splitType!!)
-            playerTab[index].isPlayerDrawAce[currentUser.splitType!!.valueOf] = playerDrawAnAceOrNot(deck, playerTab[index], currentUser.splitType!!)
-            playerTab[index].isPlayerScoreSoft[currentUser.splitType!!.valueOf] = playerHaveASoftScoreOrNot(playerTab[index], deck, currentUser.splitType!!)
+//            addCardToPlayerHandList(playerTab[index], deck, currentUser.splitType!!)
+//            playerTab[index].isPlayerDrawAce[currentUser.splitType!!.valueOf] = playerDrawAnAceOrNot(deck, playerTab[index], currentUser.splitType!!)
+//            playerTab[index].isPlayerScoreSoft[currentUser.splitType!!.valueOf] = playerHaveASoftScoreOrNot(playerTab[index], deck, currentUser.splitType!!)
             deck.index = deck.index!! + 1
             Log.e(TAG, "Player N°${index+1} draw a card index:${deck.index}")
         }
@@ -662,7 +661,7 @@ class OnlineGameFragment : Fragment() {
                     currentUser.isGameHost!! && player.playerNumberType == PlayerNumberType.PLAYER_ONE ||
                     !currentUser.isGameHost!! && player.playerNumberType == PlayerNumberType.PLAYER_TWO
                 ) {
-                    mBinding.fragmentOnlineGamePlayerScoreTv.text =
+                    mBinding.fragmentOnlineGamePlayerOneMainHandScoreTv.text =
                         requireContext().resources.getString(R.string.online_game_fragment_blackjack)
                 } else {
                     mBinding.fragmentOnlineGamePlayerTwoMainHandScoreTv.text =
@@ -673,19 +672,19 @@ class OnlineGameFragment : Fragment() {
     }
 
     private fun playerDrawCard() {
-        val playerHand = addCardToPlayerHandList(getCurrentPlayer(), deck, currentUser.splitType!!)
-        playerHand.isPlayerDrawAce[currentUser.splitType!!.valueOf] =
-            playerDrawAnAceOrNot(deck, playerHand, currentUser.splitType!!)
-        playerHand.isPlayerScoreSoft[currentUser.splitType!!.valueOf] =
-            playerHaveASoftScoreOrNot(playerHand, deck, currentUser.splitType!!)
-        if (!playerHand.isPlayerScoreSoft[currentUser.splitType!!.valueOf]!!) {
-            setPlayerDrawAceAndScoreSoftToFalse(playerHand)
-        }
+//        val playerHand = addCardToPlayerHandList(getCurrentPlayer(), deck, currentUser.splitType!!)
+//        playerHand.isPlayerDrawAce[currentUser.splitType!!.valueOf] =
+//            playerDrawAnAceOrNot(deck, playerHand, currentUser.splitType!!)
+//        playerHand.isPlayerScoreSoft[currentUser.splitType!!.valueOf] =
+//            playerHaveASoftScoreOrNot(playerHand, deck, currentUser.splitType!!)
+//        if (!playerHand.isPlayerScoreSoft[currentUser.splitType!!.valueOf]!!) {
+//            setPlayerDrawAceAndScoreSoftToFalse(playerHand)
+//        }
         deck.index = deck.index!! + 1
         mViewModel.updateOnlineDeckIndex(isCurrentUserOrOpponent().id!!, deck.index!!)
-        updateSplitHandRecyclerView(playerHand)
+//        updateSplitHandRecyclerView(playerHand)
         refreshScoreUI()
-        playerBust(playerHand, currentUser)
+//        playerBust(playerHand, currentUser)
         resetTimerAndRestart()
     }
 
@@ -758,9 +757,9 @@ class OnlineGameFragment : Fragment() {
     }
 
     private fun opponentDrawCard(playerHand: Player) {
-        addCardToPlayerHandList(playerHand, deck, opponent.splitType!!)
-        playerHand.isPlayerDrawAce[currentUser.splitType!!.valueOf] = playerDrawAnAceOrNot(deck, getCurrentPlayer(), currentUser.splitType!!)
-        playerHand.isPlayerScoreSoft[currentUser.splitType!!.valueOf] = playerHaveASoftScoreOrNot(getCurrentPlayer(), deck, currentUser.splitType!!)
+//        addCardToPlayerHandList(playerHand, deck, opponent.splitType!!)
+//        playerHand.isPlayerDrawAce[currentUser.splitType!!.valueOf] = playerDrawAnAceOrNot(deck, getCurrentPlayer(), currentUser.splitType!!)
+//        playerHand.isPlayerScoreSoft[currentUser.splitType!!.valueOf] = playerHaveASoftScoreOrNot(getCurrentPlayer(), deck, currentUser.splitType!!)
         if (!playerHand.isPlayerScoreSoft[currentUser.splitType!!.valueOf]!!) {
             setPlayerDrawAceAndScoreSoftToFalse(playerHand)
         }
@@ -784,7 +783,7 @@ class OnlineGameFragment : Fragment() {
     }
 
     private fun gameIsOver() {
-        currentUser.bet = createBet()
+        currentUser.bet = createBet(0.0)
         mViewModel.updateUserForNewGame(currentUser, false)
         mViewModel.updateOnlineDeckPlayerTurn(isCurrentUserOrOpponent().id!!, PlayerNumberType.PLAYER_ONE)
         mBinding.fragmentOnlineGameGameStart.apply {
@@ -846,7 +845,7 @@ class OnlineGameFragment : Fragment() {
                     val currentSplitBet = if (!getCurrentPlayer().isPlayerFirstSplit) FIRST_SPLIT else SECOND_SPLIT
                     currentUser.bet!![currentSplitBet] = currentUser.bet!![MAIN_HAND]!!
                     decreasePlayerBetWallet(currentUser.bet!![currentSplitBet]!!)
-                    splitPlayerGame(currentUser.splitType!!, getCurrentPlayer())
+//                    splitPlayerGame(currentUser.splitType!!, getCurrentPlayer())
                     mViewModel.updateOnlineUserWalletAndIsSplitting(currentUser, true)
                     updateSplitHandRecyclerView(getCurrentPlayer())
                     playerDrawCard()
@@ -916,7 +915,7 @@ class OnlineGameFragment : Fragment() {
         val playerHand: Player = getCurrentPlayer()
         System.err.println("opponentSplitHand: playerHand = (${playerHand.hand[MAIN_HAND]} ${playerHand.hand[FIRST_SPLIT]} ")
         if (opponent.isSplitting) {
-            splitPlayerGame(opponent.splitType!!, playerHand)
+//            splitPlayerGame(opponent.splitType!!, playerHand)
             opponent.isSplitting = false
             mViewModel.updateIsSplitting(opponent.id!!, false)
             if (playerHand.hand[FIRST_SPLIT]!![0].value == 1) {
@@ -934,7 +933,7 @@ class OnlineGameFragment : Fragment() {
         when {
             playerHand.hand[FIRST_SPLIT]?.size!! > 0 && playerHand.hand[SECOND_SPLIT]?.size == 0 -> {
                 mBinding.apply {
-                    fragmentOnlineGameUserFirstSplitImg.visibility = View.VISIBLE
+                    fragmentOnlineGamePlayerOneFirstSplitImg.visibility = View.VISIBLE
                     fragmentOnlineGamePlayerFirstSplitScoreTv.visibility = View.VISIBLE
                     fragmentOnlineGamePlayerFirstSplitRecyclerView.visibility = View.VISIBLE
                 }
@@ -942,7 +941,7 @@ class OnlineGameFragment : Fragment() {
             playerHand.hand[SECOND_SPLIT]?.size!! > 0 -> {
                 System.err.println("current player second split picture visible")
                 mBinding.apply {
-                    fragmentOnlineGameUserSecondSplitImg.visibility = View.VISIBLE
+                    fragmentOnlineGamePlayerOneSecondSplitImg.visibility = View.VISIBLE
                     fragmentOnlineGamePlayerSecondSplitScoreTv.visibility = View.VISIBLE
                     fragmentOnlineGamePlayerSecondSplitRecyclerView.visibility = View.VISIBLE
                 }
@@ -954,7 +953,7 @@ class OnlineGameFragment : Fragment() {
         when {
             playerHand.hand[FIRST_SPLIT]?.size!! > 0  && playerHand.hand[SECOND_SPLIT]?.size!! == 0 -> {
                 mBinding.apply {
-                    fragmentOnlineGameOpponentFirstSplitImg.visibility = View.VISIBLE
+                    fragmentOnlineGamePlayerTwoFirstSplitImg.visibility = View.VISIBLE
                     fragmentOnlineGamePlayerTwoFirstSplitScoreTv.visibility = View.VISIBLE
                     fragmentOnlineGamePlayerTwoFirstSplitHandRecyclerView.visibility = View.VISIBLE
                 }
@@ -962,7 +961,7 @@ class OnlineGameFragment : Fragment() {
             playerHand.hand[SECOND_SPLIT]?.size!! > 0 -> {
                 mBinding.apply {
                     System.err.println("opponent second split picture visible")
-                    fragmentOnlineGameOpponentSecondSplitImg.visibility = View.VISIBLE
+                    fragmentOnlineGamePlayerTwoSecondSplitImg.visibility = View.VISIBLE
                     fragmentOnlineGamePlayerTwoSecondSplitScoreTv.visibility = View.VISIBLE
                     fragmentOnlineGamePlayerTwoSecondSplitHandRecyclerView.visibility = View.VISIBLE
                 }
@@ -981,7 +980,7 @@ class OnlineGameFragment : Fragment() {
                     currentUser.splitType = updateSplitType(currentUser)
                     mViewModel.updateSplitType(currentUser)
                     playerDrawCard()
-                    animation = animateImageForPlayer(mBinding.fragmentOnlineGameUserFirstSplitImg)
+                    animation = animateImageForPlayer(mBinding.fragmentOnlineGamePlayerOneFirstSplitImg)
                 }
                 currentUser.splitType == HandType.FirstSplit && !getCurrentPlayer().isPlayerSecondSplit && deck.playerTurn == currentUser.playerTurn -> {
                     mViewModel.updateOnlineDeckPlayerTurn(isCurrentUserOrOpponent().id!!, getNextPlayer(getCurrentPlayer().playerNumberType))
@@ -991,7 +990,7 @@ class OnlineGameFragment : Fragment() {
                     currentUser.splitType = updateSplitType(currentUser)
                     mViewModel.updateSplitType(currentUser)
                     playerDrawCard()
-                    animation = animateImageForPlayer(mBinding.fragmentOnlineGameUserSecondSplitImg)
+                    animation = animateImageForPlayer(mBinding.fragmentOnlineGamePlayerOneSecondSplitImg)
                 }
                 currentUser.splitType == HandType.SecondSplit && deck.playerTurn == currentUser.playerTurn -> {
                     mViewModel.updateOnlineDeckPlayerTurn(isCurrentUserOrOpponent().id!!, getNextPlayer(getCurrentPlayer().playerNumberType))
@@ -1026,12 +1025,12 @@ class OnlineGameFragment : Fragment() {
             fragmentOnlineGameDealerResultTv.text = ""
             fragmentOnlineGameDealerImg.visibility = View.GONE
             fragmentOnlineGameDealerScoreTv.visibility = View.GONE
-            fragmentOnlineGameUserImg.visibility = View.GONE
-            fragmentOnlineGameUserFirstSplitImg.visibility = View.GONE
-            fragmentOnlineGameUserSecondSplitImg.visibility = View.GONE
-            fragmentOnlineGameOpponentImg.visibility = View.GONE
-            fragmentOnlineGameOpponentFirstSplitImg.visibility = View.GONE
-            fragmentOnlineGameOpponentSecondSplitImg.visibility = View.GONE
+            fragmentOnlineGamePlayerOneMainHandImg.visibility = View.GONE
+            fragmentOnlineGamePlayerOneFirstSplitImg.visibility = View.GONE
+            fragmentOnlineGamePlayerOneSecondSplitImg.visibility = View.GONE
+            fragmentOnlineGamePlayerTwoMainHandImg.visibility = View.GONE
+            fragmentOnlineGamePlayerTwoFirstSplitImg.visibility = View.GONE
+            fragmentOnlineGamePlayerTwoSecondSplitImg.visibility = View.GONE
         }
         dealer.score = 0
         dealer.hand.clear()
@@ -1165,10 +1164,10 @@ class OnlineGameFragment : Fragment() {
             fragmentOnlineGameOpponentReadyImg.visibility = View.GONE
 //            fragmentOnlineGameDealerImg.visibility = View.GONE
 
-            fragmentOnlineGameUserFirstSplitImg.visibility = View.GONE
-            fragmentOnlineGameUserSecondSplitImg.visibility = View.GONE
-            fragmentOnlineGameOpponentFirstSplitImg.visibility = View.GONE
-            fragmentOnlineGameOpponentSecondSplitImg.visibility = View.GONE
+            fragmentOnlineGamePlayerOneFirstSplitImg.visibility = View.GONE
+            fragmentOnlineGamePlayerOneSecondSplitImg.visibility = View.GONE
+            fragmentOnlineGamePlayerTwoFirstSplitImg.visibility = View.GONE
+            fragmentOnlineGamePlayerTwoSecondSplitImg.visibility = View.GONE
 
             fragmentOnlineGamePlayerFirstSplitScoreTv.visibility = View.GONE
             fragmentOnlineGamePlayerSecondSplitScoreTv.visibility = View.GONE
@@ -1202,7 +1201,7 @@ class OnlineGameFragment : Fragment() {
     private fun isCurrentPlayer(playerHand: Player) = currentUser.isGameHost!! && playerHand.playerNumberType == PlayerNumberType.PLAYER_ONE ||
             !currentUser.isGameHost!! && playerHand.playerNumberType == PlayerNumberType.PLAYER_TWO
 
-    private fun setupPlayerOneHandRecyclerView() = mBinding.fragmentOnlineGamePlayerRecyclerView.apply {
+    private fun setupPlayerOneHandRecyclerView() = mBinding.fragmentOnlineGamePlayerOneMainHandRecyclerView.apply {
         layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }
 
@@ -1232,7 +1231,7 @@ class OnlineGameFragment : Fragment() {
 
     private fun loadPlayerOneHandIntoRecyclerView(hand: ArrayList<Card>) {
         playerOneHandAdapter.submitList(hand)
-        mBinding.fragmentOnlineGamePlayerRecyclerView.adapter = playerOneHandAdapter
+        mBinding.fragmentOnlineGamePlayerOneMainHandRecyclerView.adapter = playerOneHandAdapter
     }
 
     private fun loadPlayerOneHandFirstSplitIntoRecyclerView(hand: ArrayList<Card>) {

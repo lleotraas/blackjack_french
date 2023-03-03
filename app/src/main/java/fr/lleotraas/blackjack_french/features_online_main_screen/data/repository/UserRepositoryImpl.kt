@@ -64,7 +64,7 @@ class UserRepositoryImpl @Inject constructor (
             USER_ID to connectedUser?.uid,
             NUMBER_OF_LOAN to 0,
             WALLET to 1500.0,
-            BET to Utils.createBet(),
+            BET to Utils.createBet(0.0),
             PSEUDO to connectedUser?.displayName,
             USER_PICTURE to connectedUser?.photoUrl,
             PICTURE_ROTATION to 0f,
@@ -90,7 +90,7 @@ class UserRepositoryImpl @Inject constructor (
             connectedUser.uid,
             0,
             1500.0,
-            Utils.createBet(),
+            Utils.createBet(0.0),
             connectedUser.displayName!!,
             connectedUser.photoUrl.toString(),
             0f,
@@ -228,7 +228,7 @@ class UserRepositoryImpl @Inject constructor (
             ONLINE_STATUS, OnlineStatusType.PLAYING,
             OPPONENT, searchedUserId,
             IS_USER_READY, false,
-            BET, Utils.createBet(),
+            BET, Utils.createBet(0.0),
             IS_SPLITTING, false
         )
     }
@@ -237,7 +237,7 @@ class UserRepositoryImpl @Inject constructor (
         mFirebaseHelper.getUserCollectionReference().document(currentUserId).update(
             IS_GAME_HOST, userIsGameHost,
             IS_USER_READY, false,
-            BET, Utils.createBet(),
+            BET, Utils.createBet(0.0),
             IS_SPLITTING, false
         )
     }

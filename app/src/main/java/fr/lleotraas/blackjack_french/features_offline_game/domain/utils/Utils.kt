@@ -30,9 +30,10 @@ class Utils {
         const val SECOND_SPLIT = "second_split"
         const val INSURANCE = "insurance_bet"
         const val TOTAL = "total_bet"
+        const val DEFAULT_BET = "default_bet"
         const val HAND = "hand"
-        const val FIRST_SPLIT_HAND = "firstSplitHand"
-        const val SECOND_SPLIT_HAND = "secondSplitHand"
+        const val FIRST_SPLIT_HAND = "first_split_hand"
+        const val SECOND_SPLIT_HAND = "second_split_hand"
 //        const val MAIN_HAND = 0
 //        const val FIRST_SPLIT = 1
 //        const val SECOND_SPLIT = 2
@@ -66,20 +67,37 @@ class Utils {
             val deck = Deck()
 
 //            deck.deckList.add(Card(NumberType.FOUR,ColorType.HEART,4))
-            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
-            deck.deckList.add(Card(NumberType.FOUR,ColorType.HEART,4))
-            deck.deckList.add(Card(NumberType.ACE,ColorType.SPADE,1))
-            deck.deckList.add(Card(NumberType.ACE,ColorType.CLUB,1))
-            deck.deckList.add(Card(NumberType.FOUR,ColorType.DIAMOND,4))
-            deck.deckList.add(Card(NumberType.FIVE,ColorType.HEART,5))
-//            deck.deckList.add(Card(NumberType.QUEEN,ColorType.HEART,10))
-//            deck.deckList.add(Card(NumberType.HEIGHT,ColorType.HEART,8))
-//            deck.deckList.add(Card(NumberType.JACK,ColorType.DIAMOND,10))
-//            deck.deckList.add(Card(NumberType.THREE,ColorType.SPADE,3))
-//            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
-//            deck.deckList.add(Card(NumberType.FOUR,ColorType.DIAMOND,4))
+//            deck.deckList.add(Card(NumberType.ACE,ColorType.CLUB,1))
+//            deck.deckList.add(Card(NumberType.FOUR,ColorType.HEART,4))
+//            deck.deckList.add(Card(NumberType.ACE,ColorType.CLUB,1))
+//            deck.deckList.add(Card(NumberType.ACE,ColorType.CLUB,1))
+//            deck.deckList.add(Card(NumberType.ACE,ColorType.CLUB,1))
+//            deck.deckList.add(Card(NumberType.SIX,ColorType.HEART,6))
+//            deck.deckList.add(Card(NumberType.FIVE,ColorType.HEART,5))
+//            deck.deckList.add(Card(NumberType.ACE,ColorType.CLUB,1))
+//            deck.deckList.add(Card(NumberType.ACE,ColorType.SPADE,1))
+//            deck.deckList.add(Card(NumberType.FIVE,ColorType.HEART,5))
 //            deck.deckList.add(Card(NumberType.THREE,ColorType.DIAMOND,3))
-//            deck.deckList.add(Card(NumberType.TEN,ColorType.SPADE,10))
+//            deck.deckList.add(Card(NumberType.ACE,ColorType.CLUB,1))
+//            deck.deckList.add(Card(NumberType.FOUR,ColorType.DIAMOND,4))
+//            deck.deckList.add(Card(NumberType.HEIGHT,ColorType.DIAMOND,8))
+//            deck.deckList.add(Card(NumberType.THREE,ColorType.SPADE,3))
+//            deck.deckList.add(Card(NumberType.THREE,ColorType.SPADE,3))
+//            deck.deckList.add(Card(NumberType.FOUR,ColorType.DIAMOND,4))
+//            deck.deckList.add(Card(NumberType.FOUR,ColorType.HEART,4))
+            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
+            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
+            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
+            deck.deckList.add(Card(NumberType.TEN,ColorType.HEART,10))
+            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+            deck.deckList.add(Card(NumberType.KING,ColorType.SPADE,10))
+
 
 
             for (k in 1..6) {
@@ -100,12 +118,13 @@ class Utils {
             return deck
         }
 
-        fun createBet(): HashMap<String, Double> {
+        fun createBet(defaultBetValue: Double): HashMap<String, Double> {
             val bet = HashMap<String, Double>()
             bet[MAIN_HAND] = 0.0
             bet[FIRST_SPLIT_HAND] = 0.0
             bet[SECOND_SPLIT_HAND] = 0.0
             bet[INSURANCE] = 0.0
+            bet[DEFAULT_BET] = defaultBetValue
             bet[TOTAL] = 0.0
             return bet
         }
@@ -113,7 +132,7 @@ class Utils {
         fun createArrayListOfBet(size: Int): ArrayList<HashMap<String, Double>> {
             val arrayOfBet = ArrayList<HashMap<String, Double>>()
             for (i in 0 until size) {
-                arrayOfBet.add(createBet())
+                arrayOfBet.add(createBet(0.0))
             }
             return arrayOfBet
         }
@@ -140,10 +159,10 @@ class Utils {
 
         fun incrementDeckIndex(deck: OnlineDeck) = deck.index?.plus(1)
 
-        fun addCardToPlayerHandList(playerHand: Player, deck: OnlineDeck, handType: HandType): Player {
-            playerHand.score[handType.valueOf] =
-                playerHand.score[handType.valueOf]!!.plus(deck.deckList?.get(deck.index!!)?.value!!)
-            playerHand.hand[handType.valueOf]?.add(deck.deckList!![deck.index!!])
+        fun addCardToPlayerHandList(playerHand: CustomPlayer, deck: OnlineDeck, handType: HandType): CustomPlayer {
+            playerHand.score =
+                playerHand.score.plus(deck.deckList?.get(deck.index!!)?.value!!)
+            playerHand.hand.add(deck.deckList!![deck.index!!])
             return playerHand
         }
 
@@ -167,24 +186,24 @@ class Utils {
             }
         }
 
-        fun playerDrawAnAceOrNot(deck: OnlineDeck, playerHand: Player, splitType: HandType): Boolean {
-            var isAceDraw = playerHand.isPlayerDrawAce[splitType.valueOf]
+        fun playerDrawAnAceOrNot(deck: OnlineDeck, playerHand: CustomPlayer): Boolean {
+            var isAceDraw = playerHand.isPlayerDrawAce
             if (
                 deck.deckList!![deck.index!!].number == NumberType.ACE &&
-                !isAceDraw!!
+                !isAceDraw
             ) {
                isAceDraw = true
             }
 
             if (
                 deck.deckList!![deck.index!!].number == NumberType.ACE &&
-                playerHand.score[splitType.valueOf]!! > 11 &&
-                isAceDraw!! &&
-                !playerHand.isPlayerScoreSoft[splitType.valueOf]!!
+                playerHand.score > 11 &&
+                isAceDraw &&
+                !playerHand.isPlayerScoreSoft
             ) {
                 isAceDraw = false
             }
-            return isAceDraw!!
+            return isAceDraw
         }
 
         fun dealerDrawAnAceOrNot(deck: OnlineDeck, dealer: Dealer): Boolean {
@@ -199,24 +218,24 @@ class Utils {
             return isAceDraw
         }
 
-        fun playerHaveASoftScoreOrNot(playerHand: Player, deck: OnlineDeck, splitType: HandType): Boolean {
-            var isScoreSoft = playerHand.isPlayerScoreSoft[splitType.valueOf]
+        fun playerHaveASoftScoreOrNot(playerHand: CustomPlayer, deck: OnlineDeck): Boolean {
+            var isScoreSoft = playerHand.isPlayerScoreSoft
             if (
                 deck.deckList!![deck.index!!].number == NumberType.ACE &&
-                playerHand.score[splitType.valueOf]!! < 12 &&
-                playerHand.isPlayerDrawAce[splitType.valueOf]!!
+                playerHand.score < 12 &&
+                playerHand.isPlayerDrawAce
             ) {
-                playerHand.score[splitType.valueOf] = playerHand.score[splitType.valueOf]?.plus(10)!!
+                playerHand.score = playerHand.score.plus(10)
                 isScoreSoft = true
             }
             if (
-                playerHand.score[splitType.valueOf]!! > 21 &&
-                playerHand.isPlayerDrawAce[splitType.valueOf]!!
+                playerHand.score > 21 &&
+                playerHand.isPlayerDrawAce
             ) {
-                playerHand.score[splitType.valueOf] = playerHand.score[splitType.valueOf]?.minus(10)!!
+                playerHand.score = playerHand.score.minus(10)
                 isScoreSoft = false
             }
-            return isScoreSoft!!
+            return isScoreSoft
         }
 
         fun modifyFirstSplitScore(playerHand: Player, splitType: String) {
@@ -279,7 +298,8 @@ class Utils {
         ): Int {
             return when  {
                 dealer.score == 21 && dealer.hand.size == 2 &&
-                playerScore == 21 && playerHandSize == 2 -> {
+                playerScore == 21 && playerHandSize == 2 &&
+                !isPlayerFirstSplit-> {
                     R.string.fragment_main_game_draw
                 }
                 dealer.score == 21 &&
@@ -326,37 +346,60 @@ class Utils {
             return listOfPlayerScore
         }
 
-        fun splitPlayerGame(handType: HandType, playerHand: Player) {
+        fun splitPlayerGame(arrayOfPlayer: ArrayList<CustomPlayer>, handType: HandType, currentPlayer: CustomPlayer) {
             // Add card in second split from main hand or from first split.
+            var playerToAdd: CustomPlayer
+            val handOfNewSplit = ArrayList<Card>()
+            val currentPlayerIndex = getPlayerIndex(arrayOfPlayer, currentPlayer)
             if (
-                !playerHand.isPlayerSecondSplit && playerHand.isPlayerFirstSplit && handType == HandType.MainHand ||
+                !currentPlayer.isPlayerSecondSplit && currentPlayer.isPlayerFirstSplit && handType == HandType.MainHand ||
                 handType == HandType.FirstSplit
             ) {
-                val splitCard = playerHand.hand[handType.valueOf]!![playerHand.hand[handType.valueOf]!!.size - 1]
-                val cardSplitValue = playerHand.hand[handType.valueOf]!![playerHand.hand[handType.valueOf]!!.size - 1].value!!
-                playerHand.hand[SECOND_SPLIT_HAND]?.add(splitCard)
-                playerHand.score[SECOND_SPLIT_HAND] = playerHand.score[SECOND_SPLIT_HAND]!!.plus(cardSplitValue)
-                playerHand.isPlayerSecondSplit = true
+                currentPlayer.isPlayerSecondSplit = true
+                if(handType == HandType.MainHand) {
+                    arrayOfPlayer[currentPlayerIndex + 1].isPlayerSecondSplit = true
+                } else {
+                    currentPlayer.isPlayerFirstSplit = true
+                }
+                val splitCard = currentPlayer.hand[currentPlayer.hand.size - 1]
+                splitCard.isAnimate = true
+//                val cardSplitValue = playerHand.hand[playerHand.hand.size - 1].value!!
+                handOfNewSplit.add(splitCard)
+                playerToAdd = createCustomPlayer(arrayOfPlayer, getPlayerIndex(arrayOfPlayer, currentPlayer), handOfNewSplit)
+                arrayOfPlayer.add(getPlayerIndex(arrayOfPlayer, currentPlayer) + if(handType == HandType.MainHand) 2 else 1, playerToAdd)
+//                playerHand.score = playerHand.score.plus(cardSplitValue)
             }
             // Add card in first split from main hand.
-            if (!playerHand.isPlayerFirstSplit) {
-                val mainHandSplitCard = playerHand.hand[MAIN_HAND]!![playerHand.hand[MAIN_HAND]!!.size - 1]
-                val mainHandCardSplitValue = playerHand.hand[MAIN_HAND]!![playerHand.hand[MAIN_HAND]!!.size - 1].value!!
-                playerHand.hand[FIRST_SPLIT_HAND]?.add(mainHandSplitCard)
-                playerHand.score[FIRST_SPLIT_HAND] = playerHand.score[FIRST_SPLIT_HAND]!!.plus(mainHandCardSplitValue)
-                playerHand.isPlayerFirstSplit = true
+            if (!currentPlayer.isPlayerFirstSplit) {
+                currentPlayer.isPlayerFirstSplit = true
+                val mainHandSplitCard = currentPlayer.hand[currentPlayer.hand.size - 1]
+                mainHandSplitCard.isAnimate = true
+                val mainHandCardSplitValue = currentPlayer.hand[currentPlayer.hand.size - 1].value!!
+                handOfNewSplit.add(mainHandSplitCard)
+                playerToAdd = createCustomPlayer(arrayOfPlayer, getPlayerIndex(arrayOfPlayer, currentPlayer), handOfNewSplit)
+                arrayOfPlayer.add(getPlayerIndex(arrayOfPlayer, currentPlayer) + 1, playerToAdd)
+//                playerHand.score = playerHand.score.plus(mainHandCardSplitValue)
             }
             // Refresh main hand score or first split score.
             if (handType == HandType.MainHand) {
-                val mainHandCardRemoved = playerHand.hand[MAIN_HAND]!![playerHand.hand[MAIN_HAND]!!.size - 1]
-                playerHand.score[MAIN_HAND] = playerHand.score[MAIN_HAND]!!.minus(mainHandCardRemoved.value!!)
-                playerHand.hand[MAIN_HAND]?.remove(mainHandCardRemoved)
+                val mainHandCardRemoved = currentPlayer.hand[currentPlayer.hand.size - 1]
+                currentPlayer.score = currentPlayer.score.minus(mainHandCardRemoved.value!!)
+                currentPlayer.hand.remove(mainHandCardRemoved)
             } else {
-                val firstSplitCardRemoved = playerHand.hand[FIRST_SPLIT_HAND]!![playerHand.hand[FIRST_SPLIT_HAND]!!.size - 1]
-                playerHand.score[FIRST_SPLIT_HAND] = playerHand.score[FIRST_SPLIT_HAND]!!.minus(firstSplitCardRemoved.value!!)
-                playerHand.hand[FIRST_SPLIT_HAND]?.remove(firstSplitCardRemoved)
+                val firstSplitCardRemoved = currentPlayer.hand[currentPlayer.hand.size - 1]
+                currentPlayer.score = currentPlayer.score.minus(firstSplitCardRemoved.value!!)
+                currentPlayer.hand.remove(firstSplitCardRemoved)
             }
         }
+
+        fun playerHave2Aces(offlineUser: OfflineUser): Boolean {
+            val firstCard =
+                getCurrentPlayer(offlineUser, offlineUser.currentHandType).hand[0]
+            val secondCard =
+                getCurrentPlayerSplit(offlineUser, HandType.FirstSplit).hand[0]
+            return firstCard.value == 1 && secondCard.value == 1
+        }
+
 
         fun getPlayerHand(handType: HandType): String = when(handType) {
                 HandType.MainHand -> MAIN_HAND
@@ -386,7 +429,7 @@ class Utils {
             PlayerNumberType.PLAYER_TWO -> PlayerNumberType.DEALER
             else -> PlayerNumberType.PLAYER_ONE
         }
-
+        fun walletWithdrawal(bet: Double, numberOfPlayer: Int) = bet * numberOfPlayer
         fun retrieveBetInWallet(wallet: Double, bet: Double): Double =
             wallet - bet
 
@@ -399,16 +442,16 @@ class Utils {
         fun changeTotalBet(totalBet: Double, bet: Double) =
             totalBet + bet
 
-        fun paymentForPlayer(messageResult: String, bet: Double): Double {
-            return when(messageResult) {
-                "WIN" -> bet * 2.0
-                "LOSE" -> 0.0
-                "BJ" -> (bet * 2.0) + (bet * 0.5)
-                else -> bet
+        fun paymentForPlayer(resultScore: Int, bet: Double): Double {
+            return when(resultScore) {
+                R.string.fragment_main_game_you_win -> bet
+                R.string.fragment_main_game_you_lose -> -bet
+                R.string.online_game_fragment_blackjack -> bet + bet * 0.5
+                else -> 0.0
             }
         }
 
-        fun updateWallet(user: User): User {
+        fun updateOnlineWallet(user: User): User {
             for (userBet in user.bet!!.entries) {
                 user.wallet = user.wallet?.plus(userBet.value)
             }
@@ -545,21 +588,30 @@ class Utils {
                     ).toString().toFloat() else 0f
                 )
 
-        fun createPlayerHand(playerNumber: Int): Player = Player(
+        fun createPlayerHand(playerNumber: Int, defaultBetValue: Double): Player = Player(
             createScoreMap(),
             createHandMap(),
-            HandType.MainHand,
+            createBet(defaultBetValue),
             PlayerNumberType.values()[playerNumber],
+            createResultScoreMap(),
             isPlayerDrawAce = createBooleanMap(),
             isPlayerScoreSoft = createBooleanMap(),
             isPlayerFirstSplit = false,
             isPlayerSecondSplit = false
         )
 
-        fun createArrayListOfPlayerHand(size: Int): ArrayList<Player> {
+        private fun createResultScoreMap(): java.util.HashMap<String, Int> {
+            val map = HashMap<String, Int>()
+            map[MAIN_HAND] = R.string.fragment_main_game_none
+            map[FIRST_SPLIT_HAND] = R.string.fragment_main_game_none
+            map[SECOND_SPLIT_HAND] = R.string.fragment_main_game_none
+            return map
+        }
+
+        fun createArrayListOfPlayerHand(size: Int, defaultBetValue: Double): ArrayList<Player> {
             val arrayOfPlayer = kotlin.collections.ArrayList<Player>()
             for (i in 0 until size) {
-                arrayOfPlayer.add(createPlayerHand(i))
+                arrayOfPlayer.add(createPlayerHand(i, defaultBetValue))
             }
             return arrayOfPlayer
         }
@@ -601,6 +653,211 @@ class Utils {
                 1 -> FIRST_SPLIT_HAND
                 else -> SECOND_SPLIT_HAND
             }
+
+        fun createCustomPlayerList(listSize: Int, defaultBet: Double): ArrayList<CustomPlayer> {
+            val arrayOfCustomPlayer = ArrayList<CustomPlayer>()
+            for (playerIndex in 0 until listSize) {
+                arrayOfCustomPlayer.add(
+                    CustomPlayer(
+                        bet = defaultBet,
+                        score = 0,
+                        insuranceBet = 0.0,
+                        isDouble = false,
+                        hand = ArrayList(),
+                        playerNumber = getPlayerNumberType(playerIndex),
+                        playerHandType = HandType.MainHand,
+                        isCurrentPlayer = getPlayerNumberType(playerIndex) == PlayerNumberType.PLAYER_ONE,
+                        resultScore = R.string.fragment_main_game_none,
+                        isPlayerDrawAce = false,
+                        isPlayerScoreSoft = false,
+                        isPlayerFirstSplit = false,
+                        isPlayerSecondSplit = false
+                    )
+                )
+            }
+            return arrayOfCustomPlayer
+        }
+
+        fun updateCurrentPlayerInArrayListOfCustomPlayer(arrayOfCustomPlayer: ArrayList<CustomPlayer>, currentPlayerNumber: PlayerNumberType, currentHandType: HandType) {
+            for (customPlayerIndex in 0 until arrayOfCustomPlayer.size) {
+                arrayOfCustomPlayer[customPlayerIndex].isCurrentPlayer =
+                    arrayOfCustomPlayer[customPlayerIndex].playerNumber == currentPlayerNumber &&
+                            arrayOfCustomPlayer[customPlayerIndex].playerHandType == currentHandType
+            }
+        }
+
+        fun updateCurrentPlayerScoreInArrayListOfCustomPlayer(arrayOfCustomPlayer: ArrayList<CustomPlayer>, currentPlayerNumber: PlayerNumberType, currentHandType: HandType, newScore: Int) {
+            for (customPlayerIndex in 0 until arrayOfCustomPlayer.size) {
+                if (
+                    arrayOfCustomPlayer[customPlayerIndex].playerNumber == currentPlayerNumber &&
+                    arrayOfCustomPlayer[customPlayerIndex].playerHandType == currentHandType
+                ) {
+                    arrayOfCustomPlayer[customPlayerIndex].score = newScore
+                }
+            }
+        }
+
+        fun addCustomPlayerInArrayListOfCustomPlayer(
+            arrayOfCustomPlayer: ArrayList<CustomPlayer>,
+            currentPlayerNumber: PlayerNumberType,
+            playerIndex: Int,
+            nextHandIndex: Int,
+            hand: ArrayList<Card>
+        ) {
+            if (currentPlayerNumber == PlayerNumberType.PLAYER_SEVEN) {
+                arrayOfCustomPlayer.add(createCustomPlayer(arrayOfCustomPlayer, playerIndex, hand))
+            } else {
+                arrayOfCustomPlayer.add(
+                    playerIndex + nextHandIndex,
+                    createCustomPlayer(arrayOfCustomPlayer, playerIndex, hand)
+                )
+            }
+        }
+
+        private fun createCustomPlayer(
+            arrayOfCustomPlayer: ArrayList<CustomPlayer>,
+            playerIndex: Int,
+            hand: ArrayList<Card>
+            ): CustomPlayer {
+            return CustomPlayer(
+                bet = arrayOfCustomPlayer[playerIndex].bet,
+                score = getHandScore(hand),
+                insuranceBet = 0.0,
+                isDouble = false,
+                hand = hand,
+                playerNumber = arrayOfCustomPlayer[playerIndex].playerNumber,
+                playerHandType = getHandTypeFromInt(if (arrayOfCustomPlayer[playerIndex].isPlayerSecondSplit) 2 else 1),
+                isCurrentPlayer = false,
+                resultScore = arrayOfCustomPlayer[playerIndex].resultScore,
+                isPlayerDrawAce = false,
+                isPlayerScoreSoft = false,
+                isPlayerFirstSplit = false,
+                isPlayerSecondSplit = false
+            )
+        }
+
+        private fun getHandScore(hand: ArrayList<Card>): Int {
+            var score = 0
+            for (card in hand) {
+                score += card.value!!
+            }
+            return score
+        }
+
+        private fun createCustomPlayer(): CustomPlayer {
+            return CustomPlayer(
+                bet = 0.0,
+                score = 0,
+                insuranceBet = 0.0,
+                isDouble = false,
+                hand = ArrayList(),
+                playerNumber = PlayerNumberType.PLAYER_ONE,
+                playerHandType = HandType.MainHand,
+                isCurrentPlayer = false,
+                resultScore = R.string.fragment_main_game_none,
+                isPlayerDrawAce = false,
+                isPlayerScoreSoft = false,
+                isPlayerFirstSplit = false,
+                isPlayerSecondSplit = false
+            )
+        }
+
+        fun nextPlayerTurn(offlineUser: OfflineUser): PlayerNumberType {
+           return when (offlineUser.currentPlayerNumber) {
+                PlayerNumberType.PLAYER_ONE -> PlayerNumberType.PLAYER_TWO
+                PlayerNumberType.PLAYER_TWO -> PlayerNumberType.PLAYER_THREE
+                PlayerNumberType.PLAYER_THREE -> PlayerNumberType.PLAYER_FOUR
+                PlayerNumberType.PLAYER_FOUR -> PlayerNumberType.PLAYER_FIVE
+                PlayerNumberType.PLAYER_FIVE -> PlayerNumberType.PLAYER_SIX
+                else -> PlayerNumberType.PLAYER_SEVEN
+            }
+        }
+
+        fun getPlayerIndex(arrayOfCustomPlayer: ArrayList<CustomPlayer>, currentPlayer: CustomPlayer): Int {
+            var indexToReturn = 0
+            for (index in 0 until arrayOfCustomPlayer.size) {
+                if (currentPlayer == arrayOfCustomPlayer[index]) {
+                    indexToReturn = index
+                }
+            }
+            return indexToReturn
+        }
+
+        fun getCurrentPlayer(offlineUser: OfflineUser, currentHandType: HandType): CustomPlayer {
+            var player = createCustomPlayer()
+            for (index in 0 until offlineUser.player.size) {
+                if (
+                    offlineUser.currentPlayerNumber == offlineUser.player[index].playerNumber &&
+                    offlineUser.currentHandType == offlineUser.player[index].playerHandType
+                ) {
+                    player = offlineUser.player[index]
+                }
+            }
+            return player
+        }
+
+        fun getCurrentPlayerSplit(offlineUser: OfflineUser, currentSplitHand: HandType): CustomPlayer {
+            var player = createCustomPlayer()
+            for (index in 0 until offlineUser.player.size) {
+                if (
+                    offlineUser.currentPlayerNumber == offlineUser.player[index].playerNumber &&
+                    HandType.FirstSplit == currentSplitHand
+                ) {
+                    player = offlineUser.player[index]
+                }
+            }
+            return player
+        }
+
+        private fun getHandTypeFromInt(index: Int): HandType {
+            return when(index) {
+                0 -> HandType.MainHand
+                1 -> HandType.FirstSplit
+                else -> HandType.SecondSplit
+            }
+        }
+
+        private fun getPlayerNumberType(playerIndex: Int): PlayerNumberType {
+            return when (playerIndex) {
+                0 -> PlayerNumberType.PLAYER_ONE
+                1 -> PlayerNumberType.PLAYER_TWO
+                2 -> PlayerNumberType.PLAYER_THREE
+                3 -> PlayerNumberType.PLAYER_FOUR
+                4 -> PlayerNumberType.PLAYER_FIVE
+                5 -> PlayerNumberType.PLAYER_SIX
+                else -> PlayerNumberType.PLAYER_SEVEN
+            }
+        }
+
+        fun getIndexOfPlayerNumberType(playerNumberType: PlayerNumberType): Int {
+            return when(playerNumberType) {
+                PlayerNumberType.PLAYER_ONE -> 1
+                PlayerNumberType.PLAYER_TWO -> 2
+                PlayerNumberType.PLAYER_THREE -> 3
+                PlayerNumberType.PLAYER_FOUR -> 4
+                PlayerNumberType.PLAYER_FIVE -> 5
+                PlayerNumberType.PLAYER_SIX -> 6
+                else -> 7
+            }
+        }
+
+
+
+        fun initializeMainBet(player: ArrayList<CustomPlayer>, defaultBet: Double) {
+            for (playerIndex in 0 until player.size) {
+                player[playerIndex].bet = defaultBet
+            }
+        }
+
+        fun calculateRvPosition(offlineUser: OfflineUser): Int {
+            return when (offlineUser.currentHandType) {
+                HandType.FirstSplit -> { 1 }
+                HandType.SecondSplit -> { 1 }
+                else -> { 0 }
+            }
+        }
+
+        fun Double.formatStringBet() = this.toString().replaceAfter(".","").replace(".","") + "€"
 
         private fun String.toOnlineStatusType() = OnlineStatusType.valueOf(this)
 

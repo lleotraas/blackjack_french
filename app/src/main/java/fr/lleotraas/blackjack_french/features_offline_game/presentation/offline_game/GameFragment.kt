@@ -42,7 +42,7 @@ class GameFragment : Fragment() {
     private lateinit var mBinding: FragmentOnlineGameBinding
     private lateinit var deck: Deck
     private var dealer = Dealer(0, ArrayList(), isDealerDrawAce = false, isDealerScoreSoft = false)
-    private var player = createPlayerHand(0)
+    private var player = createPlayerHand(0, 0.0)
     private var cardsDraw = 0
     private var isPlayerDrawAce = false
     private var isDealerDrawAce = false
@@ -201,7 +201,7 @@ class GameFragment : Fragment() {
     }
 
     private fun showScore() {
-        mBinding.fragmentOnlineGamePlayerScoreTv.text = String.format("%s", player.score[MAIN_HAND])
+        mBinding.fragmentOnlineGamePlayerOneMainHandScoreTv.text = String.format("%s", player.score[MAIN_HAND])
         mBinding.fragmentOnlineGamePlayerFirstSplitScoreTv.text = String.format("%s", player.score[FIRST_SPLIT])
         mBinding.fragmentOnlineGamePlayerSecondSplitScoreTv.text = String.format("%s", player.score[SECOND_SPLIT])
         mBinding.fragmentOnlineGameDealerScoreTv.text = String.format("%s", dealer.score)
@@ -250,7 +250,7 @@ class GameFragment : Fragment() {
 
             // Player start with blackjack
             if (player.score[MAIN_HAND] == 21) {
-                mBinding.fragmentOnlineGamePlayerScoreTv.text = requireContext().resources.getString(R.string.fragment_main_game_blackjack)
+                mBinding.fragmentOnlineGamePlayerOneMainHandScoreTv.text = requireContext().resources.getString(R.string.fragment_main_game_blackjack)
             }
 
             // Dealer have an ace
@@ -357,7 +357,7 @@ class GameFragment : Fragment() {
         showGameOver()
         increaseBankWithBlackjack()
         updatePlayerBankAmount()
-        mBinding.fragmentOnlineGameResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_blackjack_result)
+        mBinding.fragmentOnlineGamePlayerOneMainHandResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_blackjack_result)
         disableHitAndStopButtons()
     }
 
@@ -459,10 +459,10 @@ class GameFragment : Fragment() {
             player.score[FIRST_SPLIT] == 0 &&
             player.score[SECOND_SPLIT] == 0
         ) {
-            mBinding.fragmentOnlineGameResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_draw)
+            mBinding.fragmentOnlineGamePlayerOneMainHandResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_draw)
             increaseBank(bet.mainHandBet)
         } else {
-            mBinding.fragmentOnlineGameResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_lose)
+            mBinding.fragmentOnlineGamePlayerOneMainHandResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_lose)
         }
         showGameOver()
     }
@@ -497,10 +497,10 @@ class GameFragment : Fragment() {
         ) {
             mBinding.fragmentOnlineGameDoubleBtn.isEnabled = false
         }
-        setupPlayerHandRecyclerView()
+//        setupPlayerHandRecyclerView()
         setupPlayerFirstSplitRecyclerView()
         setupPlayerSecondSplitRecyclerView()
-        loadPlayerHandIntoRecyclerView(player.hand[MAIN_HAND]!!)
+//        loadPlayerHandIntoRecyclerView(player.hand[MAIN_HAND]!!)
         loadPlayerFirstSplitIntoRecyclerView(player.hand[FIRST_SPLIT]!!)
         loadPlayerSecondSplitIntoRecyclerView(player.hand[SECOND_SPLIT]!!)
 
@@ -556,7 +556,7 @@ class GameFragment : Fragment() {
     }
 
     private fun playerBust() {
-        mBinding.fragmentOnlineGameResultTv.text =
+        mBinding.fragmentOnlineGamePlayerOneMainHandResultTv.text =
             requireContext().resources.getString(R.string.fragment_main_game_you_lose)
         showGameOver()
         disableHitAndStopButtons()
@@ -612,9 +612,9 @@ class GameFragment : Fragment() {
             } else if (player.score[MAIN_HAND] == 21 && player.hand[MAIN_HAND]?.size == 2 && player.hand[FIRST_SPLIT]?.size == 0) {
                 increaseBankWithBlackjack()
                 showGameOver()
-                mBinding.fragmentOnlineGameResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_win)
+                mBinding.fragmentOnlineGamePlayerOneMainHandResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_win)
             } else {
-                mBinding.fragmentOnlineGameResultTv.text = compareScore(player.score[MAIN_HAND]!!, bet.mainHandBet)
+                mBinding.fragmentOnlineGamePlayerOneMainHandResultTv.text = compareScore(player.score[MAIN_HAND]!!, bet.mainHandBet)
                 if (bet.insuranceBet > 0) {
                     Toast.makeText(requireContext(), requireContext().resources.getString(R.string.fragment_main_game_insurance_lose), Toast.LENGTH_SHORT).show()
                 }
@@ -624,7 +624,7 @@ class GameFragment : Fragment() {
         } else {
             if (player.score[MAIN_HAND] == 21 && player.hand[MAIN_HAND]?.size == 2 && player.hand[FIRST_SPLIT]?.size == 0) {
                 increaseBankWithBlackjack()
-                mBinding.fragmentOnlineGameResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_win)
+                mBinding.fragmentOnlineGamePlayerOneMainHandResultTv.text = requireContext().resources.getString(R.string.fragment_main_game_you_win)
             } else {
                 mBinding.fragmentOnlineGameDealerResultTv.text =
                     requireContext().resources.getString(R.string.online_game_fragment_bust)
@@ -725,7 +725,7 @@ class GameFragment : Fragment() {
 
     private fun showGameOver() {
         mBinding.fragmentOnlineGameGameStart.visibility = View.VISIBLE
-        mBinding.fragmentOnlineGameResultTv.visibility = View.VISIBLE
+        mBinding.fragmentOnlineGamePlayerOneMainHandResultTv.visibility = View.VISIBLE
         showLoanBtn()
     }
 
@@ -747,7 +747,7 @@ class GameFragment : Fragment() {
 
     private fun hideGameOver() {
         mBinding.fragmentOnlineGameGameStart.visibility = View.GONE
-        mBinding.fragmentOnlineGameResultTv.visibility = View.GONE
+        mBinding.fragmentOnlineGamePlayerOneMainHandResultTv.visibility = View.GONE
         mBinding.fragmentOnlineGameFirstSplitResultTv.visibility = View.GONE
         mBinding.fragmentOnlineGameSecondSplitResultTv.visibility = View.GONE
         mBinding.fragmentOnlineGamePlayerFirstSplitScoreTv.visibility = View.GONE
@@ -761,9 +761,9 @@ class GameFragment : Fragment() {
         }
     }
 
-    private fun setupPlayerHandRecyclerView() = mBinding.fragmentOnlineGamePlayerRecyclerView.apply {
-        layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-    }
+//    private fun setupPlayerHandRecyclerView() = mBinding.fragmentOnlineGamePlayerRecyclerView.apply {
+//        layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//    }
 
     private fun setupPlayerFirstSplitRecyclerView() = mBinding.fragmentOnlineGamePlayerFirstSplitRecyclerView.apply {
         layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -777,10 +777,10 @@ class GameFragment : Fragment() {
         layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }
 
-    private fun loadPlayerHandIntoRecyclerView(hand: ArrayList<Card>) {
-        playerHandAdapter.submitList(hand)
-        mBinding.fragmentOnlineGamePlayerRecyclerView.adapter = playerHandAdapter
-    }
+//    private fun loadPlayerHandIntoRecyclerView(hand: ArrayList<Card>) {
+//        playerHandAdapter.submitList(hand)
+//        mBinding.fragmentOnlineGamePlayerRecyclerView.adapter = playerHandAdapter
+//    }
 
     private fun loadPlayerFirstSplitIntoRecyclerView(hand: ArrayList<Card>) {
         playerFirstSplitAdapter.submitList(hand)
