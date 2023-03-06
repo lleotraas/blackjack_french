@@ -9,5 +9,8 @@ data class OfflineUser(
     var currentPlayerNumber: PlayerNumberType = PlayerNumberType.PLAYER_ONE,
     var currentHandType: HandType = HandType.MainHand,
     var defaultBet: Double = 0.0,
-    var playerCount: Int = 1
+    var playerCount: Int = 1,
+    var totalBet: Double = 0.0,
+    var isPlaying: Boolean = false,
+    var isHelpMode: Boolean = false
 )

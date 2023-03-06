@@ -14,12 +14,16 @@
     </style>
 
     <!-- BUTTON -->
-    <style name="Button" parent="Widget.AppCompat.Button">
+    <style name="Button">
         <item name="android:padding">@dimen/padding_large_size</item>
         <item name="android:layout_margin">@dimen/margin_normal_size</item>
-        <item name="android:minHeight">@dimen/min_height</item>
-        <item name="android:minWidth">@dimen/min_width</item>
-        <item name="android:textSize">@dimen/text_normal_size</item>
+        <item name="android:textSize">@dimen/text_medium_size</item>
+    </style>
+
+    <style name="MorphButton">
+<!--        <item name="android:layout_marginStart">@dimen/margin_normal_size</item>-->
+<!--        <item name="android:layout_marginEnd">@dimen/margin_normal_size</item>-->
+        <item name="android:layout_margin">@dimen/margin_normal_size</item>
     </style>
 
     <style name="Image_button" parent="Widget.AppCompat.ImageButton">
@@ -38,6 +42,8 @@
     <!-- IMAGE VIEW -->
     <style name="CurrentPlayerIcon">
         <item name="android:layout_marginTop">@dimen/margin_normal_size</item>
+        <item name="android:layout_marginStart">@dimen/margin_normal_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_normal_size</item>
         <item name="android:visibility">gone</item>
         <item name="android:src">@drawable/baseline_play_arrow_24</item>
     </style>
@@ -99,5 +105,5 @@
     </style>
 
 
-    <string name="x2_text">x2</string>
+    <string name="x2_text" translatable="false">x2</string>
 </resources>

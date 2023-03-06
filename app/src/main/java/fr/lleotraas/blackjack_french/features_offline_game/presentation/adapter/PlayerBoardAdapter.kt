@@ -1,9 +1,11 @@
 package fr.lleotraas.blackjack_french.features_offline_game.presentation.adapter
 
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -19,13 +21,13 @@ import fr.lleotraas.blackjack_french.features_offline_game.domain.model.Card
 import fr.lleotraas.blackjack_french.features_offline_game.domain.model.CustomPlayer
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.formatStringBet
+import fr.lleotraas.blackjack_french.features_offline_game.presentation.dialog.InsuranceHelpDialog
+import fr.lleotraas.blackjack_french.features_offline_game.presentation.dialog.StopHelpDialog
 import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.utils.HandType
 
-class PlayerBoardAdapter : ListAdapter<CustomPlayer, PlayerBoardAdapter.PlayerBoardViewHolder> (Companion) {
+class PlayerBoardAdapter: ListAdapter<CustomPlayer, PlayerBoardAdapter.PlayerBoardViewHolder> (Companion) {
 
     inner class PlayerBoardViewHolder(val binding: PlayerBoardRowBinding) : RecyclerView.ViewHolder(binding.root)
-
-
 
     companion object : DiffUtil.ItemCallback<CustomPlayer>() {
         override fun areItemsTheSame(oldItem: CustomPlayer, newItem: CustomPlayer): Boolean {
@@ -46,7 +48,6 @@ class PlayerBoardAdapter : ListAdapter<CustomPlayer, PlayerBoardAdapter.PlayerBo
         holder.binding.apply {
             playerBoardBetValueTv.text = currentPlayer.bet.formatStringBet()
             playerBoardScoreValueTv.text = currentPlayer.score.toString()
-//            playerBoardInsuranceValueTv.text = currentPlayer.insuranceBet.toString()
             showCurrentPlayerIcon(currentPlayer, playerBoardCurrentPlayerIcon)
             showResultScore(currentPlayer, root, playerBoardPlayerResultIcon, playerBoardCurrentPlayerIcon)
             playerHaveBlackjack(currentPlayer, root.context, playerBoardScoreValueTv)

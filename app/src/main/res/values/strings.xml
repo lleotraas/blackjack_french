@@ -1,16 +1,17 @@
 <resources>
-    <string name="app_name">Blackjack</string>
-    <string name="webclient_id">752234267388-fgaat8sqor7bb0l3c7g67s0e2ih88j5e.apps.googleusercontent.com</string>
+    <string name="app_name" translatable="false">Blackjack</string>
+    <string name="webclient_id" translatable="false">752234267388-fgaat8sqor7bb0l3c7g67s0e2ih88j5e.apps.googleusercontent.com</string>
 
-    <string name="facebook_app_id">466824041889664</string>
-    <string name="fb_login_protocol_scheme">fb466824041889664</string>
+    <string name="facebook_app_id" translatable="false">466824041889664</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb466824041889664</string>
 
     <!-- ANIMATION -->
     <string name="animation_online_main_screen_to_detail" translatable="false">animationOnlineMainScreenToDetail</string>
     <string name="detail_to_animation_online_main_screen" translatable="false">detailToAnimationOnlineMainScreen</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+
     <string name="offline_game_fragment_bet_must_not_be_0">Bet is 0, choose your bet.</string>
     <string name="fragment_main_screen_new_game">Start new game</string>
     <string name="fragment_main_game_start_game">Start</string>
@@ -72,7 +73,7 @@
     <string name="online_game_fragment_server_shutdown">Server shutdown</string>
     <string name="online_game_fragment_blackjack">BJ</string>
     <string name="online_game_fragment_contract_loan">Contract loan</string>
-    <string name="fragment_online_game_loan">Loan</string>
+    <string name="fragment_online_game_rebuy">Rebuy</string>
     <string name="online_game_fragment_loan_online_message">You can contract a new loan to get 1500 in your wallet but you increase your number of loan by +1</string>
     <string name="online_game_fragment_loan_offline_message">You can contract a new loan to get 500 in your wallet</string>
     <string name="fragment_online_main_screen_fab_description">chat_fab</string>
@@ -137,11 +138,32 @@
     <string name="player_board_bet_title">Bet</string>
     <string name="player_board_double_title">Double</string>
     <string name="player_board_insurance_title">Insurance</string>
-    <string name="player_board_split">S</string>
-    <string name="player_board_insurance">A</string>
-    <string name="player_board_double">X2</string>
+    <string name="player_board_split" translatable="false">S</string>
+    <string name="player_board_insurance" translatable="false">A</string>
+    <string name="player_board_double" translatable="false">X2</string>
     <string name="insurance_fab_description">Button for insurance</string>
-    <string name="message_for_insurance">If you want to insure the box for the half of your bet, click on the A button corresponding to this box.</string>
-
+    <string name="message_for_insurance" translatable="false">If you want to insure the box for the half of your bet, click on the A button corresponding to this box.</string>
+    <string name="fragment_online_game_wallet">Wallet:</string>
+    <string name="activity_offline_game_help">Help</string>
+    <string name="fragment_main_game_help_explanation">Click on a button or an element on the screen to have some details.</string>
+    <string name="activity_offline_game_quit">Quit</string>
+    <string name="recycler_view_dialog_title">Player Box</string>
+    <string name="recycler_view_dialog_message">Here you can see your hand with all of your cards on the left. \n On the right side you can see: \n\t- Your score using your added cards. \n\t- Your bet in €. \n\t- X2 icon is highlight If you double your box. \n\t- S icon is highlight if you split your box the colour corresponding to the box number you split.</string>
+    <string name="bet_help_dialog_title">Place your bets</string>
+    <string name="bet_help_dialog_message">With this button you can choose your bet and choose how many box you want to play. Each box have the same bet. If you do not have enough money you cannot validate your bet.</string>
+    <string name="hit_help_dialog_title">Hit cards</string>
+    <string name="hit_help_dialog_message">Add a card to your hand and increase your score but if your score is over 21 you bust and automatically pass your turn to the next hand or the dealer.</string>
+    <string name="stop_help_dialog_title">Stop and Pass</string>
+    <string name="stop_help_dialog_message">Pass your turn to the next box or to the dealer.</string>
+    <string name="double_help_dialog_title">Double your bet</string>
+    <string name="double_help_dialog_message">Double your bet but you have to take one and only card and you automatically pass your turn after doing this. It is recommended to double when you have a score equal to 9,10 or 11 and if the dealer have a little card.</string>
+    <string name="split_help_dialog_title">Split your cards</string>
+    <string name="split_help_dialog_message">When you have Two cards with the same value it is possible to split them. The result is that you have now two hand with one card. The dealer give you a card on the first hand and you decide if you want to hit or stay, you can also double or split again if you have the same value again. Once you are done with the first hand it is time to do the same with the second hand. You can split maximum of three times.</string>
+    <string name="insurance_help_dialog_title">Insure your bet</string>
+    <string name="insurance_help_dialog_message">When dealer have an ace after the distribution, a button appears on each box. If you press it, you insure your bet. If dealer have blackjack, you are refunded of your bet but if he do not have blackjack, you loose your insurance and you compare your score with dealer normally. The insurance price cost the half of your bet.</string>
+    <string name="rebuy_help_dialog_title">Contract a loan</string>
+    <string name="rebuy_help_dialog_message">When your wallet reach 50€ or less, the Rebuy button appears. If you hit it, you receive an amount of 500€ in your wallet.</string>
+    <string name="dealer_help_dialog_title">Dealer score</string>
+    <string name="dealer_help_dialog_message">Here you can see the dealer score under an image that represent him.</string>
 
 </resources>

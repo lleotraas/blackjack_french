@@ -116,7 +116,7 @@ class GameFragment : Fragment() {
             lifecycleScope.launch {
                 mViewModel.updateBank(wallet!!)
             }
-            mBinding.fragmentOnlineGameContractLoanBtn.visibility = View.GONE
+            mBinding.fragmentOnlineGameRebuyBtn.visibility = View.GONE
             dialogInterface.dismiss()
         }
         setNegativeButton(requireContext().resources.getString(R.string.dialog_invitation_to_play_negative_btn)) { dialogInterface, _ ->
@@ -323,7 +323,7 @@ class GameFragment : Fragment() {
         }
 
         // LOAN DIALOG
-        mBinding.fragmentOnlineGameContractLoanBtn.setOnClickListener {
+        mBinding.fragmentOnlineGameRebuyBtn.setOnClickListener {
             showLoanDialog().show()
         }
     }
@@ -734,9 +734,9 @@ class GameFragment : Fragment() {
             wallet != null &&
             wallet?.amount!! < 100
         ) {
-            mBinding.fragmentOnlineGameContractLoanBtn.visibility = View.VISIBLE
+            mBinding.fragmentOnlineGameRebuyBtn.visibility = View.VISIBLE
         } else {
-            mBinding.fragmentOnlineGameContractLoanBtn.visibility = View.GONE
+            mBinding.fragmentOnlineGameRebuyBtn.visibility = View.GONE
         }
     }
 

@@ -8,11 +8,16 @@ import fr.lleotraas.blackjack_french.databinding.ActivityGameBinding
 @AndroidEntryPoint
 class GameActivity : AppCompatActivity() {
 
-    private lateinit var mBinding: ActivityGameBinding
+    private lateinit var binding: ActivityGameBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = ActivityGameBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+        binding = ActivityGameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        configureToolbar()
+    }
+
+    private fun configureToolbar() {
+        setSupportActionBar(binding.activityGameToolbar.toolbar)
     }
 }

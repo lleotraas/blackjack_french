@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="offline_game_fragment_bet_must_not_be_0">La mise est égale à 0, faites vos jeux.</string>
+    <string name="fragment_main_screen_new_game">Nouvelle partie</string>
+    <string name="fragment_main_game_start_game">Commencer</string>
+    <string name="fragment_main_game_dealer_score">SCORE DU CROUPIER</string>
+    <string name="fragment_main_game_you_win">WIN</string>
+    <string name="fragment_main_game_you_lose">LOSE</string>
+    <string name="online_game_fragment_bust">BUST</string>
+    <string name="fragment_main_game_draw">DRAW</string>
+    <string name="fragment_main_game_none">NONE</string>
+    <string name="bet_dialog_reset">reset</string>
+    <string name="bet_dialog_default_bet">0</string>
+    <string name="bet_dialog_ok">OK</string>
+    <string name="bet_dialog_not_enough_money">Pas assez d\'argent</string>
+    <string name="fragment_main_screen_load_game">Charger partie</string>
+    <string name="load_game_dialog_empty_slot">Slot vide</string>
+    <string name="load_game_dialog_game_number">Partie</string>
+    <string name="load_game_dialog_bank_amout">"Cave: "</string>
+    <string name="new_game_dialog_enter_name">Entrer un nom</string>
+    <string name="bet_dialog_cancel">Annuler</string>
+    <string name="fragment_main_game_current_bet">Mise:</string>
+    <string name="fragment_main_game_total_spent">Total Dépensé:</string>
+    <string name="fragment_main_game_blackjack">BJ</string>
+    <string name="fragment_main_game_insurance">Voulez-vous assurer?</string>
+    <string name="fragment_main_game_insurance_title">Assurance</string>
+    <string name="fragment_main_game_assured">Vous êtes assuré</string>
+    <string name="fragment_main_game_blackjack_result">Blackjack</string>
+    <string name="fragment_main_game_insurance_win">Assurance gagnante</string>
+    <string name="fragment_main_game_insurance_lose">Assurance perdante</string>
+    <string name="fragment_main_game_shuffle_deck">Carte rouge, le croupier mélange les cartes</string>
+    <string name="new_game_dialog_delete_save">Effacez un slot avant de créer une nouvelle partie.</string>
+    <string name="fragment_main_game_hit">Hit</string>
+    <string name="fragment_main_game_stop">Stop</string>
+    <string name="fragment_main_game_double">Doubler</string>
+    <string name="fragment_main_game_split">Split</string>
+    <string name="fragment_main_game_fab_description">Choix de la mise</string>
+    <string name="fragment_main_screen_facebook_sign">Se connecter avec facebook</string>
+    <string name="fragment_main_screen_google_sign">Se connecter avec goole</string>
+    <string name="main_screen_fragment_login_successfull">Connection réussie</string>
+    <string name="facebook_sigin_in_activity_failure">Connection échouée</string>
+    <string name="fragment_main_screen_play_online">Jouer en ligne</string>
+    <string name="activity_online_main_screen_search_game">Search online game</string>
+    <string name="online_main_screen_adapter_is_playing">En jeu</string>
+    <string name="online_main_screen_adapter_is_online">En ligne</string>
+    <string name="fragment_detail_online_user_add_friend_description">Ajouter un ami</string>
+    <string name="fragment_detail_online_user_play_with">Jouer avec lui</string>
+    <string name="online_main_screen_adapter_is_offline">Est hors ligne</string>
+    <string name="online_main_screen_adapter_ask_for_play">Demander à jouer</string>
+    <string name="detail_online_user_fragment_somebody_want_to_play">Quelqu\'un veux jouer avec vous.</string>
+    <string name="detail_online_user_fragment_invitation_to_play">Invitation à jouer</string>
+    <string name="detail_online_user_fragment_play">Jouer</string>
+    <string name="detail_online_user_fragment_cancel">Annuler</string>
+    <string name="dialog_invitation_to_play_positive_btn">Jouer</string>
+    <string name="dialog_invitation_to_play_negative_btn">Annuler</string>
+    <string name="invitation_to_play_dialog_message">veux jouer avec vous, accpter?</string>
+    <string name="dialog_invitation_to_play_title">Invitation à jouer</string>
+    <string name="dialog_waiting_for_answer_title">En attente de la réponse de l\'adversaire</string>
+    <string name="online_main_screen_adapter_waiting_answer">En attente de la réponse de l\'adversaire</string>
+    <string name="online_game_fragment_opponent_leave">Quitter la partie.</string>
+    <string name="online_game_fragment_server_shutdown">Serveur hors ligne</string>
+    <string name="online_game_fragment_blackjack">BJ</string>
+    <string name="online_game_fragment_contract_loan">Contracter un prêt</string>
+    <string name="fragment_online_game_rebuy">Rebuy</string>
+    <string name="online_game_fragment_loan_online_message">Vous pouvez contracter un nouveau prêt pour avoir 1500€ dans votre cave mais vous augmentez votre nombre de prêt de +1</string>
+    <string name="online_game_fragment_loan_offline_message">Vous pouvez contracter un prêt pour obtenir 500€ dans votre cave</string>
+    <string name="fragment_online_main_screen_fab_description">chat_fab</string>
+    <string name="fragment_online_main_screen_chat_input_hint">message</string>
+    <string name="disconnected_dialog_title">Deconnecté</string>
+    <string name="disconnected_dialog_message">Vous avez été déconnecté pour une longue session sans action. Voulez-vous vous reconnecter?</string>
+    <string name="activity_main_screen_drawer_menu_logout">Déconnection</string>
+    <string name="activity_main_screen_drawer_menu_setting">Réglages</string>
+    <string name="activity_main_screen_drawer_menu_profile">Compte</string>
+    <string name="fragment_setting_menu">Reglages</string>
+    <string name="username">nom d\'utilisateur: </string>
+    <string name="number_of_loan">nombre de prêt: </string>
+    <string name="fragment_profile_title">Editer un compte</string>
+    <string name="fragment_profile_save_btn">sauvegarder</string>
+    <string name="fragment_profile_hint_name">nom</string>
+    <string name="fragment_profile_rotate_image">tourner</string>
+    <string name="fragment_profile_image_over_size">Taille de l\'image trop haute, choisissez en une autre.</string>
+    <string name="fragment_detail_online_user_add_friend">Ajouter un ami</string>
+
+    <string name="online_main_screen_activity_players_view">Liste de joueur</string>
+    <string name="online_main_screen_activity_chat_view">Chat</string>
+
+    <string name="online_game_activity_board_view">Plateau</string>
+    <string name="online_game_activity_chat_view">Chat</string>
+
+    <string name="online_game_activity_quit">Quitter</string>
+    <string name="online_game_activity_quit_message">Quitter le jeu et aller au menu principal?</string>
+    <string name="online_game_activity_yes">Oui</string>
+    <string name="online_game_activity_no">NON</string>
+    <string name="online_game_activity_new_message">Nouveau Message</string>
+
+    <string name="opponent_quit_game_dialog_title">l\'adversaire à quitté</string>
+    <string name="opponent_quit_game_dialog_message">Votre adversaire à quitté, serveur hors ligne</string>
+    <string name="opponent_quit_game_dialog_positive_btn">OK</string>
+
+    <string name="online_game_fragment_welcome">Bievenue sur le BlackChat ;) have fun</string>
+
+    <string name="waiting_for_answer_dialog_opponent_cancel_request">L\'adversaire à annulé la requête</string>
+
+    <string name="profile_fragment_title">Compte</string>
+    <string name="profile_fragment_menu">Sauvegarde</string>
+
+    <string name="profile_activity_toolbar_title">Compte</string>
+
+    <string name="setting_menu_activity_toolbar_title">Réglages</string>
+
+    <string name="activity_main_screen_drawer_menu_home">Menu Principal</string>
+
+    <string name="dialog_load_game_slot_1">Charger slot 1</string>
+    <string name="dialog_load_game_slot_2">Charger slot 2</string>
+    <string name="dialog_load_game_slot_3">Charger slot 3</string>
+    <string name="dialog_load_game_delete_1">Supprimer slot 1</string>
+    <string name="dialog_load_game_delete_2">Supprimer slot 2</string>
+    <string name="dialog_load_game_delete_3">Supprimer slot 3</string>
+    <string name="dialog_bet_thousand">Millier</string>
+    <string name="dialog_bet_ten_of_thousand">dizaine de millier</string>
+    <string name="dialog_bet_hundred">centaine</string>
+    <string name="dialog_bet_dozens">dizaine</string>
+    <string name="dialog_bet_unity">unité</string>
+    <string name="dialog_bet_number_of_bet">Boîte</string>
+    <string name="player_board_score_title">Score</string>
+    <string name="player_board_bet_title">Mise</string>
+    <string name="player_board_double_title">Doubler</string>
+    <string name="player_board_insurance_title">Assurance</string>
+
+    <string name="insurance_fab_description">Boutton pour l\'assurance</string>
+    <string name="fragment_online_game_wallet">Cave:</string>
+    <string name="activity_offline_game_help">Aide</string>
+    <string name="fragment_main_game_help_explanation">Cliquez sur un bouton ou un élément de l\'écran pour avoir des explications.</string>
+    <string name="activity_offline_game_quit">Quitter</string>
+    <string name="recycler_view_dialog_title">Boîte du joueur</string>
+    <string name="recycler_view_dialog_message">"Ici vous pouvez voir diverses informations sur l'état de votre main comme: \n - Votre score qui change avec les cartes que vous ajoutez. \n -Votre mise en € \n - X2 devient visible quand vous doublez votre mise. \n - S devient visible lorsque vous splittez votre main, la couleur correspond au numéro de la main."</string>
+    <string name="bet_help_dialog_title">Faites vos jeux</string>
+    <string name="bet_help_dialog_message">"Avec ce bouton vous pouvez choisir votre mise et le nombre de boîte que vous voulez. toutes les boîtes auront les mêmes mises. Si vous navez pas assez d\'argent vous ne pouvez pas valider votre mise."</string>
+    <string name="hit_help_dialog_title">Tirer une carte</string>
+    <string name="hit_help_dialog_message">Ajoute une carte à votre main et augment votre score mais si votre score dépasse 21, votre main est perdu et vous passez automatiquement à la main suivante ou au croupier.</string>
+    <string name="stop_help_dialog_title">Stopper et passer</string>
+    <string name="stop_help_dialog_message">Passez votre tour à la main suivante ou au croupier.</string>
+    <string name="double_help_dialog_title">Doublez votre mise</string>
+    <string name="double_help_dialog_message">Doublez votre mise mais vous devez tirer seulement une carte et passez votre tour automatiquement. Il est recommendé de doubler quand vous avez un score de 9,10 ou 11 et si le croupier à une petite carte.</string>
+    <string name="split_help_dialog_title">Séparez votre main</string>
+    <string name="split_help_dialog_message">Quand vous avez 2 cartes de même valeur il est possible de les séparer. Vous avez maintenant 2 mains avec une seule carte chacune. Le croupier vous donne une carte sur la 1ere main et vous décidez si vous voulez en tirer d\'autres ou pas, vous pouvez aussi doubler ou séparer encore si vous avez encore 2 cartes de même valeur. Une fois vos décisions prises avec la 1ere main il est temps de faire la même chose avec la 2eme. Vous pouvez séparer un maximum de 3 fois.</string>
+    <string name="insurance_help_dialog_title">Assurez votre mise</string>
+    <string name="insurance_help_dialog_message">Quand le croupier à un as après la distribution, un bouton apparaît sur chaque mains. Si vous appuyer dessus, vous assurez vote mise. Si le croupier à un blackjack, vous êtes remboursé de votre mise mais si le croupier n\'a pas de blackjakck, vous perdez votre assurance et vous comparez votre score avec lui normalement. L\'assurance coûte la moitiée de votre mise.</string>
+    <string name="rebuy_help_dialog_title">Contracter un prêt</string>
+    <string name="rebuy_help_dialog_message">Quand votre cave atteint 50€ ou moins, le bouton de Rebuy apparaît. Si vous cliquez dessus, vous recevrez un montant de 500€ dans votre cave.</string>
+    <string name="dealer_help_dialog_title">Score du Croupier</string>
+    <string name="dealer_help_dialog_message">Ici vous pouvez voir le score du Croupier sous une image qui le représente.</string>
+
+</resources>

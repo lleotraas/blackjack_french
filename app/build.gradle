@@ -7,6 +7,20 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\charl\\Documents\\android_app_key\\blackjack_french_key\\blackjack_french.jks')
+            storePassword '!Ceberg1'
+            keyAlias 'lleotraas_blackjack'
+            keyPassword '!Ceberg1'
+        }
+        release {
+            storeFile file('C:\\Users\\charl\\Documents\\android_app_key\\blackjack_french_key\\blackjack_french.jks')
+            keyAlias 'lleotraas_blackjack'
+            storePassword '!Ceberg1'
+            keyPassword '!Ceberg1'
+        }
+    }
     compileSdk 33
 
     defaultConfig {
@@ -23,6 +37,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

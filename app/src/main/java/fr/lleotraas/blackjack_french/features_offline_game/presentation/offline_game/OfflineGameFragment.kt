@@ -8,17 +8,20 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
+import androidx.core.view.get
+import androidx.core.view.isEmpty
+import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,11 +29,14 @@ import fr.lleotraas.blackjack_french.R
 import fr.lleotraas.blackjack_french.databinding.FragmentOnlineGameCopyBinding
 import fr.lleotraas.blackjack_french.features_offline_game.domain.model.*
 import fr.lleotraas.blackjack_french.features_offline_game.domain.service.TimeService
+import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.MorphButton
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils
+import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.formatStringWinBet
+import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.dp
 import fr.lleotraas.blackjack_french.features_offline_game.presentation.GameActivityViewModel
 import fr.lleotraas.blackjack_french.features_offline_game.presentation.adapter.GameAdapter
 import fr.lleotraas.blackjack_french.features_offline_game.presentation.adapter.PlayerBoardAdapter
-import fr.lleotraas.blackjack_french.features_offline_game.presentation.dialog.BetDialog
+import fr.lleotraas.blackjack_french.features_offline_game.presentation.dialog.*
 import fr.lleotraas.blackjack_french.features_online_game.domain.model.OnlineDeck
 import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.utils.HandType
 import kotlinx.coroutines.launch
@@ -53,8 +59,6 @@ class OfflineGameFragment :Fragment() {
     private var currentTime = 0.0
     private var isTimerStarted = false
     private var isShuffleTime = false
-    private lateinit var smoothScroller: LinearSmoothScroller
-    private var boardIndex = 0
     private lateinit var recyclerViewState: Parcelable
 
     override fun onCreateView(
@@ -65,48 +69,72 @@ class OfflineGameFragment :Fragment() {
         binding = FragmentOnlineGameCopyBinding.inflate(inflater, container, false)
         val bankId = requireActivity().intent.extras?.getLong(PLAYER_SAVE_ID)
         initDeck()
-        initWallet(bankId)
-        createAdapterList()
+        createOfflinePlayerAndDealer(bankId)
+        initAdapterList()
+        initRecyclerView()
+        initBtn()
         initBroadcastTimer()
         hideUnnecessaryView()
         prepareDealerProfileImg()
         disableBtn()
+        configureSupportNavigateUp()
         configureListeners()
         return binding.root
+    }
+
+    private fun initBtn() {
+        binding.apply {
+            fragmentOnlineGameHitBtn.apply {
+                text = requireContext().resources.getString(R.string.fragment_main_game_hit)
+                setPadding((40 * dp()).toInt(), (getPaddingValue() * dp()).toInt(), (40 * dp()).toInt(), (getPaddingValue() * dp()).toInt())
+            }
+            fragmentOnlineGameStopBtn.apply {
+                text = requireContext().resources.getString(R.string.fragment_main_game_stop)
+                setPadding((36 * dp()).toInt(), (getPaddingValue() * dp()).toInt(), (36 * dp()).toInt(), (getPaddingValue() * dp()).toInt())
+            }
+            fragmentOnlineGameSplitBtn.apply {
+                text = requireContext().resources.getString(R.string.fragment_main_game_split)
+                setPadding((40 * dp()).toInt(), (getPaddingValue() * dp()).toInt(), (40 * dp()).toInt(), (getPaddingValue() * dp()).toInt())
+            }
+            fragmentOnlineGameDoubleBtn.apply {
+                text = requireContext().resources.getString(R.string.fragment_main_game_double)
+                setPadding((28 * dp()).toInt(), (getPaddingValue() * dp()).toInt(), (28 * dp()).toInt(), (getPaddingValue() * dp()).toInt())
+            }
+        }
+    }
+
+    private fun getPaddingValue(): Int {
+        return 20
     }
 
     private fun initDeck() {
         deck = prepareDeck()
     }
 
-    private fun createAdapterList() {
+    private fun initAdapterList() {
         playerBoardAdapter = PlayerBoardAdapter()
-        playerBoardRv = binding.fragmentOnlineGameBoardRv
-        setupVerticalRecyclerView(playerBoardRv)
-
-        recyclerViewState = playerBoardRv.layoutManager!!.onSaveInstanceState()!!
-
         dealerHandAdapter = GameAdapter()
-        dealerCardRv = binding.fragmentOnlineGameDealerRecyclerView
-        setupHorizontalRecyclerView(dealerCardRv)
-
-        smoothScroller = object : LinearSmoothScroller(requireContext()) {
-            override fun getVerticalSnapPreference(): Int {
-                return SNAP_TO_START
-            }
-        }
     }
 
-    private fun initWallet(bankId: Long?) {
+    private fun initRecyclerView() {
+        playerBoardRv = binding.fragmentOnlineGameBoardRv
+        setupVerticalRecyclerView(playerBoardRv)
+        dealerCardRv = binding.fragmentOnlineGameDealerRecyclerView
+        setupHorizontalRecyclerView(dealerCardRv)
+        recyclerViewState = playerBoardRv.layoutManager!!.onSaveInstanceState()!!
+    }
+
+    private fun createOfflinePlayerAndDealer(bankId: Long?) {
 
         if (bankId != null) {
             viewModel.getBank(bankId).observe(viewLifecycleOwner) { wallet ->
+                if (wallet.amount <= 50.0) {
+                    binding.fragmentOnlineGameRebuyBtn.visibility = View.VISIBLE
+                }
                 if (offlineUser == null) {
-                    Log.d(javaClass.simpleName, "initWallet: wallet pseudo:${wallet.pseudo}")
                     offlineUser = OfflineUser(
                         wallet,
                     )
-
                     dealer = Utils.createDealer()
                 } else {
                     offlineUser!!.wallet?.amount = wallet.amount
@@ -121,19 +149,6 @@ class OfflineGameFragment :Fragment() {
 
         }
     }
-
-//    private fun initPlayer(bankId: Long?) {
-//
-//        if (bankId != null) {
-//
-//            viewModel.getOfflineUser().observe(viewLifecycleOwner) { user ->
-//                binding.apply {
-//                    Log.d(javaClass.simpleName, "initPlayer: user pseudo: ${user.wallet?.pseudo}")
-//                }
-//            }
-//
-//        }
-//    }
 
     private fun initBroadcastTimer() {
         serviceIntent = Intent(requireContext(), TimeService::class.java)
@@ -157,7 +172,7 @@ class OfflineGameFragment :Fragment() {
             time in 0.0 .. 10.0
         ) {
             currentTime++
-            dealerDrawCard(offlineUser, dealer, deck)
+            dealerDrawCard(dealer, deck)
         }
 
         if (
@@ -186,18 +201,20 @@ class OfflineGameFragment :Fragment() {
         for (indexOfPlayer in 0 until offlineUser.player.size) {
 
             val playerToCompare = offlineUser.player[indexOfPlayer]
+            var resultScore: Int
             val score = playerToCompare.score
             val bet = playerToCompare.bet
             val handSize = playerToCompare.hand.size
             val handType = offlineUser.player[indexOfPlayer].playerHandType.valueOf
-            var resultScore: Int
             val isFirstSplit = offlineUser.player[indexOfPlayer].isPlayerFirstSplit
             if (score in 1..21) {
-                resultScore = if (dealer.score < 22) {
-                    Utils.compareScore(score, handSize, handType, isFirstSplit, dealer)
-                } else {
-                    Utils.compareScore(score, handSize)
-                }
+
+                resultScore =
+                    if (dealer.score < 22) {
+                        Utils.compareScore(score, handSize, handType, isFirstSplit, dealer)
+                    } else {
+                        Utils.compareScore(score, handSize)
+                    }
                 offlineUser.player[indexOfPlayer].resultScore = resultScore
                 winBet += Utils.paymentForPlayer(resultScore, bet)
             }
@@ -208,26 +225,22 @@ class OfflineGameFragment :Fragment() {
             }
         }
         offlineUser.wallet!!.amount += winBet
-        showWinBetResult(winBet)
+        showLoseBetAMount(winBet)
         addCardToView(offlineUser)
+        showReBuyToPlayer(offlineUser)
+        offlineUser.isPlaying = false
         lifecycleScope.launch {
             viewModel.updateBank(offlineUser.wallet!!)
         }
     }
 
-    private fun showWinBetResult(winBet: Double) {
-        var bet = if (winBet.toString().last() == '0') winBet.toString().replaceAfter(".","").replace(".","") else winBet.toString()
-        val result =
-            if (winBet < 0.0)
-                requireContext().resources.getString(R.string.fragment_main_game_you_lose) + " $bet"
-            else
-                requireContext().resources.getString(R.string.fragment_main_game_you_win) + " $bet"
-
-        binding.fragmentOnlineGamePlayerBetBtn.text = result
+    private fun showReBuyToPlayer(offlineUser: OfflineUser) {
+        if (offlineUser.wallet!!.amount <= 50.0) {
+            binding.fragmentOnlineGameRebuyBtn.visibility = View.VISIBLE
+        }
     }
 
     private fun insurancePay(playerToCompare: CustomPlayer): Double {
-        Log.e(javaClass.simpleName, "insurancePay: insurance bet = ${playerToCompare.insuranceBet}")
         return if (playerToCompare.insuranceBet > 0.0) playerToCompare.insuranceBet * 2 else 0.0
     }
 
@@ -255,6 +268,7 @@ class OfflineGameFragment :Fragment() {
 
     private fun hideUnnecessaryView() {
         binding.apply {
+            fragmentOnlineGamePlayerBetBtn.visibility = View.GONE
             fragmentOnlineGameOpponentBetBtn.visibility = View.GONE
             fragmentOnlineGameCurrentUserReadyImg.visibility = View.GONE
             fragmentOnlineGameOpponentReadyImg.visibility = View.GONE
@@ -276,131 +290,323 @@ class OfflineGameFragment :Fragment() {
             fragmentOnlineGameStopBtn.isEnabled = false
             fragmentOnlineGameDoubleBtn.isEnabled = false
             fragmentOnlineGameSplitBtn.isEnabled = false
+            fragmentOnlineGameHitBtn.setUIState(MorphButton.UIState.Loading)
+            fragmentOnlineGameStopBtn.setUIState(MorphButton.UIState.Loading)
+            fragmentOnlineGameDoubleBtn.setUIState(MorphButton.UIState.Loading)
+            fragmentOnlineGameSplitBtn.setUIState(MorphButton.UIState.Loading)
         }
     }
 
+    private fun enableBtn() {
+        binding.apply {
+            fragmentOnlineGameHitBtn.isEnabled = true
+            fragmentOnlineGameStopBtn.isEnabled = true
+            fragmentOnlineGameDoubleBtn.isEnabled = true
+            fragmentOnlineGameSplitBtn.isEnabled = true
+            fragmentOnlineGameHitBtn.setUIState(MorphButton.UIState.Button)
+            fragmentOnlineGameStopBtn.setUIState(MorphButton.UIState.Button)
+            fragmentOnlineGameDoubleBtn.setUIState(MorphButton.UIState.Button)
+            fragmentOnlineGameSplitBtn.setUIState(MorphButton.UIState.Button)
+            fragmentOnlineGameRebuyBtn.visibility = View.VISIBLE
+            fakeInsuranceBtn.visibility = View.VISIBLE
+            fakeInsuranceTv.visibility = View.VISIBLE
+        }
+    }
+
+    private fun configureSupportNavigateUp() {
+        requireActivity().addMenuProvider(object : MenuProvider{
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.activity_offline_game_menu, menu)
+                if (offlineUser!!.isHelpMode) {
+                    menu[0].title = requireContext().resources.getString(R.string.activity_offline_game_quit)
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if (menuItem.itemId == R.id.offline_game_help) {
+                    if (!offlineUser!!.isHelpMode) {
+                        binding.fragmentOnlineGameHelpTv.visibility = View.VISIBLE
+                        menuItem.title = requireContext().resources.getString(R.string.activity_offline_game_quit)
+                        manageUiForHelp()
+                    } else {
+                        binding.fragmentOnlineGameHelpTv.visibility = View.GONE
+                        menuItem.title = requireContext().resources.getString(R.string.activity_offline_game_help)
+                        backForPreviousUi()
+                    }
+                    offlineUser!!.isHelpMode = !offlineUser!!.isHelpMode
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun manageUiForHelp() {
+        loadPlayerBoardIntoRecyclerView(Utils.createCustomPlayerListForHelp(), playerBoardAdapter, playerBoardRv)
+        val dealerHand = Utils.createDealerHandForHelp()
+        loadHandIntoRecyclerView(dealerHand, dealerHandAdapter, dealerCardRv)
+        binding.fragmentOnlineGameDealerScoreTv.text = dealerHand[0].value.toString()
+        binding.fakeConstraintLayout.visibility = View.VISIBLE
+        enableBtn()
+        hideStartBtn()
+        startAnimationForHelp()
+    }
+
+    private fun startAnimationForHelp() {
+        val scaleAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_up_infinite)
+        binding.apply {
+            fragmentOnlineGameRebuyBtn.animation = scaleAnimation
+            fakeInsuranceBtn.animation = scaleAnimation
+            fakeInsuranceTv.animation = scaleAnimation
+            fragmentOnlineGameFab.animation = scaleAnimation
+            fragmentOnlineGameDealerInformationContainer.animation = scaleAnimation
+            fakeConstraintLayout.animation = scaleAnimation
+        }
+    }
+
+    private fun stopAnimationForHelp() {
+        binding.apply {
+            fragmentOnlineGameRebuyBtn.animation = null
+            fakeInsuranceBtn.animation = null
+            fakeInsuranceTv.animation = null
+            fragmentOnlineGameBoardRv.animation = null
+            fragmentOnlineGameFab.animation = null
+            fragmentOnlineGameDealerInformationContainer.animation = null
+            fakeConstraintLayout.animation = null
+        }
+    }
+
+    private fun backForPreviousUi() {
+        binding.apply {
+            fragmentOnlineGameRebuyBtn.visibility = View.GONE
+            fakeInsuranceBtn.visibility = View.GONE
+            fakeInsuranceTv.visibility = View.GONE
+            fakeConstraintLayout.visibility = View.GONE
+        }
+        stopAnimationForHelp()
+        if (!offlineUser!!.isPlaying) {
+            showStartBtn()
+            disableBtn()
+        }
+        if (offlineUser!!.player[0].hand.isEmpty()) {
+            loadPlayerBoardIntoRecyclerView(ArrayList(), playerBoardAdapter, playerBoardRv)
+            loadHandIntoRecyclerView(ArrayList(), dealerHandAdapter, dealerCardRv)
+            disableBtn()
+            binding.fragmentOnlineGameDealerImg.visibility = View.GONE
+            binding.fragmentOnlineGameDealerContainer.visibility = View.GONE
+        } else {
+            loadPlayerBoardIntoRecyclerView(offlineUser!!.player, playerBoardAdapter, playerBoardRv)
+            loadHandIntoRecyclerView(dealer.hand, dealerHandAdapter, dealerCardRv)
+            binding.fragmentOnlineGameDealerScoreTv.text = dealer.score.toString()
+            val currentPlayer = Utils.getCurrentPlayer(offlineUser!!, offlineUser!!.currentHandType)
+            playerCanSplit(currentPlayer)
+            playerCanDouble(currentPlayer)
+        }
+    }
 
     private fun configureListeners() {
         binding.apply {
             val animUp = AnimationUtils.loadAnimation(requireContext(), R.anim.scale_up)
-            fragmentOnlineGameFab.setOnClickListener {
-                fragmentOnlineGameFab.startAnimation(animUp)
-                fragmentOnlineGameFabBorderImg.startAnimation(animUp)
-                val betDialog = BetDialog()
-                betDialog.show(requireActivity().supportFragmentManager, betDialog.tag)
-            }
 
-            fragmentOnlineGameGameStart.setOnClickListener {
-                if (offlineUser!!.defaultBet > 0.0) {
-                    fragmentOnlineGamePlayerBetBtn.text = ""
-                    boardIndex = 0
-                    fragmentOnlineGameGameStart.startAnimation(animUp)
-                    offlineUser!!.player = Utils.createCustomPlayerList(
-                        offlineUser!!.playerCount,
-                        offlineUser!!.defaultBet
-                    )
-                    dealer = Utils.createDealer()
-                    resetRecyclerView(dealer)
-                    distributionSequence(deck)
-                    enableHitAndStopBtn()
-                    hideStartBtn()
+            fragmentOnlineGameFab.setOnClickListener {
+                if (offlineUser!!.isHelpMode) {
+                    val alertDialog = BetHelpDialog()
+                    alertDialog.show(requireActivity().supportFragmentManager, alertDialog.tag)
                 } else {
-                    makeSnackBar(requireContext().resources.getString(R.string.offline_game_fragment_bet_must_not_be_0))
+                    fragmentOnlineGameFabBorderImg.startAnimation(animUp)
+                    fragmentOnlineGameFab.startAnimation(animUp)
+                    goToBetDialog()
                 }
             }
 
+            fragmentOnlineGameGameStart.setOnClickListener {
+                fragmentOnlineGameGameStart.startAnimation(animUp)
+                gameStartSequence()
+            }
+
             fragmentOnlineGameHitBtn.setOnClickListener {
-                Utils.closeInsurance(offlineUser!!.player)
-                val currentPlayer = Utils.getCurrentPlayer(offlineUser!!, offlineUser!!.currentHandType)
-                fragmentOnlineGameHitBtn.startAnimation(animUp)
-                disableDoubleAndSplitBtn()
-                playerDrawCard(offlineUser!!, deck, currentPlayer)
-                playerBust(offlineUser!!, deck)
-                addCardToView(offlineUser!!)
+                if (offlineUser!!.isHelpMode) {
+                    val alertDialog = HitHelpDialog()
+                    alertDialog.show(requireActivity().supportFragmentManager, alertDialog.tag)
+                } else {
+                    fragmentOnlineGameHitBtn.startAnimation(animUp)
+                    hitCardSequence()
+                }
             }
 
             fragmentOnlineGameStopBtn.setOnClickListener {
-                Utils.closeInsurance(offlineUser!!.player)
-                fragmentOnlineGameStopBtn.startAnimation(animUp)
-                nextHandOrDealerTurn(offlineUser!!, deck)
+                if (offlineUser!!.isHelpMode) {
+                    val alertDialog = StopHelpDialog()
+                    alertDialog.show(requireActivity().supportFragmentManager, alertDialog.tag)
+                } else {
+                    fragmentOnlineGameStopBtn.startAnimation(animUp)
+                    stopSequence()
+                }
             }
 
             fragmentOnlineGameDoubleBtn.setOnClickListener {
-                Utils.closeInsurance(offlineUser!!.player)
-                val currentPlayer = Utils.getCurrentPlayer(offlineUser!!, offlineUser!!.currentHandType)
-                fragmentOnlineGameDoubleBtn.startAnimation(animUp)
-                val doubleBet = currentPlayer.bet * 2.0
-                currentPlayer.isDouble = true
-                currentPlayer.bet = doubleBet
-                playerDrawCard(offlineUser!!, deck, currentPlayer)
-                playerBust(offlineUser!!, deck)
-                addCardToView(offlineUser!!)
-                nextHandOrDealerTurn(offlineUser!!, deck)
-
+                if (offlineUser!!.isHelpMode) {
+                    val alertDialog = DoubleHelpDialog()
+                    alertDialog.show(requireActivity().supportFragmentManager, alertDialog.tag)
+                } else {
+                    fragmentOnlineGameDoubleBtn.startAnimation(animUp)
+                    doubleSequence()
+                }
             }
 
             fragmentOnlineGameSplitBtn.setOnClickListener {
-                Utils.closeInsurance(offlineUser!!.player)
-                val currentPlayer = Utils.getCurrentPlayer(offlineUser!!, offlineUser!!.currentHandType)
-                val bet = currentPlayer.bet
-                if (bet <= offlineUser!!.wallet!!.amount) {
-                    fragmentOnlineGameSplitBtn.startAnimation(animUp)
-                    Utils.splitPlayerGame(
-                        offlineUser!!.player,
-                        offlineUser!!.currentHandType,
-                        currentPlayer
-                    )
-                    if (Utils.playerHave2Aces(offlineUser!!)) {
-                        playerDrawCard(offlineUser!!, deck, currentPlayer)
-                        nextHandOrDealerTurn(offlineUser!!, deck)
-                        currentPlayer.score =
-                            currentPlayer.score + 10
-                        nextHandOrDealerTurn(offlineUser!!, deck)
-                    } else {
-                        playerDrawCard(offlineUser!!, deck, currentPlayer)
-                        playerCanSplit(currentPlayer)
-                        addCardToView(offlineUser!!)
-                    }
+                if (offlineUser!!.isHelpMode) {
+                    val alertDialog = SplitHelpDialog()
+                    alertDialog.show(requireActivity().supportFragmentManager, alertDialog.tag)
                 } else {
-                    makeSnackBar(requireContext().resources.getString(R.string.bet_dialog_not_enough_money))
+                    fragmentOnlineGameSplitBtn.startAnimation(animUp)
+                    splitCardSequence()
+                }
+            }
+
+            fragmentOnlineGameRebuyBtn.setOnClickListener {
+                if (offlineUser!!.isHelpMode) {
+                    val alertDialog = RebuyHelpDialog()
+                    alertDialog.show(requireActivity().supportFragmentManager, alertDialog.tag)
+                } else {
+                    fragmentOnlineGameRebuyBtn.startAnimation(animUp)
+                    rebuySequence()
+                }
+            }
+
+            fakeInsuranceBtn.setOnClickListener {
+                InsuranceHelpDialog().show(requireActivity().supportFragmentManager, InsuranceHelpDialog().tag)
+            }
+
+            fragmentOnlineGameDealerInformationContainer.setOnClickListener {
+                if (offlineUser!!.isHelpMode) {
+                    DealerHelpDialog().show(requireActivity().supportFragmentManager, DealerHelpDialog().tag)
+                }
+            }
+
+            fakeConstraintLayout.setOnClickListener {
+                if (offlineUser!!.isHelpMode) {
+                    RecyclerViewHelpDialog().show(requireActivity().supportFragmentManager, RecyclerViewHelpDialog().tag)
                 }
             }
         }
     }
 
-    private fun nextHandOrDealerTurn(offlineUser: OfflineUser, deck: OnlineDeck) {
+    private fun rebuySequence() {
+        offlineUser!!.wallet!!.amount += 500.0
+        binding.fragmentOnlineGameRebuyBtn.visibility = View.GONE
+        lifecycleScope.launch {
+            viewModel.updateBank(offlineUser!!.wallet!!)
+        }
+    }
+
+    private fun splitCardSequence() {
+        if (offlineUser!!.wallet!!.amount >= offlineUser!!.totalBet + offlineUser!!.defaultBet) {
+            offlineUser!!.totalBet += offlineUser!!.defaultBet
+            Utils.closeInsurance(offlineUser!!.player)
+            val currentPlayer = Utils.getCurrentPlayer(offlineUser!!, offlineUser!!.currentHandType)
+            Utils.splitPlayerGame(offlineUser!!.player, offlineUser!!.currentHandType, currentPlayer)
+            playerSplitTwoAces(offlineUser!!, currentPlayer)
+        } else {
+            makeSnackBar(requireContext().resources.getString(R.string.bet_dialog_not_enough_money))
+        }
+    }
+
+    private fun doubleSequence() {
+        if (offlineUser!!.wallet!!.amount >= offlineUser!!.totalBet + offlineUser!!.defaultBet) {
+            offlineUser!!.totalBet += offlineUser!!.defaultBet
+            Utils.closeInsurance(offlineUser!!.player)
+            val currentPlayer =
+                Utils.getCurrentPlayer(offlineUser!!, offlineUser!!.currentHandType)
+            currentPlayer.isDouble = true
+            currentPlayer.bet = currentPlayer.bet * 2.0
+            playerDrawCard(offlineUser!!, deck, currentPlayer)
+            addCardToView(offlineUser!!)
+            nextHandOrDealerTurn(offlineUser!!)
+            playerDoubleBust(offlineUser!!)
+        } else {
+            makeSnackBar(requireContext().resources.getString(R.string.bet_dialog_not_enough_money))
+        }
+    }
+
+    private fun stopSequence() {
+        Utils.closeInsurance(offlineUser!!.player)
+        nextHandOrDealerTurn(offlineUser!!)
+    }
+
+    private fun hitCardSequence() {
+        Utils.closeInsurance(offlineUser!!.player)
+        val currentPlayer =
+            Utils.getCurrentPlayer(offlineUser!!, offlineUser!!.currentHandType)
+        playerDrawCard(offlineUser!!, deck, currentPlayer)
+        playerBust(offlineUser!!)
+        addCardToView(offlineUser!!)
+    }
+
+    private fun gameStartSequence() {
+        if (offlineUser!!.defaultBet > 0.0) {
+            if (offlineUser!!.wallet!!.amount >= offlineUser!!.defaultBet * offlineUser!!.playerCount) {
+                offlineUser!!.totalBet = offlineUser!!.defaultBet * offlineUser!!.playerCount
+                offlineUser!!.isPlaying = true
+                showMoneyEarned("")
+                offlineUser!!.player = Utils.createCustomPlayerList(
+                    offlineUser!!.playerCount,
+                    offlineUser!!.defaultBet
+                )
+                dealer = Utils.createDealer()
+                resetRecyclerView(dealer)
+                distributionSequence(deck)
+                enableHitAndStopBtn()
+                hideStartBtn()
+            } else {
+                makeSnackBar(requireContext().resources.getString(R.string.bet_dialog_not_enough_money))
+            }
+        } else {
+            makeSnackBar(requireContext().resources.getString(R.string.offline_game_fragment_bet_must_not_be_0))
+        }
+    }
+
+    private fun goToBetDialog() {
+        binding.apply {
+            if (!offlineUser!!.isPlaying) {
+                val betDialog = BetDialog()
+                betDialog.show(requireActivity().supportFragmentManager, betDialog.tag)
+            }
+        }
+    }
+
+    private fun playerSplitTwoAces(offlineUser: OfflineUser, currentPlayer: CustomPlayer) {
+        if (Utils.playerHave2Aces(offlineUser)) {
+            playerDrawCard(offlineUser, deck, currentPlayer)
+            nextHandOrDealerTurn(offlineUser)
+            val playerWithSecondAce = Utils.getCurrentPlayer(offlineUser, offlineUser.currentHandType)
+            playerWithSecondAce.score += 10
+            nextHandOrDealerTurn(offlineUser)
+        } else {
+            playerDrawCard(offlineUser, deck, currentPlayer)
+            playerCanSplit(currentPlayer)
+            addCardToView(offlineUser)
+        }
+    }
+
+    private fun nextHandOrDealerTurn(offlineUser: OfflineUser) {
         var currentPlayer = Utils.getCurrentPlayer(offlineUser, offlineUser.currentHandType)
         when{
             currentPlayer.isPlayerFirstSplit && offlineUser.currentHandType == HandType.MainHand -> {
-                offlineUser.currentHandType = HandType.FirstSplit
-                Utils.updateCurrentPlayerInArrayListOfCustomPlayer(offlineUser.player, offlineUser.currentPlayerNumber, offlineUser.currentHandType)
-                currentPlayer = Utils.getCurrentPlayer(offlineUser, offlineUser.currentHandType)
-                playerDrawCard(offlineUser, deck, currentPlayer)
-                boardIndex++
-                addCardToView(offlineUser)
-                playerCanDouble(currentPlayer)
-                playerCanSplit(currentPlayer)
+                changePlayerHandSequence(offlineUser, HandType.FirstSplit)
             }
             currentPlayer.isPlayerSecondSplit && offlineUser.currentHandType == HandType.FirstSplit -> {
-                offlineUser.currentHandType = HandType.SecondSplit
-                Utils.updateCurrentPlayerInArrayListOfCustomPlayer(offlineUser.player, offlineUser.currentPlayerNumber, offlineUser.currentHandType)
-                currentPlayer = Utils.getCurrentPlayer(offlineUser, offlineUser.currentHandType)
-                playerDrawCard(offlineUser, deck, currentPlayer)
-                boardIndex++
-                addCardToView(offlineUser)
-                playerCanDouble(currentPlayer)
-                playerCanSplit(currentPlayer)
+                changePlayerHandSequence(offlineUser, HandType.SecondSplit)
             }
             Utils.getIndexOfPlayerNumberType(offlineUser.currentPlayerNumber)  != offlineUser.playerCount -> {
                 offlineUser.currentPlayerNumber = Utils.nextPlayerTurn(offlineUser)
                 offlineUser.currentHandType = HandType.MainHand
                 Utils.updateCurrentPlayerInArrayListOfCustomPlayer(offlineUser.player, offlineUser.currentPlayerNumber, offlineUser.currentHandType)
-                boardIndex++
-                offlineUser.currentHandType = HandType.MainHand
                 currentPlayer = Utils.getCurrentPlayer(offlineUser, offlineUser.currentHandType)
+                addCardToView(offlineUser)
                 playerCanDouble(currentPlayer)
                 playerCanSplit(currentPlayer)
-                addCardToView(offlineUser)
+
             }
             else -> {
                 startTimer()
@@ -409,8 +615,18 @@ class OfflineGameFragment :Fragment() {
         }
     }
 
+    private fun changePlayerHandSequence(offlineUser: OfflineUser, handType: HandType) {
+        offlineUser.currentHandType = handType
+        Utils.updateCurrentPlayerInArrayListOfCustomPlayer(offlineUser.player, offlineUser.currentPlayerNumber, offlineUser.currentHandType)
+        val currentPlayer = Utils.getCurrentPlayer(offlineUser, offlineUser.currentHandType)
+        playerDrawCard(offlineUser, deck, currentPlayer)
+        addCardToView(offlineUser)
+        playerCanDouble(currentPlayer)
+        playerCanSplit(currentPlayer)
+    }
+
     private fun playerDrawCard(offlineUser: OfflineUser, deck: OnlineDeck, player: CustomPlayer) {
-        redCardEndOfTheDeck(offlineUser, deck)
+        redCardEndOfTheDeck(deck)
         Utils.addCardToPlayerHandList(player, deck, offlineUser.currentHandType)
         player.isPlayerDrawAce =
             Utils.playerDrawAnAceOrNot(deck, player)
@@ -422,8 +638,8 @@ class OfflineGameFragment :Fragment() {
         deck.index = Utils.incrementDeckIndex(deck)
     }
 
-    private fun redCardEndOfTheDeck(offlineUser: OfflineUser, deck: OnlineDeck) {
-        if (deck.index == 260) {
+    private fun redCardEndOfTheDeck(deck: OnlineDeck) {
+        if (deck.index!! == 260) {
 //            val currentPlayerHand = Utils.currentPlayerHand(offlineUser)
 //            currentPlayerHand.add(
 //                Card(NumberType.RED, ColorType.RED, 0)
@@ -432,7 +648,8 @@ class OfflineGameFragment :Fragment() {
         }
     }
 
-    private fun dealerDrawCard(offlineUser: OfflineUser, dealer: Dealer, deck: OnlineDeck) {
+    private fun dealerDrawCard(dealer: Dealer, deck: OnlineDeck) {
+        redCardEndOfTheDeck(deck)
         Utils.addCardToDealerList(dealer, deck)
         dealer.isDealerDrawAce = Utils.dealerDrawAnAceOrNot(deck, dealer)
         dealer.isDealerScoreSoft = Utils.modifyDealerScoreWithAce(dealer, deck)
@@ -444,16 +661,53 @@ class OfflineGameFragment :Fragment() {
         deck.index = Utils.incrementDeckIndex(deck)
     }
 
-    private fun playerBust(offlineUser: OfflineUser, deck: OnlineDeck) {
+    private fun playerBust(offlineUser: OfflineUser) {
         val indexOfPlayerHand = offlineUser.currentHandType
         val currentPlayer = Utils.getCurrentPlayer(offlineUser, indexOfPlayerHand)
         if (currentPlayer.score > 21) {
             currentPlayer.resultScore = R.string.fragment_main_game_you_lose
-            nextHandOrDealerTurn(offlineUser, deck)
-            offlineUser.wallet?.amount = offlineUser.wallet?.amount?.minus(currentPlayer.bet)!!
-            binding.fragmentOnlineGameBankAmountTv.text = offlineUser.wallet.amount.toString()
+            nextHandOrDealerTurn(offlineUser)
+            offlineUser.wallet!!.amount-=currentPlayer.bet
+            showLoseBetAMount(-currentPlayer.bet)
+            binding.fragmentOnlineGameBankAmountTv.text = offlineUser.wallet?.amount.toString()
+        } else {
+            disableDoubleAndSplitBtn()
         }
     }
+
+    private fun playerDoubleBust(offlineUser: OfflineUser) {
+        val indexOfPlayerHand = offlineUser.currentHandType
+        val currentPlayer = Utils.getCurrentPlayer(offlineUser, indexOfPlayerHand)
+        if (currentPlayer.score > 21) {
+            currentPlayer.resultScore = R.string.fragment_main_game_you_lose
+            offlineUser.wallet!!.amount-=currentPlayer.bet
+            showLoseBetAMount(-currentPlayer.bet)
+            binding.fragmentOnlineGameBankAmountTv.text = offlineUser.wallet?.amount.toString()
+        }
+    }
+
+    private fun showLoseBetAMount(bet: Double) {
+        val stringBetView = binding.fragmentOnlineGamePlayerBetBtn.text.toString()
+        val moneyAlreadyLose = if (stringBetView.isNotEmpty()) {
+            (stringBetView.replace(
+                requireContext().resources.getString(R.string.fragment_main_game_you_lose) + " ",
+                ""
+            ).toDouble())
+        } else {
+            0.0
+        }
+        val totalEarnMoney = moneyAlreadyLose + bet
+        val string = requireContext().resources.getString(Utils.winOrLoseString(totalEarnMoney)) + " ${(totalEarnMoney).formatStringWinBet()}"
+//            binding.fragmentOnlineGamePlayerBetBtn.text = string
+        showMoneyEarned(string)
+
+    }
+
+//    private fun showWinBetResult(winBet: Double) {
+//        val bet = winBet.formatStringWinBet()
+//        val result = requireContext().resources.getString(Utils.winOrLoseString(winBet)) + " $bet"
+//        binding.fragmentOnlineGamePlayerBetBtn.text = result
+//    }
 
     private fun prepareDeck(): OnlineDeck {
         val deck = OnlineDeck()
@@ -465,7 +719,7 @@ class OfflineGameFragment :Fragment() {
     private fun distributionSequence(deck: OnlineDeck) {
         val currentPlayer = Utils.getCurrentPlayer(offlineUser!!, offlineUser!!.currentHandType)
         giveOneCardToAllBox(offlineUser!!, deck)
-        dealerDrawCard(offlineUser!!, dealer, deck)
+        dealerDrawCard(dealer, deck)
         giveOneCardToAllBox(offlineUser!!, deck)
         addCardToView(offlineUser!!)
         addDealerCardToView(dealer)
@@ -497,12 +751,24 @@ class OfflineGameFragment :Fragment() {
         val firstCard = currentPlayer.hand[0]
         val secondCard = currentPlayer.hand[1]
         val isSecondSplit = currentPlayer.isPlayerSecondSplit
-        binding.fragmentOnlineGameSplitBtn.isEnabled = firstCard.value == secondCard.value && !isSecondSplit && currentPlayer.playerHandType != HandType.SecondSplit
+        if (firstCard.value == secondCard.value && !isSecondSplit && currentPlayer.playerHandType != HandType.SecondSplit) {
+            binding.fragmentOnlineGameSplitBtn.setUIState(MorphButton.UIState.Button)
+            binding.fragmentOnlineGameSplitBtn.isEnabled = true
+        } else {
+            binding.fragmentOnlineGameSplitBtn.setUIState(MorphButton.UIState.Loading)
+            binding.fragmentOnlineGameSplitBtn.isEnabled = false
+        }
     }
 
     private fun playerCanDouble(currentPlayer: CustomPlayer) {
         val isPlayerHaveTwoCards = currentPlayer.hand.size == 2
-        binding.fragmentOnlineGameDoubleBtn.isEnabled = isPlayerHaveTwoCards
+        if (isPlayerHaveTwoCards) {
+            binding.fragmentOnlineGameDoubleBtn.setUIState(MorphButton.UIState.Button)
+            binding.fragmentOnlineGameDoubleBtn.isEnabled = true
+        } else{
+            binding.fragmentOnlineGameDoubleBtn.setUIState(MorphButton.UIState.Loading)
+            binding.fragmentOnlineGameDoubleBtn.isEnabled = false
+        }
     }
 
     private fun addCardToView(offlineUser: OfflineUser) {
@@ -537,6 +803,8 @@ class OfflineGameFragment :Fragment() {
         binding.apply {
             fragmentOnlineGameHitBtn.isEnabled = true
             fragmentOnlineGameStopBtn.isEnabled = true
+            binding.fragmentOnlineGameHitBtn.setUIState(MorphButton.UIState.Button)
+            binding.fragmentOnlineGameStopBtn.setUIState(MorphButton.UIState.Button)
         }
     }
 
@@ -544,17 +812,34 @@ class OfflineGameFragment :Fragment() {
         binding.apply {
             fragmentOnlineGameDoubleBtn.isEnabled = false
             fragmentOnlineGameSplitBtn.isEnabled = false
+            binding.fragmentOnlineGameSplitBtn.setUIState(MorphButton.UIState.Loading)
+            binding.fragmentOnlineGameDoubleBtn.setUIState(MorphButton.UIState.Loading)
         }
     }
 
     private fun hideStartBtn() {
-        binding.fragmentOnlineGameGameStart.visibility = View.GONE
-        binding.fragmentOnlineGameDealerImg.visibility = View.VISIBLE
+        binding.apply {
+            fragmentOnlineGameGameStart.visibility = View.GONE
+            fragmentOnlineGameDealerImg.visibility = View.VISIBLE
+            fragmentOnlineGameDealerContainer.visibility = View.VISIBLE
+        }
     }
 
     private fun showStartBtn() {
-        binding.fragmentOnlineGameGameStart.visibility = View.VISIBLE
-        binding.fragmentOnlineGameDealerImg.visibility = View.INVISIBLE
+        binding.apply {
+            fragmentOnlineGameGameStart.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showMoneyEarned(stringToShow: String) {
+        binding.fragmentOnlineGamePlayerBetBtn.apply {
+            visibility = if (stringToShow.isEmpty()) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+            text = stringToShow
+        }
     }
 
     private fun loadHandIntoRecyclerView(hand: ArrayList<Card>?, adapter: GameAdapter, recyclerView: RecyclerView) {

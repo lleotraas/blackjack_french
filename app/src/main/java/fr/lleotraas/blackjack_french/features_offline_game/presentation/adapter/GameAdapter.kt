@@ -15,7 +15,7 @@ import fr.lleotraas.blackjack_french.features_offline_game.domain.model.Card
 import fr.lleotraas.blackjack_french.features_offline_game.domain.model.ColorType
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.getCardText
 
-class GameAdapter : ListAdapter<Card, GameAdapter.MainGameViewHolder> (Companion) {
+class GameAdapter: ListAdapter<Card, GameAdapter.MainGameViewHolder> (Companion) {
 
     inner class MainGameViewHolder(val binding: CardImageBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -38,8 +38,6 @@ class GameAdapter : ListAdapter<Card, GameAdapter.MainGameViewHolder> (Companion
         val currentCard = currentList[position]
         if (currentCard.isAnimate) {
             holder.binding.root.animation = AnimationUtils.loadAnimation(holder.itemView.context, R.anim.recycler_view)
-//            holder.binding.cardImageColorImg.animation = AnimationUtils.loadAnimation(holder.itemView.context, R.anim.card_fade_in)
-
             currentCard.isAnimate = false
         }
         if (currentCard.color != ColorType.RED) {
