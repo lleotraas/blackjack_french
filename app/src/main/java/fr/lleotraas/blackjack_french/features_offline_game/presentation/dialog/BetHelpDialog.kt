@@ -7,18 +7,18 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import fr.lleotraas.blackjack_french.R
-import fr.lleotraas.blackjack_french.databinding.HelpDialogBinding
+import fr.lleotraas.blackjack_french.databinding.DialogHelpBinding
 
 class BetHelpDialog : DialogFragment() {
 
-    private lateinit var binding: HelpDialogBinding
+    private lateinit var binding: DialogHelpBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = HelpDialogBinding.inflate(inflater, container, false)
+        binding = DialogHelpBinding.inflate(inflater, container, false)
         updateUi()
         configureListener()
         return binding.root

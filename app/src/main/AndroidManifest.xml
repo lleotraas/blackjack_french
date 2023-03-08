@@ -55,10 +55,14 @@
 
         <activity
             android:name=".features_offline_game.presentation.GameActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"/>
+
         <activity
             android:name=".GoogleSignInActivity"
             android:exported="false" />
+
         <activity
             android:name=".FacebookSignInActivity"
             android:exported="false" />

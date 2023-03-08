@@ -16,6 +16,15 @@
         android:src="@drawable/blackjack_icon"/>
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/fragment_main_screen_rules_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_main_screen_play_online_btn"
+        android:layout_margin="@dimen/margin_large_size"
+        android:text="@string/activity_main_screen_rules"
+        android:background="@drawable/rounded_corner_colored" />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/fragment_main_screen_play_online_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

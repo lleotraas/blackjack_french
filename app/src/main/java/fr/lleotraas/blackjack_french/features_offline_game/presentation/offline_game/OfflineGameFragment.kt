@@ -579,8 +579,9 @@ class OfflineGameFragment :Fragment() {
         if (Utils.playerHave2Aces(offlineUser)) {
             playerDrawCard(offlineUser, deck, currentPlayer)
             nextHandOrDealerTurn(offlineUser)
+
             val playerWithSecondAce = Utils.getCurrentPlayer(offlineUser, offlineUser.currentHandType)
-            playerWithSecondAce.score += 10
+            playerWithSecondAce.score += if (playerWithSecondAce.isPlayerDrawAce) 0 else 10
             nextHandOrDealerTurn(offlineUser)
         } else {
             playerDrawCard(offlineUser, deck, currentPlayer)

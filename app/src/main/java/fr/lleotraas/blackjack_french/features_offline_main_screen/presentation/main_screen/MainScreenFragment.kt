@@ -10,6 +10,7 @@ import fr.lleotraas.blackjack_french.databinding.FragmentMainScreenBinding
 import fr.lleotraas.blackjack_french.features_offline_main_screen.presentation.dialog.LoadGameDialog
 import fr.lleotraas.blackjack_french.features_offline_main_screen.presentation.dialog.NewGameDialog
 import fr.lleotraas.blackjack_french.features_offline_main_screen.presentation.dialog.OnlineGameDialog
+import fr.lleotraas.blackjack_french.features_offline_main_screen.presentation.dialog.RulesHelpDialog
 
 @AndroidEntryPoint
 class MainScreenFragment : Fragment(){
@@ -32,18 +33,19 @@ class MainScreenFragment : Fragment(){
         mBinding.apply {
 
             fragmentMainScreenNewGameBtn.setOnClickListener {
-                val newGameDialog = NewGameDialog()
-                newGameDialog.show(requireActivity().supportFragmentManager, newGameDialog.tag)
+                NewGameDialog().show(requireActivity().supportFragmentManager, NewGameDialog().tag)
             }
 
             fragmentMainScreenLoadGameBtn.setOnClickListener {
-                val loadGameDialog = LoadGameDialog()
-                loadGameDialog.show(requireActivity().supportFragmentManager, loadGameDialog.tag)
+                LoadGameDialog().show(requireActivity().supportFragmentManager, LoadGameDialog().tag)
             }
 
             fragmentMainScreenPlayOnlineBtn.setOnClickListener {
-                val onlineGameDialog = OnlineGameDialog()
-                onlineGameDialog.show(requireActivity().supportFragmentManager, onlineGameDialog.tag)
+                OnlineGameDialog().show(requireActivity().supportFragmentManager, OnlineGameDialog().tag)
+            }
+
+            fragmentMainScreenRulesBtn.setOnClickListener {
+                RulesHelpDialog().show(requireActivity().supportFragmentManager, RulesHelpDialog().tag)
             }
         }
     }
