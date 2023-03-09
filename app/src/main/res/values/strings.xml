@@ -133,7 +133,9 @@
     <string name="dialog_bet_hundred">Hundred</string>
     <string name="dialog_bet_dozens">Dozens</string>
     <string name="dialog_bet_unity">Unity</string>
+    <string name="dialog_bet_title">Choose your bet</string>
     <string name="dialog_bet_number_of_bet">Box</string>
+    <string name="dialog_bet_choose_number_of_bet">Choose the number of box</string>
     <string name="player_board_score_title">Score</string>
     <string name="player_board_bet_title">Bet</string>
     <string name="player_board_double_title">Double</string>
@@ -147,8 +149,8 @@
     <string name="activity_offline_game_help">Help</string>
     <string name="fragment_main_game_help_explanation">Click on a button or an element on the screen to have some details.</string>
     <string name="activity_offline_game_quit">Quit</string>
-    <string name="recycler_view_dialog_title">Player Box</string>
-    <string name="recycler_view_dialog_message">Here you can see your hand with all of your cards on the left. \n On the right side you can see: \n\t- Your score using your added cards. \n\t- Your bet in €. \n\t- X2 icon is highlight If you double your box. \n\t- S icon is highlight if you split your box the colour corresponding to the box number you split.</string>
+    <string name="player_info_dialog_title">Player Box</string>
+    <string name="player_info_dialog_message">Here you can see your hand with all of your cards on the left. \n On the right side you can see: \n\t- Your score using your added cards. \n\t- Your bet in €. \n\t- X2 icon is highlight If you double your box. \n\t- The color change if you split your box the colour corresponding to the box number you split.</string>
     <string name="bet_help_dialog_title">Place your bets</string>
     <string name="bet_help_dialog_message">With this button you can choose your bet and choose how many box you want to play. Each box have the same bet. If you do not have enough money you cannot validate your bet.</string>
     <string name="hit_help_dialog_title">Hit cards</string>

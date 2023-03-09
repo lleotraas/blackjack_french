@@ -122,7 +122,9 @@
     <string name="dialog_bet_hundred">centaine</string>
     <string name="dialog_bet_dozens">dizaine</string>
     <string name="dialog_bet_unity">unité</string>
+    <string name="dialog_bet_title">Choisissez votre mise</string>
     <string name="dialog_bet_number_of_bet">Boîte</string>
+    <string name="dialog_bet_choose_number_of_bet">Choisissez le nombre de boîtes</string>
     <string name="player_board_score_title">Score</string>
     <string name="player_board_bet_title">Mise</string>
     <string name="player_board_double_title">Doubler</string>
@@ -133,8 +135,8 @@
     <string name="activity_offline_game_help">Aide</string>
     <string name="fragment_main_game_help_explanation">Cliquez sur un bouton ou un élément de l\'écran pour avoir des explications.</string>
     <string name="activity_offline_game_quit">Quitter</string>
-    <string name="recycler_view_dialog_title">Boîte du joueur</string>
-    <string name="recycler_view_dialog_message">"Ici vous pouvez voir diverses informations sur l'état de votre main comme: \n - Votre score qui change avec les cartes que vous ajoutez. \n -Votre mise en € \n - X2 devient visible quand vous doublez votre mise. \n - S devient visible lorsque vous splittez votre main, la couleur correspond au numéro de la main."</string>
+    <string name="player_info_dialog_title">Boîte du joueur</string>
+    <string name="player_info_dialog_message">"Ici vous pouvez voir diverses informations sur l'état de votre main comme: \n - Votre score qui change avec les cartes que vous ajoutez. \n -Votre mise en € \n - X2 devient visible quand vous doublez votre mise. \n - La couleur change lorsque vous splittez votre main, la couleur correspond au numéro de la main."</string>
     <string name="bet_help_dialog_title">Faites vos jeux</string>
     <string name="bet_help_dialog_message">"Avec ce bouton vous pouvez choisir votre mise et le nombre de boîte que vous voulez. toutes les boîtes auront les mêmes mises. Si vous navez pas assez d\'argent vous ne pouvez pas valider votre mise."</string>
     <string name="hit_help_dialog_title">Tirer une carte</string>

@@ -26,9 +26,9 @@ class RecyclerViewHelpDialog : DialogFragment() {
 
     private fun updateUi() {
         binding.apply {
-            helpDialogTitleTv.text = requireContext().resources.getString(R.string.recycler_view_dialog_title)
-            helpDialogMessageTv.text = requireContext().resources.getString(R.string.recycler_view_dialog_message)
-            helpDialogContextualImg.background = ContextCompat.getDrawable(requireContext(), R.drawable.hand)
+            helpDialogTitleTv.text = requireContext().resources.getString(R.string.player_info_dialog_title)
+            helpDialogMessageTv.text = requireContext().resources.getString(R.string.player_info_dialog_message)
+            helpDialogContextualImg.background = ContextCompat.getDrawable(requireContext(), R.drawable.player_info)
         }
     }
 

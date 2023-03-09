@@ -2,7 +2,6 @@ package fr.lleotraas.blackjack_french.features_offline_game.domain.utils
 
 import android.net.Uri
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -713,6 +712,7 @@ class Utils {
             listOfCustomPlayer[0].isDouble = true
             listOfCustomPlayer[0].insuranceBet = -1.0
             listOfCustomPlayer[0].isPlayerFirstSplit = true
+            listOfCustomPlayer[0].isHelpMode = true
             return listOfCustomPlayer
         }
 
@@ -737,13 +737,13 @@ class Utils {
 
         fun getColorByPlayerNumber(playerNumberType: PlayerNumberType): Int {
             return when(playerNumberType) {
-                PlayerNumberType.PLAYER_ONE -> R.color.facebook
-                PlayerNumberType.PLAYER_TWO -> R.color.google
-                PlayerNumberType.PLAYER_THREE -> R.color.purple_200
-                PlayerNumberType.PLAYER_FOUR -> R.color.teal_200
-                PlayerNumberType.PLAYER_FIVE -> R.color.purple_700
-                PlayerNumberType.PLAYER_SIX -> R.color.yellow
-                else -> R.color.green
+                PlayerNumberType.PLAYER_ONE -> R.drawable.rounded_border_fb_color
+                PlayerNumberType.PLAYER_TWO -> R.drawable.rounded_border_google_color
+                PlayerNumberType.PLAYER_THREE -> R.drawable.rounded_border_purple_200_color
+                PlayerNumberType.PLAYER_FOUR -> R.drawable.rounded_border_teal_color
+                PlayerNumberType.PLAYER_FIVE -> R.drawable.rounded_border_light_green_color
+                PlayerNumberType.PLAYER_SIX -> R.drawable.rounded_border_yellow_color
+                else -> R.drawable.rounded_border_green_color
             }
         }
 

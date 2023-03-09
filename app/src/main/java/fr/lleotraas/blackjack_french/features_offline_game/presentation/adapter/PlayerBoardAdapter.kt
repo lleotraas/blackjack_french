@@ -4,8 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,9 +21,13 @@ import fr.lleotraas.blackjack_french.features_offline_game.domain.model.Card
 import fr.lleotraas.blackjack_french.features_offline_game.domain.model.CustomPlayer
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.formatStringBet
+import fr.lleotraas.blackjack_french.features_offline_game.presentation.offline_game.OfflineGameFragment.Companion.INSURANCE_PRESSED
+import fr.lleotraas.blackjack_french.features_offline_game.presentation.offline_game.OfflineGameFragment.Companion.PLAYER_INFO_PRESSED
 import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.utils.HandType
 
-class PlayerBoardAdapter: ListAdapter<CustomPlayer, PlayerBoardAdapter.PlayerBoardViewHolder> (Companion) {
+class PlayerBoardAdapter(
+    var onPlayerInfoClickListener: (CustomPlayer, String) -> Unit
+): ListAdapter<CustomPlayer, PlayerBoardAdapter.PlayerBoardViewHolder> (Companion) {
 
     inner class PlayerBoardViewHolder(val binding: PlayerBoardRowBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -48,18 +54,39 @@ class PlayerBoardAdapter: ListAdapter<CustomPlayer, PlayerBoardAdapter.PlayerBoa
             showResultScore(currentPlayer, root, playerBoardPlayerResultIcon, playerBoardCurrentPlayerIcon)
             playerHaveBlackjack(currentPlayer, root.context, playerBoardScoreValueTv)
             playerDouble(currentPlayer, root.context, playerBoardDoubleValueTv)
-            playerSplit(currentPlayer, root.context, playerBoardSplitTv)
-            playerCanInsure(currentPlayer, playerBoardInsuranceFab, playerBoardInsuranceTv)
-            playerInsurance(currentPlayer, root.context, playerBoardInsuranceValueTv)
+            playerSplit(currentPlayer, root.context, playerBoardIconConstraintLayout)
+            playerInsurance(currentPlayer, root.context, playerBoardContainer)
+            playerCanInsure(currentPlayer, root.context, playerBoardInsuranceFab, playerBoardInsuranceTv, playerBoardContainer)
+            animationForHelp(currentPlayer, root.context, playerBoardIconConstraintLayout, playerBoardInsuranceFab, playerBoardInsuranceTv)
+            root.setOnClickListener {
+                onPlayerInfoClickListener(currentPlayer, PLAYER_INFO_PRESSED)
+            }
             setupHorizontalRecyclerView(playerBoardCardRv, root.context)
             loadHandIntoRecyclerView(currentPlayer.hand, GameAdapter(), playerBoardCardRv)
         }
     }
 
-    private fun playerCanInsure(
+    private fun animationForHelp(
         currentPlayer: CustomPlayer,
+        context: Context,
+        playerBoardIconConstraintLayout: ConstraintLayout,
         playerBoardInsuranceFab: FloatingActionButton,
         playerBoardInsuranceTv: AppCompatTextView
+    ) {
+        if (currentPlayer.isHelpMode) {
+            val animation = AnimationUtils.loadAnimation(context, R.anim.scale_up_infinite)
+            playerBoardIconConstraintLayout.animation = animation
+            playerBoardInsuranceFab.animation = animation
+            playerBoardInsuranceTv.animation = animation
+        }
+    }
+
+    private fun playerCanInsure(
+        currentPlayer: CustomPlayer,
+        context: Context,
+        playerBoardInsuranceFab: FloatingActionButton,
+        playerBoardInsuranceTv: AppCompatTextView,
+        playerBoardContainer: ConstraintLayout
     ) {
         if (currentPlayer.isInsuranceOpen) {
             playerBoardInsuranceFab.visibility = View.VISIBLE
@@ -68,25 +95,27 @@ class PlayerBoardAdapter: ListAdapter<CustomPlayer, PlayerBoardAdapter.PlayerBoa
 
         playerBoardInsuranceFab.setOnClickListener {
             currentPlayer.insuranceBet = currentPlayer.bet / 2
+            onPlayerInfoClickListener(currentPlayer, INSURANCE_PRESSED)
             playerBoardInsuranceFab.visibility = View.GONE
             playerBoardInsuranceTv.visibility = View.GONE
+            playerInsurance(currentPlayer, context, playerBoardContainer)
         }
     }
 
     private fun playerInsurance(
         currentPlayer: CustomPlayer,
         context: Context,
-        playerBoardInsuranceValueTv: AppCompatTextView
+        container: ConstraintLayout
     ) {
         if (currentPlayer.insuranceBet > 0.0) {
-            playerBoardInsuranceValueTv.setTextColor(ContextCompat.getColor(context, R.color.carpet_color))
+            container.background = ContextCompat.getDrawable(context, R.drawable.rounded_border_hand_insure)
         }
     }
 
     private fun playerSplit(
         currentPlayer: CustomPlayer,
         context: Context,
-        playerBoardSplitTv: AppCompatTextView
+        playerBoardInfo: ConstraintLayout
     ) {
         if (
             currentPlayer.isPlayerFirstSplit ||
@@ -94,7 +123,7 @@ class PlayerBoardAdapter: ListAdapter<CustomPlayer, PlayerBoardAdapter.PlayerBoa
             currentPlayer.playerHandType == HandType.SecondSplit
         ) {
             val color = Utils.getColorByPlayerNumber(currentPlayer.playerNumber)
-            playerBoardSplitTv.setTextColor(ContextCompat.getColor(context, color))
+            playerBoardInfo.background = ContextCompat.getDrawable(context, color)
         }
     }
 
@@ -104,7 +133,7 @@ class PlayerBoardAdapter: ListAdapter<CustomPlayer, PlayerBoardAdapter.PlayerBoa
         playerBoardDoubleValueTv: AppCompatTextView
     ) {
         if (currentPlayer.isDouble) {
-            playerBoardDoubleValueTv.setTextColor(ContextCompat.getColor(context, R.color.red))
+            playerBoardDoubleValueTv.visibility = View.VISIBLE
         }
     }
 

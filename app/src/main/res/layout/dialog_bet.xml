@@ -2,7 +2,104 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:behavior_peekHeight="auto"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dialog_bet_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/margin_normal_size"
+        android:text="@string/dialog_bet_title"
+        android:textSize="@dimen/text_medium_size"
+        android:textColor="@color/black"/>
+
+    <NumberPicker
+        android:id="@+id/dialog_bet_unity_bet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/dialog_bet_title"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_bet_number_of_bet_tv"
+        app:layout_constraintStart_toEndOf="@id/dialog_bet_dozens_bet"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/dialog_bet_unity"/>
+
+    <NumberPicker
+        android:id="@+id/dialog_bet_dozens_bet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/dialog_bet_unity_bet"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_bet_unity_bet"
+        app:layout_constraintStart_toEndOf="@+id/dialog_bet_hundred_bet"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_bet_unity_bet"
+        android:contentDescription="@string/dialog_bet_dozens"/>
+
+    <NumberPicker
+        android:id="@+id/dialog_bet_hundred_bet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/dialog_bet_unity_bet"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_bet_unity_bet"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_bet_dozens_bet"
+        app:layout_constraintStart_toEndOf="@+id/dialog_bet_thousand_bet"
+        android:contentDescription="@string/dialog_bet_hundred"/>
+
+    <NumberPicker
+        android:id="@+id/dialog_bet_thousand_bet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/dialog_bet_unity_bet"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_bet_unity_bet"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_bet_hundred_bet"
+        app:layout_constraintStart_toEndOf="@+id/dialog_bet_ten_of_thousands_bet"
+        android:contentDescription="@string/dialog_bet_thousand"/>
+
+    <NumberPicker
+        android:id="@+id/dialog_bet_ten_of_thousands_bet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/dialog_bet_unity_bet"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_bet_unity_bet"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_bet_thousand_bet"
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/dialog_bet_ten_of_thousand"/>
+
+    <NumberPicker
+        android:id="@+id/dialog_bet_number_of_bet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_bet_ten_of_thousands_bet"
+        app:layout_constraintBottom_toTopOf="@+id/bet_dialog_bet_bank_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dialog_bet_number_of_bet_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_bet_unity_bet"
+        app:layout_constraintBottom_toTopOf="@id/dialog_bet_number_of_bet"
+        app:layout_constraintStart_toStartOf="@id/dialog_bet_number_of_bet"
+        app:layout_constraintEnd_toEndOf="@+id/dialog_bet_number_of_bet"
+        android:layout_marginTop="@dimen/margin_large_size"
+        android:text="@string/dialog_bet_choose_number_of_bet"
+        android:textSize="@dimen/text_medium_size"
+        android:textColor="@color/black"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dialog_bet_wallet_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/bet_dialog_bet_bank_tv"
+        app:layout_constraintStart_toStartOf="@+id/bet_dialog_bet_bank_tv"
+        app:layout_constraintEnd_toEndOf="@+id/bet_dialog_bet_bank_tv"
+        android:text="@string/fragment_online_game_wallet"
+        android:textSize="@dimen/text_medium_size"
+        android:textColor="@color/black"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/bet_dialog_bet_bank_tv"
@@ -18,6 +115,7 @@
         android:layout_marginEnd="@dimen/margin_normal_size"
         android:layout_marginVertical="@dimen/margin_xlarge_size"
         android:textSize="@dimen/text_large_size"
+        android:textColor="@color/black"
         android:background="@drawable/rounded_corner_colored"
         android:padding="@dimen/padding_normal_size" />
 
@@ -34,70 +132,6 @@
         android:layout_marginEnd="@dimen/margin_xlarge_size"
         android:layout_marginStart="@dimen/margin_normal_size"
         android:background="@drawable/rounded_corner_colored" />
-
-    <NumberPicker
-        android:id="@+id/dialog_bet_unity_bet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/dialog_bet_dozens_bet"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/dialog_bet_unity"/>
-
-    <NumberPicker
-        android:id="@+id/dialog_bet_dozens_bet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dialog_bet_hundred_bet"
-        app:layout_constraintEnd_toStartOf="@+id/dialog_bet_unity_bet"
-        android:contentDescription="@string/dialog_bet_dozens"/>
-
-    <NumberPicker
-        android:id="@+id/dialog_bet_hundred_bet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dialog_bet_dozens_bet"
-        app:layout_constraintStart_toEndOf="@+id/dialog_bet_thousand_bet"
-        android:contentDescription="@string/dialog_bet_hundred"/>
-
-    <NumberPicker
-        android:id="@+id/dialog_bet_thousand_bet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dialog_bet_hundred_bet"
-        app:layout_constraintStart_toEndOf="@+id/dialog_bet_ten_of_thousands_bet"
-        android:contentDescription="@string/dialog_bet_thousand"/>
-
-    <NumberPicker
-        android:id="@+id/dialog_bet_ten_of_thousands_bet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dialog_bet_thousand_bet"
-        app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="@string/dialog_bet_ten_of_thousand"/>
-
-    <NumberPicker
-        android:id="@+id/dialog_bet_number_of_bet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_bet_ten_of_thousands_bet"
-        app:layout_constraintBottom_toTopOf="@+id/bet_dialog_bet_bank_tv"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="@dimen/margin_large_size" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/dialog_bet_number_of_bet_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/dialog_bet_number_of_bet"
-        app:layout_constraintBottom_toBottomOf="@+id/dialog_bet_number_of_bet"
-        app:layout_constraintStart_toEndOf="@id/dialog_bet_number_of_bet"
-        android:layout_marginStart="@dimen/margin_large_size"
-        android:text="@string/dialog_bet_number_of_bet" />
 
 
 

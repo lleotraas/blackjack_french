@@ -16,5 +16,6 @@ data class CustomPlayer(
     var isPlayerScoreSoft: Boolean,
     var isPlayerFirstSplit: Boolean,
     var isPlayerSecondSplit: Boolean,
-    var isInsuranceOpen: Boolean
+    var isInsuranceOpen: Boolean,
+    var isHelpMode: Boolean = false,
 )

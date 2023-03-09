@@ -43,12 +43,14 @@ class OnlineMainScreenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentOnlineMainScreenBinding.inflate(inflater, container, false)
-        val currentUserId = requireActivity().intent.extras!!.get(CURRENT_USER_ID) as String
-        getCurrentUser = mViewModel.getOnlineUser(currentUserId)
-        mViewModel.updateOnlineUserStatus(currentUserId, OnlineStatusType.ONLINE)
-        initAdapters(currentUserId)
-        setupOnlineUserRecyclerView()
-        updateUI(currentUserId)
+        val currentUserId = requireActivity().intent.extras!!.getString(CURRENT_USER_ID)
+        if (currentUserId != null) {
+            getCurrentUser = mViewModel.getOnlineUser(currentUserId)
+            mViewModel.updateOnlineUserStatus(currentUserId, OnlineStatusType.ONLINE)
+            initAdapters(currentUserId)
+            setupOnlineUserRecyclerView()
+            updateUI(currentUserId)
+        }
         configureListeners()
         return mBinding.root
     }

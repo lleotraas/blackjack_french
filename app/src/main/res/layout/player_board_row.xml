@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/player_board_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -79,55 +78,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/player_board_Double_value_tv"
+            app:layout_constraintBottom_toTopOf="@id/player_board_bet_value_tv"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/player_board_split_tv"
+            app:layout_constraintEnd_toEndOf="parent"
             style="@style/ValueTextView"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/player_board_split_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/player_board_score_value_tv"
-            app:layout_constraintEnd_toEndOf="parent"
-            style="@style/ValueTextView"
-            android:textColor="@color/gray"
-            android:text="@string/player_board_split"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/player_board_insurance_value_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/player_board_score_value_tv"
-            app:layout_constraintBottom_toTopOf="@+id/player_board_bet_value_tv"
-            app:layout_constraintStart_toEndOf="@+id/player_board_Double_value_tv"
-            app:layout_constraintEnd_toEndOf="parent"
-            style="@style/ValueTextView"
-            android:textColor="@color/gray"
-            android:text="@string/player_board_insurance"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/player_board_Double_value_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/player_board_score_value_tv"
-            app:layout_constraintBottom_toTopOf="@+id/player_board_bet_value_tv"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/player_board_insurance_value_tv"
-            style="@style/ValueTextView"
-            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/player_board_bet_value_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="@dimen/text_normal_size"
+            android:textColor="@color/red"
+            android:visibility="gone"
             android:text="@string/player_board_double"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/player_board_bet_value_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/player_board_Double_value_tv"
+            app:layout_constraintTop_toBottomOf="@+id/player_board_score_value_tv"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            style="@style/ValueTextView"/>
+            app:layout_constraintEnd_toStartOf="@+id/player_board_Double_value_tv"
+            android:textSize="@dimen/text_medium_size"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="@dimen/margin_little_size"
+            android:layout_marginBottom="@dimen/margin_little_size"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
