@@ -27,8 +27,8 @@ android {
         applicationId "fr.lleotraas.blackjack_french"
         minSdk 21
         targetSdk 33
-        versionCode 11002
-        versionName "1.10.02"
+        versionCode 11104
+        versionName "1.11.04"
 
         testInstrumentationRunner "fr.lleotraas.blackjack_french.HiltTestRunner"
     }
