@@ -20,7 +20,6 @@ class BetDialog : BottomSheetDialogFragment() {
 
     private lateinit var mBinding: DialogBetBinding
     private val viewModel: GameActivityViewModel by viewModels()
-    private var playerBankAmountMax: Double? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +36,6 @@ class BetDialog : BottomSheetDialogFragment() {
     private fun getPlayerBank() {
         viewModel.getOfflineUser().observe(viewLifecycleOwner) { offlineUser ->
             mBinding.betDialogBetBankTv.text = String.format("%s", offlineUser.wallet?.amount)
-            playerBankAmountMax = offlineUser.wallet?.amount
             updateUser(offlineUser)
         }
     }
@@ -47,13 +45,13 @@ class BetDialog : BottomSheetDialogFragment() {
             betDialogBetBankTv.text = offlineUser.wallet?.amount.toString()
             val currentPlayer = Utils.getCurrentPlayer(offlineUser, offlineUser.currentHandType)
             if (offlineUser.defaultBet > 0.0) {
-                val betArray =
-                    Utils.getArrayOfBetString(currentPlayer.bet.toString())
+                val betArray = Utils.getArrayOfBetString(currentPlayer.bet.toString())
                 val betTabTv = createBetTabTv()
                 for (index in betArray.indices) {
                     betTabTv[Utils.getIndex(betArray.size, betTabTv.size, index)].value = betArray[index].toString().toInt()
                 }
-                betDialogBetBankTv.text = (offlineUser.wallet?.amount?.minus(bet())).toString()
+                dialogBetNumberOfBet.value = offlineUser.playerCount
+                betDialogBetBankTv.text = (offlineUser.wallet!!.amount - bet() * offlineUser.playerCount).toString()
             }
         }
         configureListeners(offlineUser)

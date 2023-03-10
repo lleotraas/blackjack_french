@@ -759,6 +759,48 @@ class Utils {
             }
         }
 
+        fun allPlayerBust(playerList: ArrayList<CustomPlayer>): Boolean {
+            for (player in playerList) {
+                if (player.score < 22) {
+                    return false
+                }
+            }
+            return true
+        }
+
+        fun playerHaveInsurance(playerList: ArrayList<CustomPlayer>): Boolean {
+            for (player in playerList) {
+                if (player.insuranceBet > 0.0) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        fun insurancePay(playerToCompare: CustomPlayer): Double {
+            return if (playerToCompare.insuranceBet > 0.0) playerToCompare.insuranceBet * 2 else 0.0
+        }
+
+        fun insuranceLoose(playerToCompare: CustomPlayer): Double {
+            return if (playerToCompare.insuranceBet > 0.0) playerToCompare.insuranceBet else 0.0
+        }
+
+        fun payAllInsurance(
+            wallet: Wallet,
+            playerList: ArrayList<CustomPlayer>,
+            dealerHaveBlackJack: Boolean
+        ) {
+            for (player in playerList) {
+                if (player.insuranceBet > 0.0) {
+                    if (dealerHaveBlackJack) {
+                        wallet.amount+=insurancePay(player)
+                    } else {
+                        wallet.amount-=insuranceLoose(player)
+                    }
+                }
+            }
+        }
+
         private fun getHandTypeFromInt(index: Int): HandType {
             return when(index) {
                 0 -> HandType.MainHand

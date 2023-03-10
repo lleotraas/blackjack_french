@@ -94,11 +94,12 @@ class PlayerBoardAdapter(
         }
 
         playerBoardInsuranceFab.setOnClickListener {
-            currentPlayer.insuranceBet = currentPlayer.bet / 2
             onPlayerInfoClickListener(currentPlayer, INSURANCE_PRESSED)
-            playerBoardInsuranceFab.visibility = View.GONE
-            playerBoardInsuranceTv.visibility = View.GONE
-            playerInsurance(currentPlayer, context, playerBoardContainer)
+            if (currentPlayer.insuranceBet > 0.0) {
+                playerBoardInsuranceFab.visibility = View.GONE
+                playerBoardInsuranceTv.visibility = View.GONE
+                playerInsurance(currentPlayer, context, playerBoardContainer)
+            }
         }
     }
 
