@@ -35,4 +35,15 @@
         android:paddingHorizontal="@dimen/padding_large_size"
         style="@style/main_screen_button" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/fragment_main_screen_online_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/fragment_main_screen_facebook_sign_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/main_screen_button"
+        android:text="Test online" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

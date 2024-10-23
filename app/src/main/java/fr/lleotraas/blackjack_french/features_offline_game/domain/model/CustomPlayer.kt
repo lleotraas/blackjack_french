@@ -18,4 +18,5 @@ data class CustomPlayer(
     var isPlayerSecondSplit: Boolean,
     var isInsuranceOpen: Boolean,
     var isHelpMode: Boolean = false,
+    var isAnimate: Boolean = true
 )

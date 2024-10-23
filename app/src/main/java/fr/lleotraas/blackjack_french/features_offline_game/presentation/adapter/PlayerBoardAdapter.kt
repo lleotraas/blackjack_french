@@ -57,12 +57,21 @@ class PlayerBoardAdapter(
             playerSplit(currentPlayer, root.context, playerBoardIconConstraintLayout)
             playerInsurance(currentPlayer, root.context, playerBoardContainer)
             playerCanInsure(currentPlayer, root.context, playerBoardInsuranceFab, playerBoardInsuranceTv, playerBoardContainer)
+            animateForGame(currentPlayer, root)
             animationForHelp(currentPlayer, root.context, playerBoardIconConstraintLayout, playerBoardInsuranceFab, playerBoardInsuranceTv)
             root.setOnClickListener {
                 onPlayerInfoClickListener(currentPlayer, PLAYER_INFO_PRESSED)
             }
             setupHorizontalRecyclerView(playerBoardCardRv, root.context)
             loadHandIntoRecyclerView(currentPlayer.hand, GameAdapter(), playerBoardCardRv)
+        }
+    }
+
+    private fun animateForGame(currentPlayer: CustomPlayer, root: ConstraintLayout) {
+        if (currentPlayer.isAnimate) {
+            currentPlayer.isAnimate = false
+            val animation = AnimationUtils.loadAnimation(root.context, R.anim.slide_out_down)
+            root.animation = animation
         }
     }
 

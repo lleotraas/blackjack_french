@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import fr.lleotraas.blackjack_french.features_offline_game.domain.model.Card
 import fr.lleotraas.blackjack_french.features_offline_game.domain.model.PlayerNumberType
 import fr.lleotraas.blackjack_french.features_online_game.domain.model.OnlineDeck
 import fr.lleotraas.blackjack_french.features_online_game.domain.repository.OnlineDeckRepository
@@ -117,5 +118,11 @@ class OnlineGameActivityViewModel @Inject constructor (
 
     fun deleteAllMessage(userId: String) {
         onlineGameChatRepository.deleteAllMessage(userId)
+    }
+
+    fun addCard(tableId: Int, card: Card) {
+        viewModelScope.launch {
+            onlineDeckRepository.addCard(tableId, card)
+        }
     }
 }

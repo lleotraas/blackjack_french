@@ -6,14 +6,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
+import fr.lleotraas.blackjack_french.features_offline_game.domain.model.Card
 import fr.lleotraas.blackjack_french.features_online_main_screen.domain.repository.FirebaseHelper
 import fr.lleotraas.blackjack_french.features_online_game.domain.repository.OnlineDeckRepository
 import fr.lleotraas.blackjack_french.features_online_game.domain.model.OnlineDeck
 import fr.lleotraas.blackjack_french.features_offline_game.domain.model.PlayerNumberType
+import fr.lleotraas.blackjack_french.features_online_game.domain.retrofit.CardApi
 import javax.inject.Inject
 
 class OnlineDeckRepositoryImpl @Inject constructor (
-    private val mFirebaseHelper: FirebaseHelper
+    private val mFirebaseHelper: FirebaseHelper,
+    private val api: CardApi
 ): OnlineDeckRepository {
 
     private var onlineDeck = MutableLiveData<OnlineDeck?>()
@@ -72,4 +75,11 @@ class OnlineDeckRepositoryImpl @Inject constructor (
         Log.e(ContentValues.TAG, "deleteOnlineDeck: Deck deleted")
     }
 
+    override suspend fun addCard(tableId: Int, card: Card) {
+        api.addCard(
+            tableId,
+            card.number!!.name,
+            card.color!!.name
+        )
+    }
 }

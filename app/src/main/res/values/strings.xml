@@ -168,6 +168,13 @@
     <string name="dealer_help_dialog_title">Dealer score</string>
     <string name="dealer_help_dialog_message">Here you can see the dealer score under an image that represent him.</string>
     <string name="activity_main_screen_rules">Game Rules</string>
+    <string name="activity_main_screen_tutorial">tutorial</string>
     <string name="game_rules">The BlackJack principle is to get as close as possible to the score of 21 without exceeding it. \n Each card is worth the value written on it, the Jack, Queen and King are worth 10 points and the Ace is worth 1 or 11 but the highest score will always be displayed. \n At the start of the game, a card is dealt on each box, one to the dealer then a second on each box. At each round you will be asked if you want to shoot or not. Once all your boxes have been played, it is the dealer\'s turn to draw cards. The croupier has the obligation to draw until reaching a minimum score of 17, if his score is between 17 and 21 you will compare the score of each of your boxes with him, if you have more than him you win and pocket your bet, if you have less than him you lose your bet and if you tie you are refunded. \n Blackjack is the combination of an Ace and a card with a value of 10, a blackjack can only be obtained after the deal, if you split a box and get 21 in 2 cards it will not be a Blackjack. Blackjack is higher than the score of 21, when you make a Blackjack your score will show BJ. It is possible for you to hit or even double down on Blackjack but this is not recommended as you cannot lose and at worst tie with the dealer. Blackjack is paid 1.5 times your bet.</string>
+    <string name="dialog_tutorial_base_rule">Base Rule</string>
+    <string name="dialog_tutorial_double">Double</string>
+    <string name="dialog_tutorial_split">Split</string>
+    <string name="dialog_tutorial_insurance">Insurance</string>
+    <string name="dialog_for_tutorial_welcome_title">Welcome to the BlackJack tutorial.</string>
+    <string name="dialog_for_tutorial_welcome_message">This the board where you play. \n When you are ready, click on the wallet button to place your bet.</string>
 
 </resources>

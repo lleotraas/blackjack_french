@@ -15,12 +15,15 @@ import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.On
 import fr.lleotraas.blackjack_french.FacebookSignInActivity
 import fr.lleotraas.blackjack_french.GoogleSignInActivity
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.CURRENT_USER_ID
+import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.createDeck
+import fr.lleotraas.blackjack_french.features_online_game.presentation.OnlineGameActivityViewModel
 
 @AndroidEntryPoint
 class OnlineGameDialog: BottomSheetDialogFragment() {
 
     private lateinit var mBinding: DialogOnlineGameBinding
     private val mViewModel: MainScreenActivityViewModel by viewModels()
+    private val onlineViewModel: OnlineGameActivityViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +55,13 @@ class OnlineGameDialog: BottomSheetDialogFragment() {
                 val intent = Intent(requireContext(), FacebookSignInActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION
                 startActivity(intent)
+            }
+
+            fragmentMainScreenOnlineBtn.setOnClickListener {
+                val deck = createDeck()
+                for (card in deck.deckList) {
+                    onlineViewModel.addCard(1, card)
+                }
             }
         }
     }

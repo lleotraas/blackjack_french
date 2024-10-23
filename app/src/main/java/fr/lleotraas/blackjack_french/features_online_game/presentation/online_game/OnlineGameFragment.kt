@@ -36,6 +36,8 @@ import fr.lleotraas.blackjack_french.features_online_main_screen.domain.model.Us
 import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.utils.HandType
 import fr.lleotraas.blackjack_french.features_offline_game.domain.service.TimeService
 import fr.lleotraas.blackjack_french.features_offline_game.domain.service.TimeService.Companion.TIME_EXTRA
+import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.*
+import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.InsuranceUtils
 import fr.lleotraas.blackjack_french.features_online_main_screen.presentation.OnlineMainScreenActivity
 import fr.lleotraas.blackjack_french.features_online_game.presentation.dialog.OnlineBetDialog
 import fr.lleotraas.blackjack_french.features_online_game.presentation.dialog.OpponentQuitGameDialog
@@ -50,34 +52,21 @@ import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Co
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.SEARCHED_USER_ID
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.SECOND_SPLIT
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.TOTAL
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.addCardToDealerList
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.addCardToPlayerHandList
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.changeTotalBet
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.convertTimeInPercent
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.createBet
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.createDealer
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.createDeck
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.createPlayerHand
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.dealerDrawAnAceOrNot
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.disableDoubleBtn
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.getBetTypeByInt
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.getHandTab
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.getHandType
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.getHandTypeForDoubledBox
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.getNextPlayer
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.getPlayerHand
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.getTimeCount
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.isDealerHaveBlackJack
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.modifyDealerScoreWithAce
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.modifyFirstSplitScore
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.playerHaveASoftScoreOrNot
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.paymentForPlayer
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.playerDrawAnAceOrNot
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.retrieveBetInWallet
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.retrieveInsuranceBetInWallet
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.shuffleDeck
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.splitPlayerGame
-import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.updateInsurance
 import fr.lleotraas.blackjack_french.features_offline_game.domain.utils.Utils.Companion.updateOnlineWallet
 
 @AndroidEntryPoint
@@ -184,7 +173,7 @@ class OnlineGameFragment : Fragment() {
 
             enableHitAndStopButtons()
             enableSplitButton()
-            mBinding.fragmentOnlineGameDoubleBtn.isEnabled = disableDoubleBtn(getCurrentPlayer(), currentUser, dealer, time)
+            mBinding.fragmentOnlineGameDoubleBtn.isEnabled = DoubleUtils.disableDoubleBtn(getCurrentPlayer(), currentUser, dealer, time)
             gameBegin()
             if (time % 2.0 == 0.0) {
                 animation?.start()
@@ -458,8 +447,8 @@ class OnlineGameFragment : Fragment() {
 
     private fun updateScoreUiAndBet(listOfPlayer: ArrayList<Player>) {
         Log.e(TAG, "Dealer score = ${dealer.score}")
-        val dealerHaveBlackjack = isDealerHaveBlackJack(dealer)
-        currentUser.bet!![INSURANCE] = updateInsurance(currentUser, dealerHaveBlackjack)
+        val dealerHaveBlackjack = DealerUtils.isDealerHaveBlackJack(dealer)
+        currentUser.bet!![INSURANCE] = InsuranceUtils.updateInsurance(currentUser, dealerHaveBlackjack)
         for (player in listOfPlayer) {
             for (index in 0 until player.score.size) {
                 val messageResult = player.score[getHandTab(index)]?.let {
@@ -609,10 +598,10 @@ class OnlineGameFragment : Fragment() {
     }
 
     private fun distributionDealerDrawCard() {
-        addCardToDealerList(dealer, deck)
-        dealer.isDealerDrawAce = dealerDrawAnAceOrNot(deck, dealer)
-        dealer.isDealerScoreSoft = modifyDealerScoreWithAce(dealer, deck)
-        deck.index = deck.index!! + 1
+        DealerUtils.addCardToDealerList(dealer, deck)
+        dealer.isDealerDrawAce = DealerUtils.dealerDrawAnAceOrNot(deck, dealer)
+        dealer.isDealerScoreSoft = DealerUtils.modifyDealerScoreWithAce(dealer, deck)
+        deck.index = deck.index + 1
     }
 
     private fun distributionPlayersDrawCard() {
@@ -620,7 +609,7 @@ class OnlineGameFragment : Fragment() {
 //            addCardToPlayerHandList(playerTab[index], deck, currentUser.splitType!!)
 //            playerTab[index].isPlayerDrawAce[currentUser.splitType!!.valueOf] = playerDrawAnAceOrNot(deck, playerTab[index], currentUser.splitType!!)
 //            playerTab[index].isPlayerScoreSoft[currentUser.splitType!!.valueOf] = playerHaveASoftScoreOrNot(playerTab[index], deck, currentUser.splitType!!)
-            deck.index = deck.index!! + 1
+            deck.index = deck.index + 1
             Log.e(TAG, "Player N°${index+1} draw a card index:${deck.index}")
         }
     }
@@ -771,9 +760,9 @@ class OnlineGameFragment : Fragment() {
 
     private fun dealerDrawCard() {
         Log.e(TAG, "DEALER DRAW")
-        val dealerHand = addCardToDealerList(dealer, deck).hand
-        dealer.isDealerDrawAce = dealerDrawAnAceOrNot(deck, dealer)
-        dealer.isDealerScoreSoft = modifyDealerScoreWithAce(dealer, deck)
+        val dealerHand = DealerUtils.addCardToDealerList(dealer, deck).hand
+        dealer.isDealerDrawAce = DealerUtils.dealerDrawAnAceOrNot(deck, dealer)
+        dealer.isDealerScoreSoft = DealerUtils.modifyDealerScoreWithAce(dealer, deck)
         if (!dealer.isDealerScoreSoft) {
             setDealerDrawAceAndScoreSoftToFalse(dealer)
         }
@@ -832,7 +821,7 @@ class OnlineGameFragment : Fragment() {
                     decreasePlayerBetWallet(bet!!)
                     playerDrawCard()
                     // TODO Not sure the next line work
-                    if (getCurrentPlayer().score[getHandTypeForDoubledBox(currentUser.splitType!!.valueOf)]!! < 22) {
+                    if (getCurrentPlayer().score[DoubleUtils.getHandTypeForDoubledBox(currentUser.splitType!!.valueOf)]!! < 22) {
                         nextPlayer()
                     }
                 } else {
@@ -856,7 +845,7 @@ class OnlineGameFragment : Fragment() {
                     ) {
                         getCurrentPlayer().isPlayerDrawAce[FIRST_SPLIT] = true
                         getCurrentPlayer().isPlayerScoreSoft[FIRST_SPLIT] = true
-                        modifyFirstSplitScore(getCurrentPlayer(), FIRST_SPLIT)
+                        SplitUtils.modifyFirstSplitScore(getCurrentPlayer(), FIRST_SPLIT)
                         nextPlayer()
                         nextPlayer()
                     }
@@ -884,8 +873,8 @@ class OnlineGameFragment : Fragment() {
     }
 
     private fun decreasePlayerInsuranceBetWallet(bet: Double) {
-        currentUser.wallet = retrieveInsuranceBetInWallet(currentUser.wallet!!, bet)
-        currentUser.bet!![INSURANCE] = retrieveInsuranceBetInWallet(currentUser.bet!![INSURANCE]!!, bet)
+        currentUser.wallet = InsuranceUtils.retrieveInsuranceBetInWallet(currentUser.wallet!!, bet)
+        currentUser.bet!![INSURANCE] = InsuranceUtils.retrieveInsuranceBetInWallet(currentUser.bet!![INSURANCE]!!, bet)
         currentUser.bet!![TOTAL] = changeTotalBet(currentUser.bet!![TOTAL]!!, bet / 2)
         mViewModel.updateOnlineUserBetAndWallet(currentUser)
     }
@@ -919,7 +908,7 @@ class OnlineGameFragment : Fragment() {
             opponent.isSplitting = false
             mViewModel.updateIsSplitting(opponent.id!!, false)
             if (playerHand.hand[FIRST_SPLIT]!![0].value == 1) {
-                modifyFirstSplitScore(playerHand, FIRST_SPLIT)
+                SplitUtils.modifyFirstSplitScore(playerHand, FIRST_SPLIT)
             }
         }
         showOpponentSplitPictures(playerHand)

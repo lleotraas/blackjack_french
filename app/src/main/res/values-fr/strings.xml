@@ -154,6 +154,12 @@
     <string name="dealer_help_dialog_title">Score du Croupier</string>
     <string name="dealer_help_dialog_message">Ici vous pouvez voir le score du Croupier sous une image qui le représente.</string>
     <string name="activity_main_screen_rules">Règles du Jeu</string>
+    <string name="activity_main_screen_tutorial">tutoriel</string>
     <string name="game_rules">Le principe du jeu est de s\'approcher du score de 21 sans le dépasser.\n Chaque cartes vaut la valeur inscrite dessus, le Valet, la Dame et le Roi (les bûches) valent 10 points et l\'As vaut 1 ou 11 mais on affichera toujous le score le plus élevé.\n En début de partie, une carte est distribuée sur chaque boîte, une au croupier puis une deuxième sur chaque boîtes. A chaque tour on vous demandera si vous voulez tirer ou non. Une fois que toutes vo boîtes ont été jouées c\'est au tour du croupier de tirer des cartes. Le croupier à l\'obligation de tirer jusqu\'a atteindre un score minimum de 17, si son score est compris entre 17 et 21 vous comparerez le score de chacune de vos boîtes avec lui, si vous avez plus que lui vous gagnez et empochez votre mise, si vous avez moins que lui vous perdez voter mise et si vous faites égalité vous êtes remboursé. \n le Blackjack est la combinaison d\'un As et d\'une bûche, un blackjack ne peut être obtenu qu\'après la distribution, si vous séparez une boîte et obtenez 21 en 2 cartes ce ne sera pas un Blackjack. Le Blackjack est supérieur au score de 21, quand vous faites un Blackjack votre score indiquera BJ. Il vous est possible de tirer ou même de doubler sur un Blackjack mais ce n\'est pas recommandé car vous ne pouvez pas perdre et au pire faire égalité avec le croupier. Le blackjack est payé 1.5 fois votre mise.</string>
-
+    <string name="dialog_tutorial_base_rule">Règles de base</string>
+    <string name="dialog_tutorial_double">Doubler</string>
+    <string name="dialog_tutorial_split">Séparer (Split)</string>
+    <string name="dialog_tutorial_insurance">Assurance</string>
+    <string name="dialog_for_tutorial_welcome_title">Bienvenue dans le tutoriel du BlackJack.</string>
+    <string name="dialog_for_tutorial_welcome_message">Voici le tapis sur lequel vous jouerez. \n Quand vous êtes prêt, appuyez sur le bouton wallet pour faire vos jeux.</string>
 </resources>

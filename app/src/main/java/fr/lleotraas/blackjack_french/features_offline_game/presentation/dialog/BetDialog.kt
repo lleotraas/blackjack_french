@@ -43,7 +43,7 @@ class BetDialog : BottomSheetDialogFragment() {
     private fun updateUser(offlineUser: OfflineUser) {
         mBinding.apply {
             betDialogBetBankTv.text = offlineUser.wallet?.amount.toString()
-            val currentPlayer = Utils.getCurrentPlayer(offlineUser, offlineUser.currentHandType)
+            val currentPlayer = Utils.getCurrentPlayer(offlineUser)
             if (offlineUser.defaultBet > 0.0) {
                 val betArray = Utils.getArrayOfBetString(currentPlayer.bet.toString())
                 val betTabTv = createBetTabTv()
